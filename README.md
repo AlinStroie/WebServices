@@ -87,6 +87,7 @@ web-services-portfolio/
 ├── package.json
 ├── vite.config.js
 └── README.md
+
 Instalare și rulare locală
 1. Clonează repository-ul
 git clone https://github.com/AlinStroie/WebServices.git
