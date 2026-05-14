@@ -87,83 +87,141 @@ web-services-portfolio/
 ├── package.json
 ├── vite.config.js
 └── README.md
+```
 
-Instalare și rulare locală
-1. Clonează repository-ul
+---
+
+## Instalare și rulare locală
+
+### 1. Clonează repository-ul
+
+```bash
 git clone https://github.com/AlinStroie/WebServices.git
-2. Intră în folderul proiectului
+```
+
+### 2. Intră în folderul proiectului
+
+```bash
 cd WebServices
-3. Instalează dependențele
+```
+
+### 3. Instalează dependențele
+
+```bash
 npm install
-4. Pornește serverul de dezvoltare
+```
+
+### 4. Pornește serverul de dezvoltare
+
+```bash
 npm run dev
+```
 
 După rulare, proiectul va fi disponibil de obicei la:
 
+```txt
 http://localhost:5173/
-Build pentru producție
+```
+
+---
+
+## Build pentru producție
 
 Pentru generarea versiunii finale:
 
+```bash
 npm run build
+```
 
 Fișierele generate vor fi în folderul:
 
+```txt
 dist/
+```
 
 Pentru preview local al build-ului:
 
+```bash
 npm run preview
-Personalizare proiect
-Schimbarea numelui brandului
+```
+
+---
+
+## Personalizare proiect
+
+### Schimbarea numelui brandului
 
 Numele brandului poate fi modificat în:
 
+```txt
 src/components/Navbar.jsx
 src/components/Footer.jsx
+```
 
 Caută:
 
+```txt
 WebNova Studio
+```
 
 și înlocuiește cu numele dorit.
 
-Modificarea serviciilor
+---
+
+### Modificarea serviciilor
 
 Serviciile se modifică din:
 
+```txt
 src/data/services.js
+```
 
 Acolo poți schimba:
 
-titlul serviciului;
-descrierea;
-iconița folosită.
-Modificarea beneficiilor
+- titlul serviciului;
+- descrierea;
+- iconița folosită.
+
+---
+
+### Modificarea beneficiilor
 
 Beneficiile se modifică din:
 
+```txt
 src/data/benefits.js
-Modificarea portofoliului
+```
+
+---
+
+### Modificarea portofoliului
 
 Proiectele demo se modifică din:
 
+```txt
 src/data/portfolio.js
+```
 
 Fiecare proiect are:
 
-titlu;
-categorie;
-descriere;
-gradient vizual.
-Modificarea pachetelor de preț
+- titlu;
+- categorie;
+- descriere;
+- gradient vizual.
+
+---
+
+### Modificarea pachetelor de preț
 
 Pachetele se modifică din:
 
+```txt
 src/data/pricing.js
+```
 
 Exemplu:
 
+```js
 {
   name: "Basic",
   price: "de la 300€",
@@ -177,106 +235,139 @@ Exemplu:
     "SEO basic",
   ],
 }
-Modificarea datelor de contact
+```
+
+---
+
+### Modificarea datelor de contact
 
 Datele de contact se modifică din:
 
+```txt
 src/components/Contact.jsx
 src/components/Footer.jsx
+```
 
 Poți schimba:
 
-email;
-telefon;
-locație;
-textul formularului.
-Formularul de contact
+- email;
+- telefon;
+- locație;
+- textul formularului.
+
+---
+
+## Formularul de contact
 
 Formularul de contact este momentan local. La trimitere, acesta afișează un mesaj de succes, dar nu trimite email și nu salvează datele într-o bază de date.
 
 Pentru funcționalitate reală, formularul poate fi conectat ulterior la:
 
-EmailJS;
-Formspree;
-un backend propriu;
-o funcție serverless.
-Securitate
+- EmailJS;
+- Formspree;
+- un backend propriu;
+- o funcție serverless.
+
+---
+
+## Securitate
 
 În forma actuală, formularul nu trimite date către server, deci riscurile sunt reduse.
 
 Pentru o variantă de producție, sunt recomandate:
 
-validare client-side;
-validare server-side;
-limitare număr cereri;
-protecție anti-spam;
-honeypot field;
-protecție CSRF dacă se folosește autentificare sau sesiune;
-evitarea expunerii cheilor API în frontend.
-Design
+- validare client-side;
+- validare server-side;
+- limitare număr cereri;
+- protecție anti-spam;
+- honeypot field;
+- protecție CSRF dacă se folosește autentificare sau sesiune;
+- evitarea expunerii cheilor API în frontend.
+
+---
+
+## Design
 
 Direcția vizuală a proiectului:
 
-fundal negru / foarte închis;
-text alb și gri deschis;
-accente discrete;
-carduri cu border subtil;
-efect glass / blur;
-colțuri rotunjite;
-spațiere generoasă;
-animații fine;
-aspect premium și minimalist.
-Secțiuni principale
-Hero
+- fundal negru / foarte închis;
+- text alb și gri deschis;
+- accente discrete;
+- carduri cu border subtil;
+- efect glass / blur;
+- colțuri rotunjite;
+- spațiere generoasă;
+- animații fine;
+- aspect premium și minimalist.
+
+---
+
+## Secțiuni principale
+
+### Hero
 
 Secțiune principală cu titlu mare, subtitlu și butoane call-to-action.
 
-Beneficii
+### Beneficii
 
 Prezintă avantajele principale ale serviciilor oferite.
 
-Servicii
+### Servicii
 
 Listă de servicii web:
 
-site de prezentare;
-landing page;
-portofoliu personal;
-magazin online simplu;
-redesign site vechi;
-mentenanță lunară.
-Portofoliu
+- site de prezentare;
+- landing page;
+- portofoliu personal;
+- magazin online simplu;
+- redesign site vechi;
+- mentenanță lunară.
+
+### Portofoliu
 
 Proiecte fictive/demo care pot fi înlocuite cu proiecte reale.
 
-Proces
+### Proces
 
 Pașii de lucru de la idee până la publicarea site-ului.
 
-Prețuri
+### Prețuri
 
 Trei pachete orientative:
 
-Basic;
-Standard;
-Premium.
-Contact
+- Basic;
+- Standard;
+- Premium.
+
+### Contact
 
 Formular simplu și date de contact.
 
-Comenzi utile
+---
+
+## Comenzi utile
+
+```bash
 npm install
 npm run dev
 npm run build
 npm run preview
-Status proiect
+```
+
+---
+
+## Status proiect
 
 Proiectul este funcțional și poate fi rulat local. Este potrivit ca bază pentru un site real de prezentare, portofoliu sau servicii web.
 
-Autor
+---
 
-Proiect realizat de Alin Stroie.
+## Autor
 
-Licență
+Proiect realizat de **Alin Stroie**.
+
+---
+
+## Licență
 
 Acest proiect poate fi folosit și modificat în scop personal, educațional sau comercial.
