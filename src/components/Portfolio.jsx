@@ -4,69 +4,40 @@ import { ArrowUpRight, X } from "lucide-react";
 
 import AnimatedSection from "./AnimatedSection";
 import SectionHeader from "./SectionHeader";
-import MedicalSiteMockup from "./MedicalSiteMockup";
+import PortfolioBrowserFrame from "./PortfolioBrowserFrame";
+import PortfolioMockupRenderer from "./PortfolioMockupRenderer";
 import { portfolio } from "../data/portfolio";
 
-function KinetoPortfolioPreview() {
+function PortfolioCardPreview({ project }) {
   return (
     <div className="relative h-64 overflow-hidden rounded-[1.7rem] border border-white/10 bg-black/50 p-3">
-      <div className="absolute inset-0 bg-gradient-to-br from-emerald-400/20 via-cyan-300/10 to-transparent opacity-80" />
+      <div
+        className={`absolute inset-0 bg-gradient-to-br ${
+          project.theme?.glowFrom || "from-white/20"
+        } ${project.theme?.glowVia || "via-white/10"} to-transparent opacity-80`}
+      />
 
-      <div className="absolute -right-16 -top-16 h-44 w-44 rounded-full bg-emerald-400/20 blur-3xl transition duration-500 group-hover:scale-125" />
-      <div className="absolute -bottom-16 -left-16 h-44 w-44 rounded-full bg-cyan-300/20 blur-3xl transition duration-500 group-hover:scale-125" />
+      <div
+        className={`absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl transition duration-500 group-hover:scale-125 ${
+          project.theme?.glowAccentOne || "bg-white/10"
+        }`}
+      />
+
+      <div
+        className={`absolute -bottom-16 -left-16 h-44 w-44 rounded-full blur-3xl transition duration-500 group-hover:scale-125 ${
+          project.theme?.glowAccentTwo || "bg-white/10"
+        }`}
+      />
 
       <div className="relative h-full transition duration-500 group-hover:scale-[1.05] group-hover:-translate-y-1">
-        <div className="h-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-white shadow-2xl">
-          <div className="flex h-9 items-center gap-2 border-b border-slate-200 bg-slate-50 px-4">
-            <span className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="h-3 w-3 rounded-full bg-yellow-400" />
-            <span className="h-3 w-3 rounded-full bg-green-400" />
-            <div className="ml-3 h-4 flex-1 rounded-full bg-slate-200" />
-          </div>
-
-          <div className="h-[calc(100%-2.25rem)]">
-            <MedicalSiteMockup />
-          </div>
-        </div>
+        <PortfolioBrowserFrame project={project} size="card" />
       </div>
     </div>
   );
-}
-
-function DefaultPortfolioPreview({ project }) {
-  return (
-    <div
-      className={`relative h-64 overflow-hidden rounded-[1.7rem] border border-white/10 ${project.gradient}`}
-    >
-      <div className="absolute inset-0 bg-black/20" />
-
-      <div className="absolute left-5 top-5 flex gap-2">
-        <span className="h-3 w-3 rounded-full bg-red-400/80" />
-        <span className="h-3 w-3 rounded-full bg-yellow-300/80" />
-        <span className="h-3 w-3 rounded-full bg-green-400/80" />
-      </div>
-
-      <div className="absolute bottom-5 left-5 right-5 rounded-[1.3rem] border border-white/10 bg-black/35 p-5 backdrop-blur-md transition duration-500 group-hover:-translate-y-1">
-        <div className="mb-4 h-3 w-2/3 rounded-full bg-white/30" />
-        <div className="mb-2 h-2 w-full rounded-full bg-white/15" />
-        <div className="h-2 w-1/2 rounded-full bg-white/15" />
-      </div>
-    </div>
-  );
-}
-
-function PortfolioPreview({ project }) {
-  if (project.title === "Cabinet kinetoterapie") {
-    return <KinetoPortfolioPreview />;
-  }
-
-  return <DefaultPortfolioPreview project={project} />;
 }
 
 function PortfolioProjectModal({ project, onClose }) {
   if (!project) return null;
-
-  const isKineto = project.title === "Cabinet kinetoterapie";
 
   return (
     <AnimatePresence>
@@ -132,7 +103,7 @@ function PortfolioProjectModal({ project, onClose }) {
                 <span className="h-3 w-3 rounded-full bg-yellow-400" />
                 <span className="h-3 w-3 rounded-full bg-green-400" />
 
-                <div className="ml-4 hidden flex-1 rounded-full border border-white/10 bg-black/30 px-4 py-1 text-xs text-white/40 sm:block">
+                <div className="ml-4 hidden rounded-full border border-white/10 bg-black/30 px-4 py-1 text-xs text-white/40 sm:block">
                   preview / {project.title.toLowerCase()}
                 </div>
               </div>
@@ -157,7 +128,9 @@ function PortfolioProjectModal({ project, onClose }) {
                   {project.title}
                 </h2>
 
-                <p className="mt-5 leading-8 text-white/55">{project.text}</p>
+                <p className="mt-5 leading-8 text-white/55">
+                  {project.text}
+                </p>
 
                 <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5">
                   <p className="text-sm uppercase tracking-[0.25em] text-white/30">
@@ -165,24 +138,21 @@ function PortfolioProjectModal({ project, onClose }) {
                   </p>
 
                   <ul className="mt-4 space-y-3 text-sm text-white/60">
-                    <li>Design responsive pentru mobil și desktop</li>
-                    <li>Secțiuni pentru servicii și beneficii</li>
-                    <li>Call-to-action pentru programări sau contact</li>
-                    <li>Structură orientată spre încredere și conversie</li>
+                    {project.features.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
                   </ul>
                 </div>
               </div>
 
-              <div className="bg-gradient-to-br from-emerald-400/10 via-cyan-300/5 to-transparent p-4 md:p-7">
-                {isKineto ? (
-                  <div className="h-[34rem] overflow-hidden rounded-[1.7rem] border border-white/10 bg-white shadow-2xl">
-                    <MedicalSiteMockup />
-                  </div>
-                ) : (
-                  <div
-                    className={`h-[34rem] rounded-[1.7rem] border border-white/10 ${project.gradient}`}
-                  />
-                )}
+              <div
+                className={`bg-gradient-to-br p-4 md:p-7 ${
+                  project.theme?.modalBg || "from-white/10 via-white/5 to-transparent"
+                }`}
+              >
+                <div className="h-[34rem] overflow-hidden rounded-[1.7rem] border border-white/10 bg-white shadow-2xl">
+                  <PortfolioMockupRenderer project={project} />
+                </div>
               </div>
             </div>
           </motion.div>
@@ -208,12 +178,12 @@ function Portfolio() {
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {portfolio.map((project) => (
               <button
-                key={project.title}
+                key={project.id}
                 type="button"
                 onClick={() => setSelectedProject(project)}
                 className="group rounded-[2rem] border border-white/10 bg-white/[0.035] p-4 text-left transition duration-300 hover:-translate-y-2 hover:bg-white/[0.06] hover:shadow-[0_30px_90px_rgba(255,255,255,0.06)]"
               >
-                <PortfolioPreview project={project} />
+                <PortfolioCardPreview project={project} />
 
                 <div className="p-4">
                   <div className="mb-4 flex items-center justify-between gap-4">
