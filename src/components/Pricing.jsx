@@ -65,7 +65,7 @@ function Pricing({ onSelectPlan }) {
                   {plan.description}
                 </p>
 
-                <ul className="mt-8 space-y-4">
+                <ul className="mt-8 mb-10 space-y-4">
                   {plan.features.map((feature) => (
                     <li key={feature} className="flex gap-3">
                       <Check
@@ -87,7 +87,7 @@ function Pricing({ onSelectPlan }) {
                 <button
                   type="button"
                   onClick={() => onSelectPlan(plan.name)}
-                  className={`mt-auto inline-flex items-center justify-between gap-3 rounded-full px-5 py-4 pt-4 text-sm font-semibold transition duration-300 ${
+                  className={`mt-auto inline-flex items-center justify-between gap-3 rounded-full px-5 py-4 text-sm font-semibold transition duration-300 ${
                     plan.highlight
                       ? "bg-black text-white hover:scale-[1.02] hover:bg-black/85"
                       : "border border-white/10 bg-white/[0.04] text-white hover:scale-[1.02] hover:bg-white/[0.08]"
