@@ -28,14 +28,12 @@ function CookieBanner({ onOpenPolicy }) {
   }
 
   function openPrivacy() {
-  setVisible(false);
-  onOpenPolicy?.("privacy");
-}
+    onOpenPolicy?.("privacy");
+  }
 
-function openCookies() {
-  setVisible(false);
-  onOpenPolicy?.("cookies");
-}
+  function openCookies() {
+    onOpenPolicy?.("cookies");
+  }
 
   return (
     <AnimatePresence>
@@ -50,9 +48,9 @@ function openCookies() {
             ease: [0.22, 1, 0.36, 1],
           }}
         >
-          <div className="rounded-[1.7rem] border border-white/10 bg-[#080808]/95 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.65)] backdrop-blur-xl">
+          <div className="relative rounded-[1.7rem] border border-white/10 bg-[#080808]/95 p-5 shadow-[0_24px_90px_rgba(0,0,0,0.65)] backdrop-blur-xl">
             <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-              <div className="flex gap-4">
+              <div className="flex gap-4 pr-8">
                 <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/[0.05] text-white/70">
                   <Cookie size={20} />
                 </div>

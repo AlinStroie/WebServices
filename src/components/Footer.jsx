@@ -5,14 +5,12 @@ function Footer({ onOpenPolicy, onOpenContact }) {
     <footer className="border-t border-white/10 px-5 py-12 lg:px-8">
       <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-4">
         <div>
-          <div className="mb-4 flex items-center gap-3">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-black text-black">
-              {siteConfig.brand.logoLetter}
-            </span>
-
-            <span className="font-semibold">{siteConfig.brand.name}</span>
+          <div className="mb-4 flex items-center">
+            <img src="/banner site.svg"
+              alt={siteConfig.brand.name}
+              className="h-20 w-auto"
+            />
           </div>
-
           <p className="max-w-xs leading-7 text-white/45">
             {siteConfig.brand.tagline}
           </p>

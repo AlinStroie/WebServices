@@ -1,22 +1,22 @@
 export const siteConfig = {
   brand: {
-    name: "A² Studio",
+    name: "A Squared Studio",
     shortName: "A² Studio",
     logoLetter: "A²",
     tagline: "Website-uri moderne pentru afaceri care vor să crească online.",
   },
 
   contact: {
-    email: "contact@astudio.ro",
-    phone: "+40 700 000 000",
-    whatsapp: "40700000000",
+    email: "asquared.studio@outlook.com",
+    phone: "+40 729 818 039",
+    whatsapp: "+40 729 818 039",
     location: "Brașov, România",
   },
 
   social: {
-    instagram: "https://instagram.com/",
-    facebook: "https://facebook.com/",
-    linkedin: "https://linkedin.com/",
+    instagram: "https://instagram.com/byasqared.studio/",
+    facebook: "https://facebook.com/profile.php?id=61589528503382",
+    linkedin: "https://linkedin.com/a-squared-studio-33a25340b/",
   },
 
   navigation: [
