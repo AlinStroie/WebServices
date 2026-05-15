@@ -2,14 +2,13 @@ import { motion } from "framer-motion";
 
 function OverlayBackdrop({
   onClick,
-  className = "",
   blur = 7,
   opacity = 0.6,
-  duration = 0.65,
+  duration = 0.75,
+  className = "",
 }) {
   return (
     <>
-      {/* Layer întunecare */}
       <motion.div
         onClick={onClick}
         className={`absolute inset-0 bg-black ${className}`}
@@ -17,12 +16,11 @@ function OverlayBackdrop({
         animate={{ opacity }}
         exit={{ opacity: 0 }}
         transition={{
-          duration: 0.38,
+          duration: 0.42,
           ease: [0.22, 1, 0.36, 1],
         }}
       />
 
-      {/* Layer blur fluid */}
       <motion.div
         onClick={onClick}
         className="absolute inset-0 will-change-[opacity,backdrop-filter] [contain:paint]"
