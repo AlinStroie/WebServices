@@ -9,6 +9,7 @@ export const siteConfig = {
   contact: {
     email: "contact@astudio.ro",
     phone: "+40 700 000 000",
+    whatsapp: "40700000000",
     location: "Brașov, România",
   },
 
@@ -45,7 +46,7 @@ export const siteConfig = {
         "Nu folosim datele pentru newsletter, reclame sau comunicări comerciale fără un acord separat.",
         "Datele pot fi păstrate doar pe durata necesară comunicării și gestionării solicitării.",
         "Utilizatorul poate cere accesul, rectificarea sau ștergerea datelor sale.",
-        "Pentru solicitări legate de datele personale, ne poți contacta la contact@webnova.ro.",
+        "Pentru solicitări legate de datele personale, ne poți contacta la contact@astudio.ro.",
       ],
     },
 

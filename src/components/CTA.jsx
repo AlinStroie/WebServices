@@ -1,7 +1,7 @@
 import AnimatedSection from "./AnimatedSection";
 import { ArrowRight } from "lucide-react";
 
-function CTA() {
+function CTA({ onOpenContact }) {
   return (
     <AnimatedSection className="px-5 py-24 lg:px-8">
       <div className="mx-auto max-w-7xl overflow-hidden rounded-[2.5rem] border border-white/10 bg-white p-8 text-black md:p-14">
@@ -16,12 +16,13 @@ function CTA() {
             </h2>
           </div>
 
-          <a
-            href="#contact"
+          <button
+            type="button"
+            onClick={onOpenContact}
             className="inline-flex items-center justify-center gap-2 rounded-full bg-black px-8 py-4 font-semibold text-white transition hover:scale-[1.03] hover:bg-black/85"
           >
             Hai să discutăm <ArrowRight size={18} />
-          </a>
+          </button>
         </div>
       </div>
     </AnimatedSection>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { siteConfig } from "../data/siteConfig";
 
-function Navbar() {
+function Navbar({ onOpenContact }) {
   const [open, setOpen] = useState(false);
 
   const links = siteConfig.navigation;
@@ -27,12 +27,13 @@ function Navbar() {
           ))}
         </div>
 
-        <a
-          href="#contact"
+        <button
+          type="button"
+          onClick={onOpenContact}
           className="hidden rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:scale-[1.03] hover:bg-white/90 md:inline-flex"
         >
           Cere ofertă
-        </a>
+        </button>
 
         <button
           onClick={() => setOpen(!open)}
@@ -57,13 +58,13 @@ function Navbar() {
               </a>
             ))}
 
-            <a
-              href="#contact"
-              onClick={() => setOpen(false)}
-              className="mt-2 rounded-full bg-white px-5 py-3 text-center text-sm font-semibold text-black"
+            <button
+              type="button"
+              onClick={onOpenContact}
+              className="hidden rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:scale-[1.03] hover:bg-white/90 md:inline-flex"
             >
               Cere ofertă
-            </a>
+            </button>
           </div>
         </div>
       )}

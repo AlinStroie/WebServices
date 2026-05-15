@@ -1,47 +1,79 @@
+import { useState } from "react";
+import { ArrowUpRight, Check } from "lucide-react";
+
 import AnimatedSection from "./AnimatedSection";
 import SectionHeader from "./SectionHeader";
+import ProcessModal from "./ProcessModal";
 import { processSteps } from "../data/process";
 
 function Process() {
+  const [selectedStep, setSelectedStep] = useState(null);
+
   return (
-    <AnimatedSection id="proces" className="px-5 py-24 lg:px-8">
-      <div className="mx-auto max-w-7xl">
-        <SectionHeader
-          eyebrow="Proces"
-          title="De la idee la site publicat, într-un proces simplu."
-          text="Lucrăm etapizat, ca să fie clar ce construim și de ce."
-        />
+    <>
+      <AnimatedSection id="proces" className="px-5 py-24 lg:px-8">
+        <div className="mx-auto max-w-7xl">
+          <SectionHeader
+            eyebrow="Proces"
+            title="De la idee la site publicat, într-un proces simplu."
+            text="Cardurile rămân clare la prima vedere, iar detaliile apar doar când vrei să explorezi fiecare etapă."
+          />
 
-        <div className="relative">
-          <div className="absolute left-6 top-0 hidden h-full w-px bg-white/10 md:block" />
-
-          <div className="grid gap-5">
-            {processSteps.map((step, index) => (
-              <div
-                key={step.title}
-                className="glass relative rounded-[2rem] p-7 md:ml-16"
+          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {processSteps.map((step) => (
+              <button
+                key={step.number}
+                onClick={() => setSelectedStep(step)}
+                className="group overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.035] p-7 text-left transition duration-300 hover:-translate-y-1 hover:bg-white/[0.07]"
               >
-                <div className="absolute -left-[5.2rem] top-7 hidden h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-black text-white md:flex">
-                  {String(index + 1).padStart(2, "0")}
+                <div className="mb-10 flex items-start justify-between">
+                  <span className="text-6xl font-semibold tracking-[-0.08em] text-white/10 transition group-hover:text-white/20">
+                    {step.number}
+                  </span>
+
+                  <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/45">
+                    {step.tag}
+                  </span>
                 </div>
 
-                <p className="mb-4 text-sm text-white/35 md:hidden">
-                  {String(index + 1).padStart(2, "0")}
-                </p>
-
-                <h3 className="text-2xl font-semibold tracking-[-0.03em]">
+                <h3 className="text-2xl font-semibold tracking-[-0.03em] text-white">
                   {step.title}
                 </h3>
 
-                <p className="mt-3 max-w-3xl leading-7 text-white/50">
-                  {step.text}
+                <p className="mt-4 leading-7 text-white/50">
+                  {step.shortText}
                 </p>
-              </div>
+
+                <div className="mt-6 grid max-h-0 gap-3 overflow-hidden opacity-0 transition-all duration-300 group-hover:max-h-40 group-hover:opacity-100">
+                  {step.hoverPoints.map((point) => (
+                    <div key={point} className="flex items-center gap-3">
+                      <Check size={16} className="text-white/70" />
+                      <span className="text-sm text-white/55">{point}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-8 flex items-center justify-between border-t border-white/10 pt-5">
+                  <span className="text-sm font-medium text-white/60">
+                    Vezi detalii
+                  </span>
+
+                  <ArrowUpRight
+                    size={19}
+                    className="text-white/35 transition group-hover:translate-x-1 group-hover:-translate-y-1 group-hover:text-white"
+                  />
+                </div>
+              </button>
             ))}
           </div>
         </div>
-      </div>
-    </AnimatedSection>
+      </AnimatedSection>
+
+      <ProcessModal
+        step={selectedStep}
+        onClose={() => setSelectedStep(null)}
+      />
+    </>
   );
 }
 

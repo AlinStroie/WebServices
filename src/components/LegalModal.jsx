@@ -2,37 +2,59 @@ import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "../data/siteConfig";
 
-
 function LegalModal({ type, onClose }) {
-  const data = siteConfig.legal[type];
+  const data = type ? siteConfig.legal[type] : null;
 
   return (
     <AnimatePresence>
-      {type && (
+      {type && data && (
         <motion.div
-          className="fixed inset-0 z-[200] flex items-center justify-center px-5"
+          className="fixed inset-0 z-[300] flex items-center justify-center px-5"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
         >
-          <div
+          <motion.div
             onClick={onClose}
-            className="absolute inset-0 bg-black/70 backdrop-blur-xl"
+            className="absolute inset-0 bg-black/75"
+            initial={{
+              opacity: 0,
+              backdropFilter: "blur(0px)",
+              WebkitBackdropFilter: "blur(0px)",
+            }}
+            animate={{
+              opacity: 1,
+              backdropFilter: "blur(10px)",
+              WebkitBackdropFilter: "blur(10px)",
+            }}
+            exit={{
+              opacity: 0,
+              backdropFilter: "blur(0px)",
+              WebkitBackdropFilter: "blur(0px)",
+            }}
+            transition={{
+              duration: 0.28,
+              ease: "easeOut",
+            }}
           />
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.94, y: 24 }}
+            initial={{ opacity: 0, scale: 0.96, y: 18 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.94, y: 24 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-white/10 bg-[#080808] p-7 shadow-2xl md:p-9"
+            exit={{ opacity: 0, scale: 0.96, y: 18 }}
+            transition={{
+              duration: 0.24,
+              ease: "easeOut",
+              delay: 0.04,
+            }}
+            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-white/10 bg-[#080808]/95 p-7 shadow-2xl md:p-9"
           >
             <button
               onClick={onClose}
-              className="absolute right-5 top-5 rounded-full border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white/10 hover:text-white"
+              className="group absolute right-5 top-5 rounded-full border border-white/10 bg-white/[0.04] p-3 text-white/60 transition hover:bg-white hover:text-black"
               aria-label="Închide"
             >
-              <X size={20} />
+              <X size={20} className="transition group-hover:rotate-90" />
             </button>
 
             <p className="mb-4 text-sm font-medium uppercase tracking-[0.3em] text-white/35">

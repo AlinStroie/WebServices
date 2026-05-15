@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { siteConfig } from "../data/siteConfig";
 
-function Hero() {
+function Hero({ onOpenContact }) {
   return (
     <section id="home" className="relative overflow-hidden px-5 pb-20 pt-32 md:pt-40 lg:px-8">
       <div className="absolute inset-0 -z-10 soft-grid opacity-60" />
@@ -35,12 +35,13 @@ function Hero() {
               {siteConfig.hero.primaryButton} <ArrowRight size={18} />
             </a>
 
-            <a
-              href="#contact"
+            <button
+              type="button"
+              onClick={onOpenContact}
               className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-7 py-4 font-semibold text-white transition hover:bg-white/[0.08]"
             >
               {siteConfig.hero.secondaryButton}
-            </a>
+            </button>
           </div>
 
           <div className="mt-12 grid max-w-xl grid-cols-3 gap-5 border-t border-white/10 pt-8">
