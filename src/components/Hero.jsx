@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles } from "lucide-react";
+import { siteConfig } from "../data/siteConfig";
 
 function Hero() {
   return (
@@ -15,16 +16,15 @@ function Hero() {
         >
           <div className="mb-7 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/65">
             <Sparkles size={16} />
-            Design premium pentru afaceri moderne
+            {siteConfig.hero.eyebrow}
           </div>
 
           <h1 className="text-balance text-5xl font-semibold leading-[0.95] tracking-[-0.06em] text-white md:text-7xl lg:text-8xl">
-            Construim site-uri moderne care arată bine și convertesc.
+            {siteConfig.hero.title}
           </h1>
 
           <p className="mt-7 max-w-2xl text-lg leading-8 text-white/55 md:text-xl">
-            Realizăm website-uri rapide, responsive și optimizate pentru afaceri
-            care vor o imagine profesională online.
+            {siteConfig.hero.subtitle}
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -32,14 +32,14 @@ function Hero() {
               href="#servicii"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-7 py-4 font-semibold text-black transition hover:scale-[1.03] hover:bg-white/90"
             >
-              Vezi serviciile <ArrowRight size={18} />
+              {siteConfig.hero.primaryButton} <ArrowRight size={18} />
             </a>
 
             <a
               href="#contact"
               className="inline-flex items-center justify-center rounded-full border border-white/12 bg-white/[0.03] px-7 py-4 font-semibold text-white transition hover:bg-white/[0.08]"
             >
-              Solicită ofertă
+              {siteConfig.hero.secondaryButton}
             </a>
           </div>
 

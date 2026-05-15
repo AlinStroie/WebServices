@@ -1,27 +1,21 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { siteConfig } from "../data/siteConfig";
 
 function Navbar() {
   const [open, setOpen] = useState(false);
 
-  const links = [
-    { label: "Acasă", href: "#home" },
-    { label: "Servicii", href: "#servicii" },
-    { label: "Portofoliu", href: "#portofoliu" },
-    { label: "Proces", href: "#proces" },
-    { label: "Prețuri", href: "#preturi" },
-    { label: "Contact", href: "#contact" },
-  ];
+  const links = siteConfig.navigation;
 
   return (
     <header className="fixed left-0 top-0 z-50 w-full border-b border-white/10 bg-black/50 backdrop-blur-2xl">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 lg:px-8">
         <a href="#home" className="flex items-center gap-3">
           <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white text-sm font-black text-black">
-            W
+            {siteConfig.brand.logoLetter}
           </span>
           <span className="text-sm font-semibold tracking-wide text-white">
-            WebNova Studio
+            {siteConfig.brand.name}
           </span>
         </a>
 
