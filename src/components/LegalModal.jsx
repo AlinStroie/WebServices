@@ -1,58 +1,79 @@
 import { X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { siteConfig } from "../data/siteConfig";
+import OverlayBackdrop from "./OverlayBackdrop";
+
+function getLegalData(type) {
+  if (!type) return null;
+
+  const legal = siteConfig.legal || {};
+
+  const aliases = {
+    privacy: ["privacy", "gdpr", "confidentialitate", "privacyPolicy"],
+    gdpr: ["gdpr", "privacy", "confidentialitate", "privacyPolicy"],
+    cookies: ["cookies", "cookie", "cookiePolicy"],
+    cookie: ["cookies", "cookie", "cookiePolicy"],
+    terms: ["terms", "termeni", "termsAndConditions"],
+  };
+
+  const possibleKeys = aliases[type] || [type];
+
+  for (const key of possibleKeys) {
+    if (legal[key]) {
+      return legal[key];
+    }
+  }
+
+  return null;
+}
 
 function LegalModal({ type, onClose }) {
-  const data = type ? siteConfig.legal[type] : null;
+  const data = getLegalData(type);
 
   return (
     <AnimatePresence>
       {type && data && (
         <motion.div
-          className="fixed inset-0 z-[300] flex items-center justify-center px-5"
-          initial={{ opacity: 0 }}
+          className="fixed inset-0 z-[999] flex items-center justify-center px-5"
+          initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
+          exit={{ opacity: 1 }}
         >
-          <motion.div
+          <OverlayBackdrop
             onClick={onClose}
-            className="absolute inset-0 bg-black/75"
-            initial={{
-              opacity: 0,
-              backdropFilter: "blur(0px)",
-              WebkitBackdropFilter: "blur(0px)",
-            }}
-            animate={{
-              opacity: 1,
-              backdropFilter: "blur(10px)",
-              WebkitBackdropFilter: "blur(10px)",
-            }}
-            exit={{
-              opacity: 0,
-              backdropFilter: "blur(0px)",
-              WebkitBackdropFilter: "blur(0px)",
-            }}
-            transition={{
-              duration: 0.28,
-              ease: "easeOut",
-            }}
+            blur={8}
+            opacity={0.62}
+            duration={0.85}
           />
 
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 18 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 18 }}
-            transition={{
-              duration: 0.24,
-              ease: "easeOut",
-              delay: 0.04,
+            initial={{
+              opacity: 0,
+              scale: 0.985,
+              y: 14,
             }}
-            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-white/10 bg-[#080808]/95 p-7 shadow-2xl md:p-9"
+            animate={{
+              opacity: 1,
+              scale: 1,
+              y: 0,
+            }}
+            exit={{
+              opacity: 0,
+              scale: 0.985,
+              y: 10,
+            }}
+            transition={{
+              duration: 0.42,
+              delay: 0.14,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="relative max-h-[85vh] w-full max-w-2xl overflow-y-auto rounded-[2rem] border border-white/10 bg-[#080808]/95 p-7 shadow-[0_24px_80px_rgba(0,0,0,0.55)] md:p-9"
           >
             <button
               onClick={onClose}
               className="group absolute right-5 top-5 rounded-full border border-white/10 bg-white/[0.04] p-3 text-white/60 transition hover:bg-white hover:text-black"
               aria-label="Închide"
+              type="button"
             >
               <X size={20} className="transition group-hover:rotate-90" />
             </button>
@@ -61,7 +82,7 @@ function LegalModal({ type, onClose }) {
               {data.eyebrow}
             </p>
 
-            <h2 className="max-w-xl text-3xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
+            <h2 className="max-w-xl pr-12 text-3xl font-semibold tracking-[-0.04em] text-white md:text-5xl">
               {data.title}
             </h2>
 
@@ -74,7 +95,8 @@ function LegalModal({ type, onClose }) {
             <div className="mt-8 flex justify-end">
               <button
                 onClick={onClose}
-                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
+                type="button"
+                className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition hover:scale-[1.02] hover:bg-white/90"
               >
                 Am înțeles
               </button>

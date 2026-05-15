@@ -1,4 +1,4 @@
-import PortfolioMockupRenderer from "./PortfolioMockupRenderer";
+import PortfolioMockupRenderer from "./mockups/PortfolioMockupRenderer";
 
 function PortfolioBrowserFrame({ project, size = "card" }) {
   const isCard = size === "card";
