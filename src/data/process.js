@@ -1,128 +1,134 @@
 export const processSteps = [
   {
     number: "01",
-    title: "Discutăm ideea",
-    shortText: "Înțelegem obiectivul site-ului și direcția proiectului.",
+    title: "Clarificăm direcția proiectului",
+    shortText:
+      "Începem prin a înțelege ce trebuie să transmită site-ul și ce rezultat vrei să obții.",
     tag: "Brief",
     previewType: "brief",
-    hoverPoints: ["obiectiv clar", "public țintă", "stil vizual"],
+    hoverPoints: ["obiectiv clar", "public țintă", "direcție vizuală"],
     details: {
       intro:
-        "În această etapă stabilim scopul proiectului și aflăm ce trebuie să transmită site-ul.",
+        "Înainte de design sau cod, stabilim scopul real al site-ului: ce trebuie să comunice, cui se adresează și ce acțiune trebuie să facă vizitatorul.",
       points: [
-        "tipul site-ului necesar",
-        "publicul țintă",
-        "serviciile sau produsele promovate",
-        "stilul vizual dorit",
-        "funcționalitățile principale",
+        "analizăm tipul afacerii și serviciile oferite",
+        "stabilim publicul țintă și nevoile lui",
+        "definim obiectivul principal al site-ului",
+        "discutăm stilul vizual potrivit pentru brand",
+        "identificăm funcționalitățile necesare",
       ],
       result:
-        "La final avem un brief clar, pe baza căruia putem construi structura site-ului.",
+        "La finalul etapei avem o direcție clară, astfel încât site-ul să nu fie doar frumos, ci construit cu un scop concret.",
     },
   },
   {
     number: "02",
-    title: "Stabilim structura",
-    shortText: "Organizăm paginile, secțiunile și traseul utilizatorului.",
-    tag: "Structură",
+    title: "Construim structura site-ului",
+    shortText:
+      "Organizăm paginile și secțiunile astfel încât informația să fie ușor de parcurs.",
+    tag: "Arhitectură",
     previewType: "sitemap",
-    hoverPoints: ["pagini principale", "secțiuni clare", "traseu logic"],
+    hoverPoints: ["pagini logice", "CTA-uri clare", "traseu simplu"],
     details: {
       intro:
-        "Construim scheletul site-ului astfel încât utilizatorul să înțeleagă rapid ce oferi și cum te poate contacta.",
+        "Un site bun nu înseamnă doar design. Structura trebuie să conducă vizitatorul natural de la prima impresie până la contact, programare sau cerere de ofertă.",
       points: [
-        "stabilim paginile importante",
-        "ordonăm secțiunile în mod logic",
-        "definim call-to-action-urile",
-        "pregătim structura pentru desktop și mobil",
-        "eliminăm informațiile inutile",
+        "definim paginile și secțiunile necesare",
+        "ordonăm informația în funcție de importanță",
+        "stabilim call-to-action-urile principale",
+        "pregătim traseul utilizatorului pentru desktop și mobil",
+        "eliminăm conținutul inutil sau repetitiv",
       ],
       result:
-        "La final avem o structură clară, ușor de transformat în design și cod.",
+        "La final avem scheletul site-ului: clar, logic și pregătit pentru design, fără secțiuni puse doar ca să umple spațiul.",
     },
   },
   {
     number: "03",
-    title: "Realizăm designul",
-    shortText: "Creăm direcția vizuală: layout, culori, carduri și spațiere.",
+    title: "Creăm direcția vizuală",
+    shortText:
+      "Transformăm structura într-un design modern, coerent și potrivit pentru identitatea afacerii.",
     tag: "Design",
     previewType: "design",
-    hoverPoints: ["layout premium", "culori potrivite", "UI modern"],
+    hoverPoints: ["layout premium", "stil coerent", "UI curat"],
     details: {
       intro:
-        "Transformăm structura într-o interfață vizuală modernă, curată și potrivită pentru brand.",
+        "Designul este gândit să transmită încredere și profesionalism, dar și să ajute utilizatorul să înțeleagă rapid ce oferi.",
       points: [
-        "alegem stilul vizual",
-        "definim paleta de culori",
-        "stabilim tipografia",
-        "creăm carduri și secțiuni aerisite",
-        "adaptăm designul pentru mobil",
+        "stabilim stilul vizual general",
+        "alegem culori, fonturi și spațiere potrivite",
+        "creăm carduri, secțiuni și zone de impact",
+        "adaptăm designul pentru mobil, tabletă și desktop",
+        "păstrăm un aspect curat, fără elemente încărcate inutil",
       ],
       result:
-        "La final avem o direcție vizuală coerentă, pregătită pentru dezvoltare.",
+        "La final ai o direcție vizuală clară, modernă și ușor de recunoscut, nu un template generic modificat superficial.",
     },
   },
   {
     number: "04",
-    title: "Dezvoltăm site-ul",
-    shortText: "Transformăm designul în cod responsive, rapid și curat.",
+    title: "Dezvoltăm site-ul în React",
+    shortText:
+      "Transformăm designul în cod curat, responsive și ușor de modificat ulterior.",
     tag: "Development",
     previewType: "code",
-    hoverPoints: ["React", "Tailwind", "responsive"],
+    hoverPoints: ["React", "Tailwind", "cod reutilizabil"],
     details: {
       intro:
-        "Construim site-ul în React, cu componente reutilizabile și structură ușor de modificat.",
+        "Site-ul este construit pe componente reutilizabile, astfel încât textele, secțiunile și informațiile importante să poată fi modificate rapid.",
       points: [
-        "scriem componente clare",
-        "folosim Tailwind pentru stilizare rapidă",
-        "optimizăm pentru mobil și desktop",
-        "adăugăm animații fine",
-        "pregătim proiectul pentru publicare",
+        "dezvoltăm interfața în React",
+        "folosim Tailwind pentru un design flexibil și rapid",
+        "separăm datele importante în fișiere ușor de editat",
+        "optimizăm afișarea pentru toate dimensiunile de ecran",
+        "adăugăm animații fine, fără să afectăm inutil performanța",
       ],
       result:
-        "La final avem un site funcțional, modern și ușor de întreținut.",
+        "La final site-ul este funcțional, responsive și organizat corect, astfel încât să poată fi întreținut sau extins mai ușor.",
     },
   },
   {
     number: "05",
-    title: "Testăm și publicăm",
-    shortText: "Verificăm afișarea, viteza, linkurile și formularul.",
+    title: "Testăm și pregătim publicarea",
+    shortText:
+      "Verificăm site-ul înainte de lansare: afișare, butoane, formulare, viteză și experiență pe mobil.",
     tag: "Launch",
     previewType: "checklist",
-    hoverPoints: ["test mobil", "viteză", "publicare"],
+    hoverPoints: ["test mobil", "verificări finale", "publicare"],
     details: {
       intro:
-        "Înainte de publicare, verificăm site-ul pe mai multe dimensiuni de ecran și corectăm problemele vizibile.",
+        "Înainte ca site-ul să fie publicat, verificăm zonele importante pentru ca experiența utilizatorului să fie cât mai clară și stabilă.",
       points: [
-        "testăm pe desktop și mobil",
-        "verificăm formularul",
-        "verificăm linkurile",
-        "facem build pentru producție",
-        "pregătim publicarea online",
+        "testăm site-ul pe desktop, tabletă și telefon",
+        "verificăm linkurile, butoanele și formularul de contact",
+        "corectăm problemele vizibile de layout",
+        "pregătim build-ul pentru producție",
+        "verificăm viteza și comportamentul general al paginii",
       ],
       result:
-        "La final site-ul este pregătit să fie publicat și trimis către client.",
+        "La final site-ul este pregătit pentru publicare și poate fi prezentat clientului sau urcat online.",
     },
   },
   {
     number: "06",
-    title: "Oferim suport",
-    shortText: "Ajutăm cu modificări, mentenanță și îmbunătățiri ulterioare.",
+    title: "Oferim suport după livrare",
+    shortText:
+      "După publicare, site-ul poate fi ajustat, îmbunătățit sau extins în funcție de nevoile afacerii.",
     tag: "Support",
     previewType: "support",
-    hoverPoints: ["update-uri", "mentenanță", "suport"],
+    hoverPoints: ["modificări", "mentenanță", "îmbunătățiri"],
     details: {
       intro:
-        "După livrare, site-ul poate fi ajustat, actualizat sau extins în funcție de nevoile afacerii.",
+        "Un site nu trebuie să rămână blocat în forma inițială. Pe măsură ce afacerea evoluează, pot fi adăugate secțiuni, texte, servicii sau funcționalități noi.",
       points: [
-        "modificări de text sau imagini",
-        "adăugare secțiuni noi",
-        "verificări periodice",
-        "optimizări simple",
-        "suport pentru publicare și mentenanță",
+        "actualizăm texte, imagini sau informații",
+        "adăugăm secțiuni noi atunci când este nevoie",
+        "facem mici ajustări de design sau structură",
+        "verificăm periodic funcționarea site-ului",
+        "putem pregăti extinderi ulterioare, precum blog, SEO sau analytics",
       ],
       result:
-        "La final clientul are un site care poate evolua odată cu afacerea.",
+        "La final clientul nu primește doar un site predat și uitat, ci o bază digitală care poate fi îmbunătățită în timp.",
     },
   },
 ];

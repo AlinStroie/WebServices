@@ -25,10 +25,9 @@ function Process() {
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Proces"
-            title="De la idee la site publicat, într-un proces simplu."
-            text="Cardurile rămân clare la prima vedere, iar detaliile apar doar când vrei să explorezi fiecare etapă."
+            title="Un proces clar, de la idee la site publicat."
+            text="Fiecare etapă are un scop precis: clarificăm direcția, construim structura, dezvoltăm site-ul și îl pregătim pentru lansare."
           />
-
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {processSteps.map((step) => (
               <button

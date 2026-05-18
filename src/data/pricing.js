@@ -1,22 +1,26 @@
 export const pricing = [
   {
     name: "Basic",
+    eyebrow: "Pentru început",
     price: "de la 300€",
-    description: "Pentru site simplu de prezentare sau pagină one-page.",
-    highlight: false,
+    description:
+      "Potrivit pentru afaceri care au nevoie de un site clar, simplu și profesionist.",
     features: [
       "Design responsive",
       "Până la 4 secțiuni",
       "Formular de contact",
       "Buton WhatsApp",
-      "SEO basic",
+      "SEO de bază",
     ],
+    cta: "Alege Basic",
+    highlight: false,
   },
   {
     name: "Standard",
+    eyebrow: "Cea mai bună alegere",
     price: "de la 600€",
-    description: "Pentru site complet, cu mai multe pagini și structură profesională.",
-    highlight: true,
+    description:
+      "Ideal pentru un site complet, cu structură mai solidă, prezentare clară și mai multă flexibilitate.",
     features: [
       "Design personalizat",
       "Până la 6 pagini",
@@ -25,19 +29,25 @@ export const pricing = [
       "Optimizare mobil",
       "Suport inițial",
     ],
+    cta: "Alege Standard",
+    highlight: true,
+    badge: "Recomandat",
   },
   {
     name: "Premium",
+    eyebrow: "Pentru proiecte custom",
     price: "la cerere",
-    description: "Pentru proiecte mai complexe, cu funcționalități extra.",
-    highlight: false,
+    description:
+      "Pentru proiecte care cer un design mai avansat, funcționalități extra și structură personalizată.",
     features: [
       "Design premium",
-      "Animații avansate",
       "Structură custom",
+      "Animații avansate",
       "Funcționalități extra",
       "Consultanță conținut",
       "Mentenanță inclusă",
     ],
+    cta: "Discută proiectul",
+    highlight: false,
   },
 ];
