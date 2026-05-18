@@ -21,7 +21,7 @@ function Services() {
               <div
                 key={service.title}
                 className={`group rounded-[2rem] border border-white/10 bg-white/[0.035] p-7 transition duration-300 hover:-translate-y-1 hover:bg-white/[0.07] ${
-                  index === 0 ? "lg:col-span-2" : ""
+                  service.wide ? "lg:col-span-2" : ""
                 }`}
               >
                 <div className="mb-10 flex items-center justify-between">

@@ -13,6 +13,8 @@ import CookieBanner from "../components/CookieBanner";
 import LegalModal from "../components/LegalModal";
 import ContactDrawer from "../components/ContactDrawer";
 import ThreeDotWaveBackground from "../components/ThreeDotWaveBackground";
+import BlogPreview from "../components/BlogPreview";
+import BlogCarousel from "../components/BlogCarousel";
 
 function Home() {
   const [legalModal, setLegalModal] = useState(null);
@@ -77,6 +79,7 @@ function Home() {
           <Services />
           <Portfolio onOverlayChange={setIsOverlayOpen} />
           <Process />
+          <BlogCarousel />
           <Pricing onSelectPlan={openContact} />
           <CTA onOpenContact={() => openContact("Standard")} />
         </main>

@@ -12,6 +12,7 @@ export const services = [
     icon: MonitorSmartphone,
     title: "Site de prezentare",
     text: "Website complet pentru afaceri locale, cabinete, servicii, restaurante sau firme care vor o imagine profesionistă.",
+    wide: true,
   },
   {
     icon: Layers,
@@ -38,4 +39,12 @@ export const services = [
     title: "Mentenanță lunară",
     text: "Actualizări de conținut, mici modificări, verificări și suport pentru funcționarea site-ului.",
   },
+
+  {
+    icon: Paintbrush,
+    title: "Pachet complet de lansare",
+    text: "Pregătim site-ul pentru publicare: verificări responsive, optimizare viteză, setări SEO de bază, conectare domeniu și testarea formularului.",
+    wide: true,
+  },
+
 ];

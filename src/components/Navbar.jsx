@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { siteConfig } from "../data/siteConfig";
+import { Link } from "react-router-dom";
 
 function Navbar({ onOpenContact }) {
   const [open, setOpen] = useState(false);
@@ -30,6 +31,18 @@ function Navbar({ onOpenContact }) {
           {links.map((link) => {
             const isContact =
               link.label.toLowerCase() === "contact" || link.href === "#contact";
+            
+            if (link.href.startsWith("/")) {
+              return (
+                <Link
+                  key={link.href}
+                  to={link.href}
+                  className="transition hover:text-white"
+                >
+                  {link.label}
+                </Link>
+              );
+            }
 
             if (isContact) {
               return (
