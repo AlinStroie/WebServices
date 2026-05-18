@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, ArrowRight, ArrowUpRight } from "lucide-react";
@@ -15,7 +15,7 @@ function useCarouselSizes() {
   const [sizes, setSizes] = useState({
     cardWidth: 390,
     spacing: 385,
-    height: 630,
+    height: 600,
   });
 
   useEffect(() => {
@@ -26,7 +26,7 @@ function useCarouselSizes() {
         setSizes({
           cardWidth: Math.min(width * 0.82, 330),
           spacing: width * 0.72,
-          height: 610,
+          height: 585,
         });
         return;
       }
@@ -35,7 +35,7 @@ function useCarouselSizes() {
         setSizes({
           cardWidth: 360,
           spacing: 330,
-          height: 620,
+          height: 595,
         });
         return;
       }
@@ -43,7 +43,7 @@ function useCarouselSizes() {
       setSizes({
         cardWidth: 390,
         spacing: 380,
-        height: 640,
+        height: 605,
       });
     }
 
@@ -138,8 +138,12 @@ function BlogCard({ post, active }) {
 }
 
 function BlogCarousel() {
+  const sectionRef = useRef(null);
+
   const [activeIndex, setActiveIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
+  const [pausedByHover, setPausedByHover] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
   const { cardWidth, spacing, height } = useCarouselSizes();
 
   const total = blogPosts.length;
@@ -175,7 +179,26 @@ function BlogCarousel() {
   }
 
   useEffect(() => {
-    if (paused) return;
+    const element = sectionRef.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInView(entry.isIntersecting);
+      },
+      {
+        threshold: 0.35,
+      }
+    );
+
+    observer.observe(element);
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isInView) return;
+    if (pausedByHover) return;
     if (isLast) return;
 
     const interval = setInterval(() => {
@@ -186,11 +209,11 @@ function BlogCarousel() {
     }, 5500);
 
     return () => clearInterval(interval);
-  }, [paused, isLast, total]);
+  }, [isInView, pausedByHover, isLast, total]);
 
   return (
     <AnimatedSection id="blog" className="px-5 py-16 md:py-20 lg:px-8">
-      <div className="mx-auto max-w-7xl">
+      <div ref={sectionRef} className="mx-auto max-w-7xl">
         <div className="mb-10 text-center md:mb-14">
           <p className="mb-4 text-sm font-medium uppercase tracking-[0.35em] text-white/35">
             Blog
@@ -209,8 +232,8 @@ function BlogCarousel() {
         <div
           className="relative mx-auto overflow-visible"
           style={{ height }}
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
+          onMouseEnter={() => setPausedByHover(true)}
+          onMouseLeave={() => setPausedByHover(false)}
         >
           <AnimatePresence initial={false}>
             {visiblePosts.map(({ post, distance, visible, active }) => {
@@ -247,7 +270,7 @@ function BlogCarousel() {
           </AnimatePresence>
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-center gap-6 md:mt-12">
+        <div className="mt-2 flex flex-col items-center justify-center gap-5 md:mt-3">
           <div className="flex items-center gap-4">
             <button
               type="button"
