@@ -61,77 +61,7 @@ function LazyOnView({ children, minHeight = 280, rootMargin = "520px 0px" }) {
   );
 }
 
-function useActiveHomeSection() {
-  const [activeSection, setActiveSection] = useState("#home");
 
-  useEffect(() => {
-    const sections = siteConfig.navigation
-      .map((item) => item.sectionHref || item.href)
-      .filter((href) => href.startsWith("#"))
-      .map((href) => document.querySelector(href))
-      .filter(Boolean);
-
-    if (!sections.length) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-
-        if (visible?.target?.id) {
-          setActiveSection(`#${visible.target.id}`);
-        }
-      },
-      {
-        rootMargin: "-28% 0px -58% 0px",
-        threshold: [0.1, 0.25, 0.5],
-      }
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
-  }, []);
-
-  return activeSection;
-}
-
-function HomeSectionNav() {
-  const activeSection = useActiveHomeSection();
-  const links = siteConfig.navigation.filter((link) =>
-    (link.sectionHref || link.href).startsWith("#")
-  );
-
-  return (
-    <div className="sticky top-[4.25rem] z-40 mx-auto hidden max-w-7xl px-5 md:block lg:px-8">
-      <nav
-        aria-label="Navigare rapidă pe homepage"
-        className="flex items-center justify-center"
-      >
-        <div className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-white/10 bg-black/55 p-1 text-sm text-white/60 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl">
-          {links.map((link) => {
-            const href = link.sectionHref || link.href;
-            const active = activeSection === href;
-
-            return (
-              <a
-                key={href}
-                href={href}
-                className={`whitespace-nowrap rounded-full px-4 py-2 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
-                  active
-                    ? "bg-white text-black"
-                    : "hover:bg-white/[0.08] hover:text-white"
-                }`}
-              >
-                {link.label}
-              </a>
-            );
-          })}
-        </div>
-      </nav>
-    </div>
-  );
-}
 
 function FloatingQuickActions({ onOpenContact, hidden }) {
   const [visible, setVisible] = useState(false);
@@ -281,7 +211,6 @@ function Home() {
 
         <main>
           <Hero onOpenContact={() => openContact("Standard")} />
-          <HomeSectionNav />
 
           <LazyOnView minHeight={300}>
             <Benefits />
@@ -339,17 +268,15 @@ function Home() {
           </Suspense>
         )}
 
-        {contactOpen && (
-          <Suspense fallback={null}>
-            <ContactDrawer
-              open={contactOpen}
-              onClose={closeContact}
-              selectedPlan={selectedPlan}
-              setSelectedPlan={setSelectedPlan}
-              onOpenPolicy={openLegalModal}
-            />
-          </Suspense>
-        )}
+        <Suspense fallback={null}>
+          <ContactDrawer
+            open={contactOpen}
+            onClose={closeContact}
+            selectedPlan={selectedPlan}
+            setSelectedPlan={setSelectedPlan}
+            onOpenPolicy={openLegalModal}
+          />
+        </Suspense>
       </div>
     </div>
   );
