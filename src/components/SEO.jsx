@@ -1,60 +1,137 @@
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
-function SEO({ title, description, type = "website", structuredData }) {
+import { siteConfig } from "../data/siteConfig";
+
+function getBaseUrl() {
+  if (siteConfig.siteUrl) return siteConfig.siteUrl.replace(/\/$/, "");
+  if (typeof window !== "undefined") return window.location.origin;
+  return "";
+}
+
+function upsertMeta(selector, createAttributes, valueAttribute, value) {
+  let element = document.querySelector(selector);
+
+  if (!element) {
+    element = document.createElement("meta");
+    Object.entries(createAttributes).forEach(([key, attributeValue]) => {
+      element.setAttribute(key, attributeValue);
+    });
+    document.head.appendChild(element);
+  }
+
+  element.setAttribute(valueAttribute, value || "");
+}
+
+function upsertLink(rel, href) {
+  let element = document.querySelector(`link[rel="${rel}"]`);
+
+  if (!element) {
+    element = document.createElement("link");
+    element.setAttribute("rel", rel);
+    document.head.appendChild(element);
+  }
+
+  element.setAttribute("href", href);
+}
+
+function SEO({
+  title,
+  description,
+  type = "website",
+  path,
+  image,
+  structuredData,
+}) {
+  const pageDescription = description || siteConfig.seo.description;
+
+  const fullTitle = useMemo(() => {
+    if (!title) return siteConfig.seo.defaultTitle;
+    return siteConfig.seo.titleTemplate.replace("%s", title);
+  }, [title]);
+
   useEffect(() => {
-    const fullTitle = title
-      ? `${title} | Web Services`
-      : "Web Services | Site-uri moderne de prezentare";
+    const baseUrl = getBaseUrl();
+    const currentPath =
+      path || `${window.location.pathname}${window.location.search}`;
+    const canonicalUrl = `${baseUrl}${currentPath === "/" ? "/" : currentPath}`;
+    const ogImage = image || siteConfig.seo.ogImage;
+    const absoluteImage = ogImage?.startsWith("http")
+      ? ogImage
+      : `${baseUrl}${ogImage || ""}`;
 
     document.title = fullTitle;
 
-    let metaDescription = document.querySelector('meta[name="description"]');
-
-    if (!metaDescription) {
-      metaDescription = document.createElement("meta");
-      metaDescription.setAttribute("name", "description");
-      document.head.appendChild(metaDescription);
-    }
-
-    metaDescription.setAttribute("content", description || "");
-
-    let ogTitle = document.querySelector('meta[property="og:title"]');
-    if (!ogTitle) {
-      ogTitle = document.createElement("meta");
-      ogTitle.setAttribute("property", "og:title");
-      document.head.appendChild(ogTitle);
-    }
-    ogTitle.setAttribute("content", fullTitle);
-
-    let ogDescription = document.querySelector(
-      'meta[property="og:description"]'
+    upsertMeta(
+      'meta[name="description"]',
+      { name: "description" },
+      "content",
+      pageDescription
     );
-    if (!ogDescription) {
-      ogDescription = document.createElement("meta");
-      ogDescription.setAttribute("property", "og:description");
-      document.head.appendChild(ogDescription);
-    }
-    ogDescription.setAttribute("content", description || "");
+    upsertMeta(
+      'meta[name="keywords"]',
+      { name: "keywords" },
+      "content",
+      siteConfig.seo.keywords
+    );
+    upsertMeta('meta[name="robots"]', { name: "robots" }, "content", "index, follow");
 
-    let ogType = document.querySelector('meta[property="og:type"]');
-    if (!ogType) {
-      ogType = document.createElement("meta");
-      ogType.setAttribute("property", "og:type");
-      document.head.appendChild(ogType);
-    }
-    ogType.setAttribute("content", type);
+    upsertMeta(
+      'meta[property="og:title"]',
+      { property: "og:title" },
+      "content",
+      fullTitle
+    );
+    upsertMeta(
+      'meta[property="og:description"]',
+      { property: "og:description" },
+      "content",
+      pageDescription
+    );
+    upsertMeta('meta[property="og:type"]', { property: "og:type" }, "content", type);
+    upsertMeta('meta[property="og:url"]', { property: "og:url" }, "content", canonicalUrl);
+    upsertMeta(
+      'meta[property="og:site_name"]',
+      { property: "og:site_name" },
+      "content",
+      siteConfig.brand.name
+    );
+    upsertMeta('meta[property="og:image"]', { property: "og:image" }, "content", absoluteImage);
 
-    const oldSchema = document.getElementById("structured-data");
-    if (oldSchema) oldSchema.remove();
+    upsertMeta(
+      'meta[name="twitter:card"]',
+      { name: "twitter:card" },
+      "content",
+      "summary_large_image"
+    );
+    upsertMeta('meta[name="twitter:title"]', { name: "twitter:title" }, "content", fullTitle);
+    upsertMeta(
+      'meta[name="twitter:description"]',
+      { name: "twitter:description" },
+      "content",
+      pageDescription
+    );
+    upsertMeta('meta[name="twitter:image"]', { name: "twitter:image" }, "content", absoluteImage);
 
-    if (structuredData) {
+    upsertLink("canonical", canonicalUrl);
+
+    document.querySelectorAll("script[data-seo-schema]").forEach((script) => {
+      script.remove();
+    });
+
+    const schemas = Array.isArray(structuredData)
+      ? structuredData
+      : structuredData
+        ? [structuredData]
+        : [];
+
+    schemas.forEach((schema, index) => {
       const script = document.createElement("script");
       script.type = "application/ld+json";
-      script.id = "structured-data";
-      script.textContent = JSON.stringify(structuredData);
+      script.dataset.seoSchema = String(index);
+      script.textContent = JSON.stringify(schema);
       document.head.appendChild(script);
-    }
-  }, [title, description, type, structuredData]);
+    });
+  }, [fullTitle, pageDescription, path, image, structuredData, type]);
 
   return null;
 }

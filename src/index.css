@@ -9,6 +9,7 @@
 
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 6rem;
 }
 
 body {
@@ -23,6 +24,11 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 0.9);
+  outline-offset: 3px;
 }
 
 ::selection {
@@ -45,6 +51,55 @@ body {
 
 .text-balance {
   text-wrap: balance;
+}
+
+.mobile-snap-row {
+  display: flex;
+  gap: 0.9rem;
+  margin-inline: -1.25rem;
+  overflow-x: auto;
+  padding-inline: 1.25rem;
+  padding-bottom: 0.35rem;
+  scroll-padding-inline: 1.25rem;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+}
+
+.mobile-snap-row::-webkit-scrollbar {
+  display: none;
+}
+
+.mobile-snap-card {
+  flex: 0 0 min(82vw, 21rem);
+  scroll-snap-align: center;
+}
+
+.mobile-snap-card-wide {
+  flex: 0 0 min(88vw, 24rem);
+  scroll-snap-align: center;
+}
+
+.mobile-line-clamp-3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.animate-hero-in {
+  animation: heroIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes heroIn {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .drawer-input {
@@ -113,4 +168,25 @@ body {
 
 .legal-scroll::-webkit-scrollbar-thumb:hover {
   background: rgb(255 255 255 / 0.28);
+}
+
+@media (max-width: 767px) {
+  .glass {
+    backdrop-filter: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+  }
 }

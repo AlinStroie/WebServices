@@ -1,3 +1,44 @@
+const sharedCaseStudy = {
+  goal: "Creșterea numărului de cereri printr-o prezentare clară a serviciilor.",
+  solution:
+    "Am pus accent pe hero clar, servicii explicate, beneficii vizibile și butoane de contact ușor de accesat.",
+  benefit:
+    "Vizitatorul înțelege rapid ce servicii există și poate cere detalii fără să caute informații prin pagină.",
+};
+
+const sharedDeliverables = [
+  "homepage structurată",
+  "secțiune servicii",
+  "formular de contact",
+  "buton WhatsApp",
+  "design responsive",
+  "SEO de bază",
+];
+
+const sharedHotspots = [
+  {
+    id: "hero",
+    title: "Hero orientat spre acțiune",
+    text: "Prima zonă explică serviciul principal și trimite utilizatorul spre contact.",
+    x: "25%",
+    y: "24%",
+  },
+  {
+    id: "services",
+    title: "Servicii ușor de comparat",
+    text: "Serviciile sunt grupate clar, astfel încât utilizatorul să aleagă rapid ce îl interesează.",
+    x: "38%",
+    y: "56%",
+  },
+  {
+    id: "cta",
+    title: "Contact rapid",
+    text: "CTA-ul rămâne vizibil și reduce pașii până la cererea de ofertă sau programare.",
+    x: "74%",
+    y: "34%",
+  },
+];
+
 export const portfolio = [
   {
     id: "kineto",
@@ -22,6 +63,9 @@ export const portfolio = [
       "Carduri pentru servicii de recuperare",
       "Layout responsive pentru mobil și desktop",
     ],
+    caseStudy: sharedCaseStudy,
+    deliverables: sharedDeliverables,
+    hotspots: sharedHotspots,
   },
   {
     id: "beauty",
@@ -46,6 +90,9 @@ export const portfolio = [
       "Galerie vizuală și carduri pentru servicii",
       "Layout premium pentru telefon și desktop",
     ],
+    caseStudy: sharedCaseStudy,
+    deliverables: sharedDeliverables,
+    hotspots: sharedHotspots,
   },
   {
     id: "transport",
@@ -70,6 +117,9 @@ export const portfolio = [
       "Formular pentru cereri rapide",
       "Design corporate responsive",
     ],
+    caseStudy: sharedCaseStudy,
+    deliverables: sharedDeliverables,
+    hotspots: sharedHotspots,
   },
   {
     id: "restaurant",
@@ -94,6 +144,9 @@ export const portfolio = [
       "Galerie foto pentru preparate",
       "Design responsive pentru mobil",
     ],
+    caseStudy: sharedCaseStudy,
+    deliverables: sharedDeliverables,
+    hotspots: sharedHotspots,
   },
   {
     id: "personal",
@@ -118,6 +171,9 @@ export const portfolio = [
       "Experiență și servicii",
       "Contact rapid pentru colaborări",
     ],
+    caseStudy: sharedCaseStudy,
+    deliverables: sharedDeliverables,
+    hotspots: sharedHotspots,
   },
   {
     id: "shop",
@@ -142,46 +198,8 @@ export const portfolio = [
       "Structură simplă pentru comandă",
       "Design responsive pentru cumpărători",
     ],
-
-    caseStudy: {
-  goal: "Creșterea numărului de programări printr-o prezentare clară a serviciilor.",
-  solution:
-    "Am pus accent pe hero clar, servicii explicate, beneficii vizibile și butoane de contact ușor de accesat.",
-  benefit:
-    "Vizitatorul înțelege rapid ce servicii există și poate cere o programare fără să caute informații prin pagină.",
-},
-
-deliverables: [
-  "homepage structurată",
-  "secțiune servicii",
-  "formular de contact",
-  "buton WhatsApp",
-  "design responsive",
-  "SEO de bază",
-],
-
-hotspots: [
-  {
-    id: "hero",
-    title: "Hero orientat spre acțiune",
-    text: "Prima zonă explică serviciul principal și trimite utilizatorul spre programare.",
-    x: "25%",
-    y: "24%",
-  },
-  {
-    id: "services",
-    title: "Servicii ușor de comparat",
-    text: "Serviciile sunt grupate clar, astfel încât utilizatorul să aleagă rapid ce îl interesează.",
-    x: "38%",
-    y: "56%",
-  },
-  {
-    id: "cta",
-    title: "Contact rapid",
-    text: "CTA-ul rămâne vizibil și reduce pașii până la cererea de ofertă sau programare.",
-    x: "74%",
-    y: "34%",
-  },
-]
+    caseStudy: sharedCaseStudy,
+    deliverables: sharedDeliverables,
+    hotspots: sharedHotspots,
   },
 ];

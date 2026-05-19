@@ -74,11 +74,11 @@ function BeautySiteMockup() {
 
           {/* dreapta */}
           <div className="relative flex min-h-[18rem] items-center justify-center">
-            {/* card imagine principală stilizată */}
+            {/* card imagine principala stilizata */}
             <div className="relative h-[17rem] w-[13rem] overflow-hidden rounded-[7rem_7rem_1.8rem_1.8rem] bg-[#ddd4ca] shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-b from-[#ede7dd] via-[#d9cfc5] to-[#c9b8a6]" />
 
-              {/* siluetă abstractă, nu imagine copiată */}
+              {/* silueta abstracta, nu imagine copiata */}
               <div className="absolute left-1/2 top-[18%] h-20 w-16 -translate-x-1/2 rounded-full bg-[#dfb18b]" />
               <div className="absolute left-[44%] top-[12%] h-28 w-16 -translate-x-1/2 rounded-full bg-gradient-to-r from-[#6e4a35] via-[#b7845d] to-[#e0b58a]" />
               <div className="absolute left-[57%] top-[35%] h-36 w-24 -translate-x-1/2 rounded-[3rem] bg-[#f6eee7]" />
@@ -89,7 +89,7 @@ function BeautySiteMockup() {
             {/* card booking */}
             <div className="absolute bottom-3 left-0 rounded-[1.3rem] border border-white/60 bg-white/75 p-3 shadow-xl backdrop-blur-md">
               <p className="text-[9px] font-semibold text-[#8a776d]">
-                Programări azi
+                Programari azi
               </p>
 
               <div className="mt-2 flex items-center gap-3">

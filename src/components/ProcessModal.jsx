@@ -27,11 +27,13 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
       }
 
       if (event.key === "ArrowRight" && !isLast) {
-        goNext();
+        setDirection(1);
+        setActiveIndex((prev) => Math.min(prev + 1, steps.length - 1));
       }
 
       if (event.key === "ArrowLeft" && !isFirst) {
-        goPrev();
+        setDirection(-1);
+        setActiveIndex((prev) => Math.max(prev - 1, 0));
       }
     }
 
@@ -42,7 +44,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
       document.removeEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "";
     };
-  }, [isOpen, activeIndex, isFirst, isLast]);
+  }, [isOpen, isFirst, isLast, onClose, setActiveIndex, steps.length]);
 
   function goNext() {
     if (isLast) return;
@@ -231,7 +233,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                       : "bg-white text-black hover:bg-white/90"
                     }`}
                 >
-                  Următorul
+                  Urmatorul
                   <ArrowRight size={16} />
                 </button>
               </div>

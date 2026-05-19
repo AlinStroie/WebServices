@@ -9,7 +9,7 @@ export const processSteps = [
     hoverPoints: ["obiectiv clar", "public țintă", "direcție vizuală"],
     details: {
       intro:
-        "Înainte de design sau cod, stabilim scopul real al site-ului: ce trebuie să comunice, cui se adresează și ce acțiune trebuie să facă vizitatorul.",
+        "Înainte de design sau dezvoltare, stabilim scopul real al site-ului: ce trebuie să comunice, cui se adresează și ce acțiune trebuie să facă vizitatorul.",
       points: [
         "analizăm tipul afacerii și serviciile oferite",
         "stabilim publicul țintă și nevoile lui",
@@ -67,21 +67,21 @@ export const processSteps = [
   },
   {
     number: "04",
-    title: "Dezvoltăm site-ul în React",
+    title: "Construim experiența finală",
     shortText:
-      "Transformăm designul în cod curat, responsive și ușor de modificat ulterior.",
-    tag: "Development",
+      "Transformăm designul într-un site responsive, rapid și ușor de actualizat ulterior.",
+    tag: "Implementare",
     previewType: "code",
-    hoverPoints: ["React", "Tailwind", "cod reutilizabil"],
+    hoverPoints: ["responsive", "performanță", "editare ușoară"],
     details: {
       intro:
-        "Site-ul este construit pe componente reutilizabile, astfel încât textele, secțiunile și informațiile importante să poată fi modificate rapid.",
+        "Site-ul este construit organizat, astfel încât textele, secțiunile și informațiile importante să poată fi modificate rapid.",
       points: [
-        "dezvoltăm interfața în React",
-        "folosim Tailwind pentru un design flexibil și rapid",
+        "dezvoltăm interfața finală",
         "separăm datele importante în fișiere ușor de editat",
         "optimizăm afișarea pentru toate dimensiunile de ecran",
         "adăugăm animații fine, fără să afectăm inutil performanța",
+        "pregătim structura pentru SEO de bază",
       ],
       result:
         "La final site-ul este funcțional, responsive și organizat corect, astfel încât să poată fi întreținut sau extins mai ușor.",
@@ -91,8 +91,8 @@ export const processSteps = [
     number: "05",
     title: "Testăm și pregătim publicarea",
     shortText:
-      "Verificăm site-ul înainte de lansare: afișare, butoane, formulare, viteză și experiență pe mobil.",
-    tag: "Launch",
+      "Verificăm site-ul înainte de lansare: afișare, butoane, formulare, viteză și experiența pe mobil.",
+    tag: "Lansare",
     previewType: "checklist",
     hoverPoints: ["test mobil", "verificări finale", "publicare"],
     details: {
@@ -114,7 +114,7 @@ export const processSteps = [
     title: "Oferim suport după livrare",
     shortText:
       "După publicare, site-ul poate fi ajustat, îmbunătățit sau extins în funcție de nevoile afacerii.",
-    tag: "Support",
+    tag: "Suport",
     previewType: "support",
     hoverPoints: ["modificări", "mentenanță", "îmbunătățiri"],
     details: {

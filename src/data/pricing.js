@@ -20,7 +20,7 @@ export const pricing = [
     eyebrow: "Cea mai bună alegere",
     price: "de la 600€",
     description:
-      "Ideal pentru un site complet, cu structură mai solidă, prezentare clară și mai multă flexibilitate.",
+      "Ideal pentru un site complet, cu structură solidă, prezentare clară și mai multă flexibilitate.",
     features: [
       "Design personalizat",
       "Până la 6 pagini",

@@ -152,38 +152,4 @@ export const blogPosts = [
       },
     ],
   },
-
-  // {
-  //   slug: "loremIUPSUM",
-  //   title: "LoremIpsum",
-  //   description:
-  //     "Ce înseamnă optimizarea SEO de bază și ce trebuie pregătit încă din etapa de construcție a site-ului.",
-  //   category: "SEO",
-  //   date: "2026-05-18",
-  //   readingTime: "5 min",
-  //   featured: false,
-  //   imageLabel: "SEO basics",
-  //   content: [
-  //     {
-  //       type: "paragraph",
-  //       text: "SEO de bază înseamnă să pregătești site-ul astfel încât motoarele de căutare să poată înțelege mai ușor conținutul. Nu garantează prima poziție în Google, dar creează o fundație sănătoasă.",
-  //     },
-  //     {
-  //       type: "heading",
-  //       text: "Ce include SEO de bază?",
-  //     },
-  //     {
-  //       type: "list",
-  //       items: [
-  //         "titluri clare pentru pagini;",
-  //         "meta description relevantă;",
-  //         "structură corectă H1, H2, H3;",
-  //         "texte scrise natural;",
-  //         "linkuri interne;",
-  //         "viteză bună;",
-  //         "afișare corectă pe mobil.",
-  //       ],
-  //     },
-  //   ],
-  // },
 ];

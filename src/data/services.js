@@ -39,12 +39,10 @@ export const services = [
     title: "Mentenanță lunară",
     text: "Actualizări de conținut, mici modificări, verificări și suport pentru funcționarea site-ului.",
   },
-
   {
     icon: Paintbrush,
     title: "Pachet complet de lansare",
     text: "Pregătim site-ul pentru publicare: verificări responsive, optimizare viteză, setări SEO de bază, conectare domeniu și testarea formularului.",
     wide: true,
   },
-
 ];

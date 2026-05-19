@@ -27,8 +27,10 @@ function hideInitialLoader() {
   });
 }
 
-if (document.readyState === "complete") {
-  hideInitialLoader();
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", hideInitialLoader, { once: true });
 } else {
-  window.addEventListener("load", hideInitialLoader);
+  hideInitialLoader();
 }
+
+window.setTimeout(hideInitialLoader, 900);

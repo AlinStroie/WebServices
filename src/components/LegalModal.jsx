@@ -1,5 +1,6 @@
 import { X, Check, Cookie, ShieldCheck, FileText, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useEffect } from "react";
 
 import { siteConfig } from "../data/siteConfig";
 import OverlayBackdrop from "./OverlayBackdrop";
@@ -28,10 +29,10 @@ function getLegalData(type) {
   return null;
 }
 
-function getModalIcon(type) {
-  if (type === "cookies" || type === "cookie") return Cookie;
-  if (type === "privacy" || type === "gdpr") return ShieldCheck;
-  return FileText;
+function ModalIcon({ type }) {
+  if (type === "cookies" || type === "cookie") return <Cookie size={22} />;
+  if (type === "privacy" || type === "gdpr") return <ShieldCheck size={22} />;
+  return <FileText size={22} />;
 }
 
 function normalizeSections(data) {
@@ -54,9 +55,24 @@ function normalizeSections(data) {
 
 function LegalModal({ type, onClose }) {
   const data = getLegalData(type);
-  const Icon = getModalIcon(type);
   const sections = data ? normalizeSections(data) : [];
   const highlights = Array.isArray(data?.highlights) ? data.highlights : [];
+
+  useEffect(() => {
+    if (!type || !data) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") onClose?.();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [data, onClose, type]);
 
   return (
     <AnimatePresence>
@@ -84,6 +100,9 @@ function LegalModal({ type, onClose }) {
               ease: [0.22, 1, 0.36, 1],
             }}
             className="relative flex max-h-[88vh] w-full max-w-5xl flex-col overflow-hidden rounded-[2rem] border border-white/10 bg-[#070707]/95 shadow-[0_32px_120px_rgba(0,0,0,0.75)] backdrop-blur-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="legal-modal-title"
           >
             <div className="pointer-events-none absolute inset-0 overflow-hidden">
               <div className="absolute -right-28 -top-28 h-80 w-80 rounded-full bg-white/[0.07] blur-[120px]" />
@@ -95,7 +114,7 @@ function LegalModal({ type, onClose }) {
               <div className="flex items-start justify-between gap-5">
                 <div className="flex gap-4">
                   <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl border border-white/10 bg-white text-black">
-                    <Icon size={22} />
+                    <ModalIcon type={type} />
                   </div>
 
                   <div>
@@ -103,7 +122,10 @@ function LegalModal({ type, onClose }) {
                       {data.eyebrow || "Document legal"}
                     </p>
 
-                    <h2 className="mt-3 max-w-2xl pr-8 text-3xl font-semibold tracking-[-0.045em] text-white md:text-5xl">
+                    <h2
+                      id="legal-modal-title"
+                      className="mt-3 max-w-2xl pr-8 text-3xl font-semibold tracking-[-0.045em] text-white md:text-5xl"
+                    >
                       {data.title || "Informații legale"}
                     </h2>
 

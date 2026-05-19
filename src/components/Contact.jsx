@@ -32,7 +32,7 @@ function Contact({ onOpenPolicy }) {
       <div className="mx-auto max-w-7xl">
         <SectionHeader
           eyebrow="Contact"
-          title="Spune-ne ce vrei să construim."
+          title="Spune-ne ce vrei sa construim."
           text="Completează formularul și revenim cu o propunere clară pentru site-ul tău."
         />
 
@@ -44,8 +44,8 @@ function Contact({ onOpenPolicy }) {
 
             <p className="mt-4 leading-7 text-white/50">
               Datele introduse în formular sunt folosite doar pentru a răspunde
-              solicitării tale. Nu le folosim pentru newsletter sau marketing
-              fără acord separat.
+              solicitarii tale. Nu le folosim pentru newsletter sau marketing
+              fara acord separat.
             </p>
 
             <div className="mt-8 space-y-5">
@@ -87,7 +87,7 @@ function Contact({ onOpenPolicy }) {
                   type="text"
                   name="name"
                   autoComplete="name"
-                  placeholder="Numele tău"
+                  placeholder="Numele tau"
                   className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 text-white outline-none transition placeholder:text-white/25 focus:border-white/30"
                 />
               </div>
@@ -134,7 +134,7 @@ function Contact({ onOpenPolicy }) {
 
               <span>
                 Sunt de acord ca datele introduse în formular să fie prelucrate
-                pentru a primi un răspuns la solicitarea mea. Am citit{" "}
+                pentru a primi un raspuns la solicitarea mea. Am citit{" "}
                 <button
                   type="button"
                   onClick={() => onOpenPolicy("privacy")}
@@ -164,7 +164,7 @@ function Contact({ onOpenPolicy }) {
 
             {sent && (
               <p className="mt-5 rounded-2xl border border-white/10 bg-white/[0.04] px-5 py-4 text-sm text-white/70">
-                Mesaj trimis local. Pentru trimitere reală, se poate conecta
+                Mesaj trimis local. Pentru trimitere reala, se poate conecta
                 ulterior EmailJS, Formspree sau un backend securizat.
               </p>
             )}

@@ -24,9 +24,9 @@ function useCarouselSizes() {
 
       if (width < 640) {
         setSizes({
-          cardWidth: Math.min(width * 0.82, 330),
-          spacing: width * 0.72,
-          height: 585,
+          cardWidth: Math.min(width * 0.86, 340),
+          spacing: width * 0.86,
+          height: 410,
         });
         return;
       }
@@ -60,13 +60,13 @@ function BlogCard({ post, active }) {
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className={`group block h-full overflow-hidden rounded-[2rem] border bg-[#101010] p-3 transition-colors duration-500 ${
+      className={`group block h-full overflow-hidden rounded-[1.55rem] border bg-[#101010] p-3 transition-colors duration-500 md:rounded-[2rem] ${
         active
-          ? "border-white/20 shadow-[0_35px_120px_rgba(255,255,255,0.10)]"
+          ? "border-white/20 shadow-[0_24px_90px_rgba(255,255,255,0.08)] md:shadow-[0_35px_120px_rgba(255,255,255,0.10)]"
           : "border-white/10"
       }`}
     >
-      <div className="relative h-60 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black">
+      <div className="relative h-32 overflow-hidden rounded-[1.2rem] border border-white/10 bg-black md:h-60 md:rounded-[1.5rem]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.18),transparent_28%),radial-gradient(circle_at_80%_80%,rgba(255,255,255,0.08),transparent_34%)]" />
 
         <div
@@ -75,54 +75,48 @@ function BlogCard({ post, active }) {
           }`}
         />
 
-        <div
-          className={`absolute -bottom-20 -left-20 h-52 w-52 rounded-full bg-white/[0.05] blur-3xl transition duration-700 ${
-            active ? "scale-125 opacity-100" : "scale-100 opacity-25"
-          }`}
-        />
-
-        <div className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/50 transition group-hover:bg-white group-hover:text-black">
-          <ArrowUpRight size={18} />
+        <div className="absolute right-4 top-4 flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/50 transition group-hover:bg-white group-hover:text-black md:right-5 md:top-5 md:h-10 md:w-10">
+          <ArrowUpRight size={17} className="md:h-[18px] md:w-[18px]" />
         </div>
 
-        <div className="absolute inset-x-6 bottom-6">
-          <p className="text-xs uppercase tracking-[0.35em] text-white/35">
+        <div className="absolute inset-x-5 bottom-5 md:inset-x-6 md:bottom-6">
+          <p className="text-[11px] uppercase tracking-[0.28em] text-white/40 md:text-xs md:tracking-[0.35em]">
             {post.category}
           </p>
 
-          <h3 className="mt-3 text-3xl font-semibold tracking-[-0.05em] text-white">
+          <h3 className="mt-2 text-xl font-semibold tracking-[-0.05em] text-white md:mt-3 md:text-3xl">
             {post.imageLabel}
           </h3>
         </div>
       </div>
 
-      <div className="flex min-h-[16rem] flex-col p-4">
+      <div className="flex min-h-[13rem] flex-col p-4 md:min-h-[16rem]">
         <div
-          className={`mb-4 flex items-center gap-3 text-sm transition-colors duration-500 ${
-            active ? "text-white/40" : "text-white/28"
+          className={`mb-3 flex items-center gap-3 text-xs transition-colors duration-500 md:mb-4 md:text-sm ${
+            active ? "text-white/45" : "text-white/30"
           }`}
         >
           <span>{post.date}</span>
-          <span>•</span>
+          <span aria-hidden="true">•</span>
           <span>{post.readingTime}</span>
         </div>
 
-        <h3 className="min-h-[4rem] text-2xl font-semibold tracking-[-0.04em] text-white">
+        <h3 className="min-h-[3.2rem] text-lg font-semibold leading-tight tracking-[-0.04em] text-white md:min-h-[4rem] md:text-2xl">
           {post.title}
         </h3>
 
         <p
-          className={`mt-4 min-h-[5.25rem] leading-7 transition-colors duration-500 ${
-            active ? "text-white/50" : "text-white/32"
+          className={`mt-3 mobile-line-clamp-3 min-h-[4.5rem] text-sm leading-6 transition-colors duration-500 md:mt-4 md:min-h-[5.25rem] md:text-base md:leading-7 ${
+            active ? "text-white/55" : "text-white/35"
           }`}
         >
           {post.description}
         </p>
 
-        <div className="mt-auto pt-6">
+        <div className="mt-auto pt-4 md:pt-6">
           <span
             className={`inline-flex items-center gap-2 text-sm font-medium transition-colors duration-500 group-hover:text-white ${
-              active ? "text-white/65" : "text-white/35"
+              active ? "text-white/70" : "text-white/40"
             }`}
           >
             Citește articolul
@@ -156,7 +150,6 @@ function BlogCarousel() {
 
       return {
         post,
-        index,
         distance,
         visible: Math.abs(distance) <= 1,
         active: distance === 0,
@@ -212,18 +205,18 @@ function BlogCarousel() {
   }, [isInView, pausedByHover, isLast, total]);
 
   return (
-    <AnimatedSection id="blog" className="px-5 py-16 md:py-20 lg:px-8">
+    <AnimatedSection id="blog" className="px-5 py-14 md:py-20 lg:px-8">
       <div ref={sectionRef} className="mx-auto max-w-7xl">
-        <div className="mb-10 text-center md:mb-14">
-          <p className="mb-4 text-sm font-medium uppercase tracking-[0.35em] text-white/35">
+        <div className="mb-8 text-center md:mb-14">
+          <p className="mb-3 text-sm font-medium uppercase tracking-[0.35em] text-white/40 md:mb-4">
             Blog
           </p>
 
-          <h2 className="mx-auto max-w-4xl text-4xl font-semibold tracking-[-0.05em] text-white md:text-6xl">
+          <h2 className="mx-auto max-w-4xl text-3xl font-semibold tracking-[-0.05em] text-white md:text-6xl">
             Resurse utile pentru afaceri online.
           </h2>
 
-          <p className="mx-auto mt-5 max-w-2xl text-lg leading-8 text-white/50">
+          <p className="mx-auto mt-4 max-w-2xl text-sm leading-6 text-white/58 md:mt-5 md:text-lg md:leading-8">
             Articole despre site-uri, SEO, design, landing page-uri și decizii
             mai bune înainte de a investi într-un website.
           </p>
@@ -249,8 +242,8 @@ function BlogCarousel() {
                   initial={false}
                   animate={{
                     x,
-                    scale: active ? 1 : 0.84,
-                    opacity: active ? 1 : 0.58,
+                    scale: active ? 1 : 0.86,
+                    opacity: active ? 1 : 0.52,
                     filter: "blur(0px)",
                     zIndex: active ? 10 : 5,
                   }}
@@ -258,7 +251,7 @@ function BlogCarousel() {
                 >
                   <motion.div
                     animate={{
-                      y: active ? 0 : 28,
+                      y: active ? 0 : 18,
                     }}
                     transition={smoothTransition}
                   >
@@ -270,7 +263,7 @@ function BlogCarousel() {
           </AnimatePresence>
         </div>
 
-        <div className="mt-2 flex flex-col items-center justify-center gap-5 md:mt-3">
+        <div className="mt-0 flex flex-col items-center justify-center gap-4 md:mt-3 md:gap-5">
           <div className="flex items-center gap-4">
             <button
               type="button"

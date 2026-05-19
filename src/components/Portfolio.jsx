@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -55,7 +55,7 @@ function getProjectCase(project) {
     solution:
       project.caseStudy?.solution ||
       project.solution ||
-      "Am structurat informația în secțiuni simple, cu mesaje clare, CTA-uri vizibile și design responsive.",
+      "Am structură pagini și secțiuni simple, cu mesaje clare, CTA-uri vizibile și design responsive.",
     benefit:
       project.caseStudy?.benefit ||
       project.benefit ||
@@ -113,7 +113,7 @@ function getProjectDeliverables(project) {
 
 function PortfolioCardPreview({ project }) {
   return (
-    <div className="relative h-64 overflow-hidden rounded-[1.7rem] border border-white/10 bg-black/50 p-3">
+    <div className="relative h-44 overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/50 p-3 md:h-64 md:rounded-[1.7rem]">
       <div
         className={`absolute inset-0 bg-gradient-to-br ${project.theme?.glowFrom || "from-white/20"
           } ${project.theme?.glowVia || "via-white/10"} to-transparent opacity-70`}
@@ -141,6 +141,50 @@ function PortfolioCardPreview({ project }) {
         <ArrowRight size={15} className="text-white/65" />
       </div>
     </div>
+  );
+}
+
+function PortfolioListCard({ project, onOpen, compact = false }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(project)}
+      aria-label={`Deschide studiul de caz ${project.title}`}
+      className={`group rounded-[1.55rem] border border-white/10 bg-white/[0.035] p-3 text-left transition-transform duration-300 will-change-transform hover:-translate-y-2 hover:bg-white/[0.05] md:rounded-[2rem] md:p-4 ${
+        compact ? "w-full" : ""
+      }`}
+    >
+      <PortfolioCardPreview project={project} />
+
+      <div className="p-3 md:p-4">
+        <div className="mb-3 flex items-center justify-between gap-4 md:mb-4">
+          <p className="text-xs text-white/45 md:text-sm">{project.category}</p>
+
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-white/45 transition group-hover:bg-white group-hover:text-black md:h-9 md:w-9">
+            <ArrowUpRight size={17} />
+          </span>
+        </div>
+
+        <h3 className="text-xl font-semibold tracking-[-0.03em] text-white md:text-2xl">
+          {project.title}
+        </h3>
+
+        <p className="mt-2 mobile-line-clamp-3 text-sm leading-6 text-white/55 md:mt-3 md:text-base md:leading-7">
+          {project.text}
+        </p>
+
+        <div className="mt-4 flex flex-wrap gap-2 md:mt-5">
+          {(project.features || []).slice(0, compact ? 2 : 3).map((feature) => (
+            <span
+              key={feature}
+              className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs text-white/50"
+            >
+              {feature}
+            </span>
+          ))}
+        </div>
+      </div>
+    </button>
   );
 }
 
@@ -320,6 +364,24 @@ function PortfolioProjectModal({
     [device]
   );
 
+  useEffect(() => {
+    if (!project) return undefined;
+
+    function handleKeyDown(event) {
+      if (event.key === "Escape") onClose?.();
+      if (event.key === "ArrowRight") onNext?.();
+      if (event.key === "ArrowLeft") onPrev?.();
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      document.body.style.overflow = "";
+    };
+  }, [onClose, onNext, onPrev, project]);
+
   if (!project) return null;
 
   const deliverables = getProjectDeliverables(project);
@@ -344,6 +406,9 @@ function PortfolioProjectModal({
           ease: [0.22, 1, 0.36, 1],
         }}
         className="relative max-h-[92vh] w-full max-w-7xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#080808] shadow-[0_24px_90px_rgba(0,0,0,0.65)]"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="portfolio-modal-title"
       >
         <div className="flex h-14 items-center justify-between border-b border-white/10 bg-white/[0.04] px-5">
           <div className="flex items-center gap-3">
@@ -394,7 +459,10 @@ function PortfolioProjectModal({
               {project.category}
             </p>
 
-            <h2 className="mt-5 text-4xl font-semibold tracking-[-0.055em] text-white md:text-5xl">
+            <h2
+              id="portfolio-modal-title"
+              className="mt-5 text-4xl font-semibold tracking-[-0.055em] text-white md:text-5xl"
+            >
               {project.title}
             </h2>
 
@@ -491,6 +559,11 @@ function PortfolioProjectModal({
 
 function Portfolio({ onOverlayChange, onOpenContact }) {
   const [selectedProject, setSelectedProject] = useState(null);
+  const [mobileIndex, setMobileIndex] = useState(0);
+
+  const mobileProject = portfolio[mobileIndex];
+  const isMobileFirst = mobileIndex === 0;
+  const isMobileLast = mobileIndex === portfolio.length - 1;
 
   function openProject(project) {
     setSelectedProject(project);
@@ -518,9 +591,17 @@ function Portfolio({ onOverlayChange, onOpenContact }) {
     setSelectedProject(portfolio[prevIndex]);
   }
 
+  function goNextMobileProject() {
+    setMobileIndex((prev) => Math.min(prev + 1, portfolio.length - 1));
+  }
+
+  function goPrevMobileProject() {
+    setMobileIndex((prev) => Math.max(prev - 1, 0));
+  }
+
   return (
     <>
-      <AnimatedSection id="portofoliu" className="px-5 py-24 lg:px-8">
+      <AnimatedSection id="portofoliu" className="px-5 py-14 md:py-24 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Portofoliu"
@@ -528,43 +609,57 @@ function Portfolio({ onOverlayChange, onOpenContact }) {
             text="Explorează proiectele ca studii de caz interactive: obiectiv, soluție, beneficii și zone importante din interfață."
           />
 
-          <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <div className="md:hidden">
+            <PortfolioListCard
+              project={mobileProject}
+              onOpen={openProject}
+              compact
+            />
+
+            <div className="mt-4 flex items-center justify-between gap-4">
+              <div className="text-sm text-white/45">
+                {mobileIndex + 1} / {portfolio.length}
+              </div>
+
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={goPrevMobileProject}
+                  disabled={isMobileFirst}
+                  aria-label="Proiect anterior"
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                    isMobileFirst
+                      ? "cursor-not-allowed border-white/5 bg-white/[0.02] text-white/20"
+                      : "border-white/10 bg-white/[0.04] text-white/70 hover:bg-white hover:text-black"
+                  }`}
+                >
+                  <ChevronLeft size={18} />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={goNextMobileProject}
+                  disabled={isMobileLast}
+                  aria-label="Proiect următor"
+                  className={`flex h-10 w-10 items-center justify-center rounded-full border transition ${
+                    isMobileLast
+                      ? "cursor-not-allowed border-white/5 bg-white/[0.02] text-white/20"
+                      : "border-white/10 bg-white/[0.04] text-white/70 hover:bg-white hover:text-black"
+                  }`}
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="hidden gap-5 md:grid md:grid-cols-2 lg:grid-cols-3">
             {portfolio.map((project) => (
-              <button
+              <PortfolioListCard
                 key={project.id}
-                type="button"
-                onClick={() => openProject(project)}
-                className="group rounded-[2rem] border border-white/10 bg-white/[0.035] p-4 text-left transition-transform duration-300 will-change-transform hover:-translate-y-2 hover:bg-white/[0.05]"
-              >
-                <PortfolioCardPreview project={project} />
-
-                <div className="p-4">
-                  <div className="mb-4 flex items-center justify-between gap-4">
-                    <p className="text-sm text-white/40">{project.category}</p>
-
-                    <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/45 transition group-hover:bg-white group-hover:text-black">
-                      <ArrowUpRight size={18} />
-                    </span>
-                  </div>
-
-                  <h3 className="text-2xl font-semibold tracking-[-0.03em] text-white">
-                    {project.title}
-                  </h3>
-
-                  <p className="mt-3 leading-7 text-white/50">{project.text}</p>
-
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {(project.features || []).slice(0, 3).map((feature) => (
-                      <span
-                        key={feature}
-                        className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs text-white/45"
-                      >
-                        {feature}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </button>
+                project={project}
+                onOpen={openProject}
+              />
             ))}
           </div>
         </div>

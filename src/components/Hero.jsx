@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import {
   ArrowRight,
   Check,
@@ -9,6 +8,8 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { siteConfig } from "../data/siteConfig";
+
 function Hero({ onOpenContact }) {
   return (
     <section
@@ -16,41 +17,32 @@ function Hero({ onOpenContact }) {
       className="relative overflow-hidden px-5 pb-16 pt-28 md:pb-20 md:pt-40 lg:px-8"
     >
       <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-8 h-[22rem] w-[22rem] -translate-x-1/2 rounded-full bg-white/[0.045] blur-[70px] md:h-[34rem] md:w-[34rem] md:blur-[140px]" />
+        <div className="absolute left-1/2 top-8 h-[22rem] w-[22rem] -translate-x-1/2 rounded-full bg-white/[0.04] blur-[54px] md:h-[34rem] md:w-[34rem] md:blur-[140px]" />
         <div className="absolute right-[-10rem] top-28 hidden h-[26rem] w-[26rem] rounded-full bg-white/[0.025] blur-[120px] md:block" />
         <div className="absolute left-[-10rem] bottom-0 hidden h-[24rem] w-[24rem] rounded-full bg-white/[0.02] blur-[110px] md:block" />
       </div>
 
       <div className="mx-auto grid max-w-7xl items-center gap-10 lg:grid-cols-[0.92fr_1.08fr] lg:gap-14">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.42,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-        >
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/55 backdrop-blur-md">
+        <div className="animate-hero-in">
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/65 md:backdrop-blur-md">
             <span className="h-2 w-2 rounded-full bg-white/70" />
-            Web design / prezență online
+            {siteConfig.hero.eyebrow}
           </div>
 
           <h1 className="max-w-4xl text-balance text-5xl font-semibold leading-[0.96] tracking-[-0.065em] text-white md:text-7xl lg:text-8xl">
-            Site-uri clare, rapide și bine structurate.
+            {siteConfig.hero.title}
           </h1>
 
-          <p className="mt-6 max-w-2xl text-base leading-7 text-white/55 md:mt-7 md:text-xl md:leading-8">
-            Construim website-uri de prezentare, landing page-uri și portofolii
-            pentru afaceri care vor să arate profesionist online, fără design
-            încărcat inutil.
+          <p className="mt-6 max-w-2xl text-base leading-7 text-white/60 md:mt-7 md:text-xl md:leading-8">
+            {siteConfig.hero.subtitle}
           </p>
 
           <div className="mt-8 flex flex-col gap-4 sm:flex-row md:mt-10">
             <a
               href="#portofoliu"
-              className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-7 py-4 font-semibold text-black transition hover:scale-[1.03] hover:bg-white/90"
+              className="group inline-flex items-center justify-center gap-3 rounded-full bg-white px-7 py-4 font-semibold text-black transition hover:scale-[1.03] hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              Vezi exemple
+              {siteConfig.hero.primaryButton}
               <span className="flex h-7 w-7 items-center justify-center rounded-full bg-black text-white transition group-hover:translate-x-1">
                 <ArrowRight size={16} />
               </span>
@@ -59,9 +51,9 @@ function Hero({ onOpenContact }) {
             <button
               type="button"
               onClick={onOpenContact}
-              className="group inline-flex items-center justify-center gap-3 rounded-full border border-white/12 bg-white/[0.035] px-7 py-4 font-semibold text-white transition hover:bg-white/[0.08]"
+              className="group inline-flex items-center justify-center gap-3 rounded-full border border-white/12 bg-white/[0.035] px-7 py-4 font-semibold text-white transition hover:bg-white/[0.08] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
             >
-              Cere recomandare
+              {siteConfig.hero.secondaryButton}
               <MousePointerClick size={18} className="text-white/60" />
             </button>
           </div>
@@ -71,18 +63,9 @@ function Hero({ onOpenContact }) {
             <SmallPoint icon={<Smartphone size={16} />} title="Responsive" />
             <SmallPoint icon={<Gauge size={16} />} title="SEO basic" />
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98, y: 14 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{
-            duration: 0.48,
-            delay: 0.04,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="relative"
-        >
+        <div className="relative animate-hero-in [animation-delay:80ms]">
           <div className="lg:hidden">
             <MobileHeroCard />
           </div>
@@ -90,7 +73,7 @@ function Hero({ onOpenContact }) {
           <div className="hidden lg:block">
             <DesktopHeroMockup />
           </div>
-        </motion.div>
+        </div>
       </div>
     </section>
   );
@@ -99,7 +82,7 @@ function Hero({ onOpenContact }) {
 function MobileHeroCard() {
   return (
     <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-[#0b0c10]/90 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.12),transparent_34%),radial-gradient(circle_at_100%_100%,rgba(255,255,255,0.08),transparent_34%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_0%,rgba(255,255,255,0.10),transparent_34%)]" />
 
       <div className="relative">
         <div className="mb-5 flex items-center justify-between">
@@ -109,7 +92,7 @@ function MobileHeroCard() {
             <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
           </div>
 
-          <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs text-white/50">
+          <span className="rounded-full border border-white/10 bg-white/[0.05] px-3 py-1 text-xs text-white/55">
             project preview
           </span>
         </div>
@@ -117,13 +100,13 @@ function MobileHeroCard() {
         <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-5">
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-xs uppercase tracking-[0.25em] text-white/35">
+              <p className="text-xs uppercase tracking-[0.25em] text-white/40">
                 Website nou
               </p>
 
-              <h3 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-white">
+              <h2 className="mt-4 text-2xl font-semibold leading-tight tracking-[-0.04em] text-white">
                 Structură simplă. Mesaj clar. Contact rapid.
-              </h3>
+              </h2>
             </div>
 
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-black">
@@ -177,9 +160,9 @@ function DesktopHeroMockup() {
                     Homepage overview
                   </p>
 
-                  <h3 className="mt-5 max-w-sm text-3xl font-semibold leading-[1.04] tracking-[-0.045em] text-[#eef3f8]">
+                  <h2 className="mt-5 max-w-sm text-3xl font-semibold leading-[1.04] tracking-[-0.045em] text-[#eef3f8]">
                     O structură clară pentru un site care se înțelege repede.
-                  </h3>
+                  </h2>
 
                   <div className="mt-5 space-y-2">
                     <div className="h-2.5 w-52 rounded-full bg-[#dbe5f3]/30" />
@@ -243,16 +226,7 @@ function DesktopHeroMockup() {
               </div>
 
               <div className="mt-5 h-2 overflow-hidden rounded-full bg-[#202632]">
-                <motion.div
-                  initial={{ width: "0%" }}
-                  animate={{ width: "94%" }}
-                  transition={{
-                    duration: 0.7,
-                    delay: 0.18,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                  className="h-full rounded-full bg-[#edf2f8]"
-                />
+                <div className="h-full w-[94%] rounded-full bg-[#edf2f8]" />
               </div>
             </div>
           </div>
@@ -264,7 +238,7 @@ function DesktopHeroMockup() {
 
 function SmallPoint({ icon, title }) {
   return (
-    <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-4 py-3 text-sm text-white/65 backdrop-blur-md">
+    <div className="flex items-center gap-3 rounded-full border border-white/10 bg-white/[0.035] px-4 py-3 text-sm text-white/70 md:backdrop-blur-md">
       <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white text-black">
         {icon}
       </span>
@@ -275,7 +249,7 @@ function SmallPoint({ icon, title }) {
 
 function MobileCheck({ text }) {
   return (
-    <div className="flex items-center gap-3 text-sm text-white/60">
+    <div className="flex items-center gap-3 text-sm text-white/65">
       <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/10 text-white">
         <Check size={13} />
       </span>
@@ -288,7 +262,7 @@ function MobileStat({ value, label }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-white/[0.035] p-4">
       <p className="text-lg font-semibold text-white">{value}</p>
-      <p className="mt-1 text-xs text-white/40">{label}</p>
+      <p className="mt-1 text-xs text-white/45">{label}</p>
     </div>
   );
 }

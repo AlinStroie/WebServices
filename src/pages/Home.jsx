@@ -1,23 +1,174 @@
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { ArrowUp, MessageCircle } from "lucide-react";
 
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
-import Benefits from "../components/Benefits";
-import Services from "../components/Services";
-import CTA from "../components/CTA";
-import Footer from "../components/Footer";
-import CookieBanner from "../components/CookieBanner";
-import LegalModal from "../components/LegalModal";
-import ContactDrawer from "../components/ContactDrawer";
-import ThreeDotWaveBackground from "../components/ThreeDotWaveBackground";
+import SEO from "../components/SEO";
+import { siteConfig } from "../data/siteConfig";
 
+const Benefits = lazy(() => import("../components/Benefits"));
+const Services = lazy(() => import("../components/Services"));
 const Portfolio = lazy(() => import("../components/Portfolio"));
 const Process = lazy(() => import("../components/Process"));
 const BlogCarousel = lazy(() => import("../components/BlogCarousel"));
 const Pricing = lazy(() => import("../components/Pricing"));
+const CTA = lazy(() => import("../components/CTA"));
+const Footer = lazy(() => import("../components/Footer"));
+const CookieBanner = lazy(() => import("../components/CookieBanner"));
+const LegalModal = lazy(() => import("../components/LegalModal"));
+const ContactDrawer = lazy(() => import("../components/ContactDrawer"));
+const ThreeDotWaveBackground = lazy(() =>
+  import("../components/ThreeDotWaveBackground")
+);
 
-function SectionLoader() {
-  return <div className="py-16" />;
+function SectionLoader({ minHeight = 280 }) {
+  return <div aria-hidden="true" style={{ minHeight }} />;
+}
+
+function LazyOnView({ children, minHeight = 280, rootMargin = "520px 0px" }) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    if (visible) return;
+    const element = ref.current;
+    if (!element) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin, threshold: 0.01 }
+    );
+
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [rootMargin, visible]);
+
+  return (
+    <div ref={ref}>
+      {visible ? (
+        <Suspense fallback={<SectionLoader minHeight={minHeight} />}>
+          {children}
+        </Suspense>
+      ) : (
+        <SectionLoader minHeight={minHeight} />
+      )}
+    </div>
+  );
+}
+
+function useActiveHomeSection() {
+  const [activeSection, setActiveSection] = useState("#home");
+
+  useEffect(() => {
+    const sections = siteConfig.navigation
+      .map((item) => item.sectionHref || item.href)
+      .filter((href) => href.startsWith("#"))
+      .map((href) => document.querySelector(href))
+      .filter(Boolean);
+
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+        if (visible?.target?.id) {
+          setActiveSection(`#${visible.target.id}`);
+        }
+      },
+      {
+        rootMargin: "-28% 0px -58% 0px",
+        threshold: [0.1, 0.25, 0.5],
+      }
+    );
+
+    sections.forEach((section) => observer.observe(section));
+    return () => observer.disconnect();
+  }, []);
+
+  return activeSection;
+}
+
+function HomeSectionNav() {
+  const activeSection = useActiveHomeSection();
+  const links = siteConfig.navigation.filter((link) =>
+    (link.sectionHref || link.href).startsWith("#")
+  );
+
+  return (
+    <div className="sticky top-[4.25rem] z-40 mx-auto hidden max-w-7xl px-5 md:block lg:px-8">
+      <nav
+        aria-label="Navigare rapidă pe homepage"
+        className="flex items-center justify-center"
+      >
+        <div className="inline-flex max-w-full gap-1 overflow-x-auto rounded-full border border-white/10 bg-black/55 p-1 text-sm text-white/60 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+          {links.map((link) => {
+            const href = link.sectionHref || link.href;
+            const active = activeSection === href;
+
+            return (
+              <a
+                key={href}
+                href={href}
+                className={`whitespace-nowrap rounded-full px-4 py-2 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white ${
+                  active
+                    ? "bg-white text-black"
+                    : "hover:bg-white/[0.08] hover:text-white"
+                }`}
+              >
+                {link.label}
+              </a>
+            );
+          })}
+        </div>
+      </nav>
+    </div>
+  );
+}
+
+function FloatingQuickActions({ onOpenContact, hidden }) {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    function handleScroll() {
+      setVisible(window.scrollY > 720);
+    }
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  if (hidden || !visible) return null;
+
+  return (
+    <div className="fixed bottom-4 right-4 z-[180] flex items-center gap-2 md:bottom-6 md:right-6">
+      <button
+        type="button"
+        onClick={onOpenContact}
+        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-semibold text-black shadow-[0_18px_70px_rgba(0,0,0,0.45)] transition hover:bg-white/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+      >
+        <MessageCircle size={16} />
+        Ofertă
+      </button>
+
+      <button
+        type="button"
+        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        aria-label="Înapoi sus"
+        className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/75 text-white shadow-[0_18px_70px_rgba(0,0,0,0.45)] transition hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+      >
+        <ArrowUp size={17} />
+      </button>
+    </div>
+  );
 }
 
 function Home() {
@@ -25,6 +176,59 @@ function Home() {
   const [contactOpen, setContactOpen] = useState(false);
   const [selectedPlan, setSelectedPlan] = useState("Standard");
   const [isOverlayOpen, setIsOverlayOpen] = useState(false);
+  const [cookieReady, setCookieReady] = useState(false);
+  const [showDesktopWave, setShowDesktopWave] = useState(false);
+
+  const structuredData = useMemo(
+    () => [
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: siteConfig.brand.name,
+        description: siteConfig.seo.description,
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        name: siteConfig.brand.name,
+        email: siteConfig.contact.email,
+        telephone: siteConfig.contact.phone,
+        address: {
+          "@type": "PostalAddress",
+          addressLocality: siteConfig.contact.location,
+        },
+        sameAs: Object.values(siteConfig.social).filter(Boolean),
+      },
+    ],
+    []
+  );
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => setCookieReady(true), 1400);
+    return () => window.clearTimeout(timer);
+  }, []);
+
+  useEffect(() => {
+    const canShowWave =
+      window.matchMedia("(min-width: 1024px)").matches &&
+      !window.matchMedia("(prefers-reduced-motion: reduce)").matches &&
+      !navigator.connection?.saveData;
+
+    if (!canShowWave) return;
+
+    const show = () => setShowDesktopWave(true);
+    const idleId = "requestIdleCallback" in window
+      ? window.requestIdleCallback(show, { timeout: 1600 })
+      : window.setTimeout(show, 900);
+
+    return () => {
+      if ("cancelIdleCallback" in window) {
+        window.cancelIdleCallback(idleId);
+      } else {
+        window.clearTimeout(idleId);
+      }
+    };
+  }, []);
 
   function openContact(plan = "Standard") {
     setSelectedPlan(plan);
@@ -52,27 +256,22 @@ function Home() {
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-black text-white">
-      {/* Fundal general: negru + glow-uri subtile */}
+      <SEO structuredData={structuredData} />
+
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
         <div className="absolute inset-0 bg-[#030303]" />
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_34%),radial-gradient(circle_at_20%_75%,rgba(255,255,255,0.025),transparent_30%),radial-gradient(circle_at_85%_35%,rgba(255,255,255,0.035),transparent_32%)]" />
-
-        <div className="absolute -left-40 top-20 h-[28rem] w-[28rem] rounded-full bg-white/[0.025] blur-[70px] md:blur-[120px]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.055),transparent_34%),radial-gradient(circle_at_20%_75%,rgba(255,255,255,0.022),transparent_30%)]" />
+        <div className="absolute -left-40 top-20 h-[24rem] w-[24rem] rounded-full bg-white/[0.022] blur-[54px] md:h-[28rem] md:w-[28rem] md:blur-[120px]" />
         <div className="absolute right-[-10rem] top-40 hidden h-[30rem] w-[30rem] rounded-full bg-slate-300/[0.03] blur-[130px] md:block" />
         <div className="absolute bottom-[-12rem] left-1/3 hidden h-[34rem] w-[34rem] rounded-full bg-white/[0.02] blur-[140px] md:block" />
-
-        <div className="absolute left-[-10%] top-[20%] h-[18rem] w-[120%] rotate-[-8deg] rounded-[100%] bg-white/[0.014] blur-[60px] md:blur-[80px]" />
-        <div className="absolute left-[-10%] top-[48%] hidden h-[16rem] w-[120%] rotate-[7deg] rounded-[100%] bg-white/[0.01] blur-[90px] md:block" />
-        <div className="absolute left-[-10%] top-[72%] hidden h-[15rem] w-[120%] rotate-[-5deg] rounded-[100%] bg-white/[0.008] blur-[95px] md:block" />
-
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.25)_68%,rgba(0,0,0,0.84)_100%)]" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.22)_68%,rgba(0,0,0,0.84)_100%)]" />
       </div>
 
-      {/* Fundal animat doar pe desktop */}
-      <div className="hidden lg:block">
-        <ThreeDotWaveBackground paused={isOverlayOpen} />
-      </div>
+      {showDesktopWave && (
+        <Suspense fallback={null}>
+          <ThreeDotWaveBackground paused={isOverlayOpen} />
+        </Suspense>
+      )}
 
       <div className="relative z-10">
         <Navbar
@@ -82,49 +281,75 @@ function Home() {
 
         <main>
           <Hero onOpenContact={() => openContact("Standard")} />
+          <HomeSectionNav />
 
-          <Benefits />
+          <LazyOnView minHeight={300}>
+            <Benefits />
+          </LazyOnView>
 
-          <Services />
+          <LazyOnView minHeight={340}>
+            <Services />
+          </LazyOnView>
 
-          <Suspense fallback={<SectionLoader />}>
+          <LazyOnView minHeight={460}>
             <Portfolio
               onOverlayChange={setIsOverlayOpen}
               onOpenContact={openContact}
             />
-          </Suspense>
+          </LazyOnView>
 
-          <Suspense fallback={<SectionLoader />}>
+          <LazyOnView minHeight={440}>
             <Process />
-          </Suspense>
+          </LazyOnView>
 
-          <Suspense fallback={<SectionLoader />}>
+          <LazyOnView minHeight={500}>
             <BlogCarousel />
-          </Suspense>
+          </LazyOnView>
 
-          <Suspense fallback={<SectionLoader />}>
+          <LazyOnView minHeight={520}>
             <Pricing onSelectPlan={openContact} />
-          </Suspense>
+          </LazyOnView>
 
-          <CTA onOpenContact={() => openContact("Standard")} />
+          <LazyOnView minHeight={360}>
+            <CTA onOpenContact={() => openContact("Standard")} />
+          </LazyOnView>
         </main>
 
-        <Footer
+        <LazyOnView minHeight={360} rootMargin="320px 0px">
+          <Footer
+            onOpenContact={() => openContact("Standard")}
+            onOpenPolicy={openLegalModal}
+          />
+        </LazyOnView>
+
+        <FloatingQuickActions
+          hidden={isOverlayOpen}
           onOpenContact={() => openContact("Standard")}
-          onOpenPolicy={openLegalModal}
         />
 
-        <CookieBanner onOpenPolicy={openLegalModal} />
+        {cookieReady && (
+          <Suspense fallback={null}>
+            <CookieBanner onOpenPolicy={openLegalModal} />
+          </Suspense>
+        )}
 
-        <LegalModal type={legalModal} onClose={closeLegalModal} />
+        {legalModal && (
+          <Suspense fallback={null}>
+            <LegalModal type={legalModal} onClose={closeLegalModal} />
+          </Suspense>
+        )}
 
-        <ContactDrawer
-          open={contactOpen}
-          onClose={closeContact}
-          selectedPlan={selectedPlan}
-          setSelectedPlan={setSelectedPlan}
-          onOpenPolicy={openLegalModal}
-        />
+        {contactOpen && (
+          <Suspense fallback={null}>
+            <ContactDrawer
+              open={contactOpen}
+              onClose={closeContact}
+              selectedPlan={selectedPlan}
+              setSelectedPlan={setSelectedPlan}
+              onOpenPolicy={openLegalModal}
+            />
+          </Suspense>
+        )}
       </div>
     </div>
   );

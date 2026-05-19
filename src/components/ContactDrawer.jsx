@@ -60,8 +60,6 @@ function ContactDrawer({
 
   useEffect(() => {
     if (open) {
-      setSuccess(false);
-      setErrors({});
       document.body.style.overflow = "hidden";
     }
 
@@ -108,11 +106,11 @@ function ContactDrawer({
     }
 
     if (!emailRegex.test(formData.email.trim())) {
-      nextErrors.email = "Introdu o adresă de email validă.";
+      nextErrors.email = "Introdu o adresa de email valida.";
     }
 
     if (phoneDigitsOnly.length < 10) {
-      nextErrors.phone = "Numărul trebuie să aibă minimum 10 cifre.";
+      nextErrors.phone = "Numarul trebuie sa aiba minimum 10 cifre.";
     }
 
     if (!formData.message.trim()) {
@@ -165,8 +163,11 @@ function ContactDrawer({
             exit={{ x: "100%" }}
             transition={drawerTransition}
             className="absolute right-0 top-0 z-20 flex h-full w-full max-w-2xl flex-col border-l border-white/10 bg-[#050505]/95 shadow-[0_0_130px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="contact-drawer-title"
           >
-            {/* Buton exterior, iese odată cu drawerul */}
+            {/* Buton exterior, iese odata cu drawerul */}
             <motion.button
               type="button"
               onClick={onClose}
@@ -196,7 +197,10 @@ function ContactDrawer({
             {/* Header compact */}
             <div className="relative border-b border-white/10 px-6 py-5 md:px-8">
               <div className="flex items-center justify-between gap-5">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] px-3 py-1.5 text-xs text-white/45">
+                <div
+                  id="contact-drawer-title"
+                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.045] px-3 py-1.5 text-xs text-white/45"
+                >
                   <Sparkles size={14} />
                   Cerere ofertă website
                 </div>
@@ -258,7 +262,7 @@ function ContactDrawer({
                         {plan === "Basic" &&
                           "Pentru un site simplu, clar și rapid."}
                         {plan === "Standard" &&
-                          "Pentru un website complet, cu structură solidă."}
+                          "Pentru un website complet, cu structura solida."}
                         {plan === "Premium" &&
                           "Pentru proiecte personalizate și funcții extra."}
                       </span>
@@ -269,9 +273,9 @@ function ContactDrawer({
 
               <div className="mb-6 grid gap-4 md:grid-cols-3">
                 {[
-                  "Discutăm obiectivul",
+                  "Discutam obiectivul",
                   "Stabilim structura",
-                  "Pregătim oferta",
+                  "Pregatim oferta",
                 ].map((item) => (
                   <div
                     key={item}
@@ -296,10 +300,10 @@ function ContactDrawer({
                 >
                   <CheckCircle2 className="mt-0.5" size={20} />
                   <div>
-                    <p className="font-semibold">Cererea a fost pregătită.</p>
+                    <p className="font-semibold">Cererea a fost pregatita.</p>
                     <p className="mt-1 text-sm leading-6 text-emerald-100/70">
                       Momentan formularul afișează confirmare locală. Pentru
-                      trimitere reală, trebuie conectat la email/backend.
+                      trimitere reala, trebuie conectat la email/backend.
                     </p>
                   </div>
                 </motion.div>
@@ -313,12 +317,14 @@ function ContactDrawer({
                     error={errors.name}
                   >
                     <input
+                      type="text"
+                      autoComplete="name"
                       value={formData.name}
                       onChange={(event) =>
                         updateField("name", event.target.value)
                       }
                       className="drawer-input"
-                      placeholder="Numele tău"
+                      placeholder="Numele tau"
                     />
                   </FieldWrapper>
 
@@ -328,6 +334,8 @@ function ContactDrawer({
                     error={errors.phone}
                   >
                     <input
+                      type="tel"
+                      autoComplete="tel"
                       value={formData.phone}
                       onChange={(event) =>
                         updateField("phone", event.target.value)
@@ -345,6 +353,8 @@ function ContactDrawer({
                     error={errors.email}
                   >
                     <input
+                      type="email"
+                      autoComplete="email"
                       value={formData.email}
                       onChange={(event) =>
                         updateField("email", event.target.value)
@@ -444,7 +454,7 @@ function ContactDrawer({
                   <Phone size={18} className="text-white/60" />
                   <p className="mt-3 text-sm text-white/35">Telefon</p>
                   <p className="mt-1 text-sm font-medium text-white">
-                    Sună direct
+                    Suna direct
                   </p>
                 </a>
               </div>
