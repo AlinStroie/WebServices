@@ -162,19 +162,19 @@ function ContactDrawer({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={drawerTransition}
-            className="absolute right-0 top-0 z-20 h-full w-full max-w-2xl overflow-visible"
+            className="absolute right-0 top-0 z-20 h-full w-full max-w-2xl overflow-hidden lg:overflow-visible"
           >
             <motion.button
               type="button"
               onClick={onClose}
               aria-label="Închide formularul"
               className="absolute left-[-3.9rem] top-1/2 z-0 hidden h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full border border-white/15 bg-white text-black shadow-[0_18px_70px_rgba(0,0,0,0.65)] transition hover:scale-105 hover:bg-white/90 lg:flex"
-              initial={{ opacity: 0, x: 52, scale: 0.94 }}
+              initial={{ opacity: 0, x: 100, scale: 0.94 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: 52, scale: 0.94 }}
               transition={{
-                duration: 0.42,
-                delay: 0.16,
+                duration: 0.32,
+                delay: 0,
                 ease: [0.22, 1, 0.36, 1],
               }}
             >
@@ -182,7 +182,7 @@ function ContactDrawer({
             </motion.button>
 
             <aside
-              className="relative z-10 flex h-full w-full flex-col border-l border-white/10 bg-[#050505]/95 shadow-[0_0_130px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
+              className="relative z-10 flex h-full w-full flex-col border-l border-white/10 bg-[#050505]/95 shadow-[0_0_130px_rgba(0,0,0,0.9)] backdrop-blur-2xl lg:shadow-[0_0_130px_rgba(0,0,0,0.9)]"
               role="dialog"
               aria-modal="true"
               aria-labelledby="contact-drawer-title"
