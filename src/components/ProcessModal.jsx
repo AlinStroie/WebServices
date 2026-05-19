@@ -17,6 +17,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
 
   const isFirst = activeIndex === 0;
   const isLast = activeIndex === steps.length - 1;
+  const modalPoints = step?.details?.points?.slice(0, 3) || [];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -69,7 +70,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
     <AnimatePresence>
       {isOpen && step && (
         <motion.div
-          className="fixed inset-0 z-[260] flex items-center justify-center px-5"
+          className="fixed inset-0 z-[260] flex items-center justify-center px-3 py-3 sm:px-5"
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 1 }}
@@ -82,7 +83,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
           />
 
           <motion.div
-            className="relative z-10 w-full max-w-5xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#080808]/95 shadow-[0_30px_120px_rgba(0,0,0,0.65)] backdrop-blur-2xl"
+            className="relative z-10 flex max-h-[calc(100dvh-1.5rem)] w-full max-w-5xl flex-col overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#080808]/95 shadow-[0_30px_120px_rgba(0,0,0,0.65)] backdrop-blur-2xl md:max-h-[92vh] md:rounded-[2rem]"
             initial={{ opacity: 0, scale: 0.96, y: 18 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 18 }}
@@ -92,8 +93,9 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
             }}
             role="dialog"
             aria-modal="true"
+            aria-labelledby="process-modal-title"
           >
-            <div className="flex items-center justify-between border-b border-white/10 px-5 py-4">
+            <div className="flex shrink-0 items-center justify-between border-b border-white/10 px-4 py-3 md:px-5 md:py-4">
               <div className="flex items-center gap-3">
                 <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/40">
                   Proces
@@ -107,14 +109,14 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="group rounded-full border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white hover:text-black"
-                aria-label="Închide"
+                className="group flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/75 transition hover:bg-white hover:text-black md:h-10 md:w-10"
+                aria-label="Închide modalul de proces"
               >
-                <X size={20} className="transition group-hover:rotate-90" />
+                <X size={22} className="transition group-hover:rotate-90" />
               </button>
             </div>
 
-            <div className="relative min-h-[31rem] overflow-hidden">
+            <div className="relative flex-1 overflow-hidden">
               <AnimatePresence mode="wait" custom={direction}>
                 <motion.div
                   key={step.number}
@@ -123,7 +125,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: direction > 0 ? -80 : 80 }}
                   transition={slideTransition}
-                  className="grid gap-0 lg:grid-cols-[0.95fr_1.05fr]"
+                  className="grid h-full gap-0 lg:grid-cols-[0.95fr_1.05fr]"
                 >
                   <div className="relative hidden min-h-[31rem] border-r border-white/10 bg-white/[0.025] p-7 lg:block">
                     <ProcessModalVisual type={step.previewType} />
@@ -139,14 +141,17 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                     </div>
                   </div>
 
-                  <div className="p-6 md:p-8">
-                    <div className="mb-7 flex items-start justify-between gap-5">
+                  <div className="p-4 md:p-8">
+                    <div className="mb-4 flex items-start justify-between gap-5 md:mb-7">
                       <div>
                         <p className="text-sm uppercase tracking-[0.3em] text-white/35">
                           {step.tag}
                         </p>
 
-                        <h2 className="mt-4 max-w-xl text-3xl font-semibold tracking-[-0.05em] text-white md:text-5xl">
+                        <h2
+                          id="process-modal-title"
+                          className="mt-3 max-w-xl text-2xl font-semibold tracking-[-0.04em] text-white md:mt-4 md:text-5xl md:tracking-[-0.05em]"
+                        >
                           {step.title}
                         </h2>
                       </div>
@@ -156,23 +161,23 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                       </span>
                     </div>
 
-                    <p className="max-w-2xl text-base leading-8 text-white/55 md:text-lg">
+                    <p className="mobile-line-clamp-3 max-w-2xl text-sm leading-6 text-white/60 md:text-lg md:leading-8">
                       {step.details.intro}
                     </p>
 
-                    <div className="mt-7 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5">
-                      <p className="text-xs uppercase tracking-[0.28em] text-white/30">
+                    <div className="mt-4 rounded-[1.2rem] border border-white/10 bg-white/[0.035] p-4 md:mt-7 md:rounded-[1.5rem] md:p-5">
+                      <p className="text-xs uppercase tracking-[0.22em] text-white/35 md:tracking-[0.28em]">
                         Ce se întâmplă în etapa asta
                       </p>
 
-                      <div className="mt-5 grid gap-3">
-                        {step.details.points.slice(0, 4).map((point) => (
+                      <div className="mt-4 grid gap-3 md:mt-5">
+                        {modalPoints.map((point) => (
                           <div key={point} className="flex items-start gap-3">
                             <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-white/[0.07] text-white/70">
                               <Check size={13} />
                             </span>
 
-                            <span className="text-sm leading-6 text-white/58">
+                            <span className="text-sm leading-6 text-white/65">
                               {point}
                             </span>
                           </div>
@@ -180,7 +185,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                       </div>
                     </div>
 
-                    <div className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/[0.025] p-5 lg:hidden">
+                    <div className="mt-4 hidden rounded-[1.5rem] border border-white/10 bg-white/[0.025] p-5 sm:block lg:hidden">
                       <p className="text-xs uppercase tracking-[0.28em] text-white/30">
                         Rezultat
                       </p>
@@ -194,7 +199,7 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
               </AnimatePresence>
             </div>
 
-            <div className="flex flex-col gap-4 border-t border-white/10 px-5 py-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex shrink-0 flex-col gap-3 border-t border-white/10 px-4 py-3 md:flex-row md:items-center md:justify-between md:px-5 md:py-4">
               <div className="flex items-center justify-center gap-2 md:justify-start">
                 {steps.map((item, index) => (
                   <button
@@ -210,12 +215,13 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                 ))}
               </div>
 
-              <div className="flex items-center justify-center gap-3 md:justify-end">
+              <div className="grid grid-cols-2 gap-3 md:flex md:items-center md:justify-end">
                 <button
                   type="button"
                   onClick={goPrev}
                   disabled={isFirst}
-                  className={`inline-flex items-center gap-2 rounded-full border px-5 py-3 text-sm font-semibold transition ${isFirst
+                  aria-label="Pasul anterior"
+                  className={`inline-flex items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold transition md:px-5 ${isFirst
                       ? "cursor-not-allowed border-white/5 bg-white/[0.02] text-white/20"
                       : "border-white/10 bg-white/[0.04] text-white/70 hover:bg-white hover:text-black"
                     }`}
@@ -228,12 +234,13 @@ function ProcessModal({ steps, activeIndex, setActiveIndex, onClose }) {
                   type="button"
                   onClick={goNext}
                   disabled={isLast}
-                  className={`inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-semibold transition ${isLast
+                  aria-label="Pasul următor"
+                  className={`inline-flex items-center justify-center gap-2 rounded-full border px-4 py-3 text-sm font-semibold transition md:px-5 ${isLast
                       ? "cursor-not-allowed border-white/5 bg-white/[0.02] text-white/20"
                       : "bg-white text-black hover:bg-white/90"
                     }`}
                 >
-                  Urmatorul
+                  Următorul
                   <ArrowRight size={16} />
                 </button>
               </div>

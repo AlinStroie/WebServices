@@ -24,10 +24,11 @@ function getPostReadingTime(post) {
 
 function BlogFloatingNav() {
   return (
-    <div className="fixed bottom-5 left-1/2 z-[120] flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-[#080808]/80 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl md:left-5 md:translate-x-0">
+    <div className="fixed bottom-4 left-4 z-[120] flex items-center gap-2 rounded-full border border-white/10 bg-[#080808]/80 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl md:bottom-5 md:left-5">
       <Link
         to="/blog"
-        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+        aria-label="Mergi la blog"
+        className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/90 md:px-4"
       >
         <Layers size={16} />
         Blog
@@ -35,7 +36,8 @@ function BlogFloatingNav() {
 
       <Link
         to="/"
-        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm font-semibold text-white/70 transition hover:bg-white hover:text-black"
+        aria-label="Mergi pe site"
+        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/70 transition hover:bg-white hover:text-black md:px-4"
       >
         <Home size={16} />
         Site
@@ -88,7 +90,7 @@ function Blog() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050505] pb-28 text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] pb-24 text-white md:pb-28">
       <SEO
         title="Blog"
         description="Articole despre site-uri de prezentare, landing page-uri, SEO de bază și design web modern."
@@ -106,27 +108,27 @@ function Blog() {
 
       <BlogFloatingNav />
 
-      <main className="relative z-10 px-5 py-16 lg:px-8">
+      <main className="relative z-10 px-4 py-8 md:px-5 md:py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <section className="grid gap-10 pb-14 pt-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
+          <section className="grid gap-6 pb-8 pt-4 md:gap-10 md:pb-14 md:pt-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-end">
             <div>
-              <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/55 md:backdrop-blur-xl">
+              <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3 py-2 text-xs text-white/55 md:mb-6 md:px-4 md:text-sm md:backdrop-blur-xl">
                 <BookOpen size={16} />
                 Resurse pentru website-uri mai bune
               </div>
 
-              <h1 className="max-w-5xl text-5xl font-semibold leading-[0.95] tracking-[-0.065em] text-white md:text-7xl">
+              <h1 className="max-w-5xl text-3xl font-semibold leading-[1.02] tracking-[-0.045em] text-white md:text-7xl md:leading-[0.95] md:tracking-[-0.065em]">
                 Idei practice despre site-uri, structură și prezență online.
               </h1>
 
-              <p className="mt-7 max-w-2xl text-lg leading-8 text-white/60">
+              <p className="mt-4 max-w-2xl text-base leading-7 text-white/60 md:mt-7 md:text-lg md:leading-8">
                 Articole scurte, clare și aplicabile pentru afaceri care vor să
                 înțeleagă ce contează înainte să investească într-un website.
               </p>
             </div>
 
-            <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-4 shadow-[0_24px_90px_rgba(0,0,0,0.45)] md:backdrop-blur-xl">
-              <label className="flex items-center gap-3 rounded-[1.5rem] border border-white/10 bg-black/30 px-4 py-4">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-3 shadow-[0_24px_90px_rgba(0,0,0,0.45)] md:rounded-[2rem] md:p-4 md:backdrop-blur-xl">
+              <label className="flex items-center gap-3 rounded-[1.2rem] border border-white/10 bg-black/30 px-4 py-3 md:rounded-[1.5rem] md:py-4">
                 <Search size={19} className="text-white/40" />
 
                 <span className="sr-only">Caută articole</span>
@@ -139,7 +141,7 @@ function Blog() {
                 />
               </label>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-3">
+              <div className="mt-4 hidden gap-3 sm:grid sm:grid-cols-3">
                 <BlogStat value={blogPosts.length} label="articole" />
                 <BlogStat value="5 min" label="citire medie" />
                 <BlogStat value="SEO" label="conținut util" />
@@ -151,9 +153,9 @@ function Blog() {
             <section>
               <Link
                 to={`/blog/${featuredPost.slug}`}
-                className="group grid overflow-hidden rounded-[2.2rem] border border-white/10 bg-white/[0.045] text-white shadow-[0_30px_120px_rgba(0,0,0,0.55)] transition duration-300 hover:-translate-y-1 hover:bg-white/[0.065] md:rounded-[2.6rem] md:backdrop-blur-xl lg:grid-cols-[0.92fr_1.08fr]"
+                className="group grid overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.045] text-white shadow-[0_30px_120px_rgba(0,0,0,0.55)] transition duration-300 hover:-translate-y-1 hover:bg-white/[0.065] md:rounded-[2.6rem] md:backdrop-blur-xl lg:grid-cols-[0.92fr_1.08fr]"
               >
-                <div className="relative min-h-[22rem] overflow-hidden p-8 md:min-h-[25rem] md:p-10">
+                <div className="relative min-h-[14rem] overflow-hidden p-5 md:min-h-[25rem] md:p-10">
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_24%_22%,rgba(255,255,255,0.18),transparent_28%),radial-gradient(circle_at_82%_74%,rgba(185,170,145,0.14),transparent_34%)]" />
 
                   <div className="relative flex h-full flex-col justify-between">
@@ -162,12 +164,12 @@ function Blog() {
                         Articol recomandat
                       </p>
 
-                      <h2 className="mt-5 max-w-xl text-4xl font-semibold leading-[1] tracking-[-0.055em] md:text-6xl">
+                      <h2 className="mt-4 max-w-xl text-3xl font-semibold leading-[1.02] tracking-[-0.045em] md:mt-5 md:text-6xl md:leading-[1] md:tracking-[-0.055em]">
                         {featuredPost.shortTitle || featuredPost.title}
                       </h2>
                     </div>
 
-                    <div className="mt-10 flex flex-wrap gap-3">
+                    <div className="mt-6 flex flex-wrap gap-2 md:mt-10 md:gap-3">
                       <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
                         {featuredPost.category}
                       </span>
@@ -179,7 +181,7 @@ function Blog() {
                   </div>
                 </div>
 
-                <div className="flex flex-col justify-between border-t border-white/10 bg-black/20 p-8 md:p-10 lg:border-l lg:border-t-0">
+                <div className="flex flex-col justify-between border-t border-white/10 bg-black/20 p-5 md:p-10 lg:border-l lg:border-t-0">
                   <div>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-white/45">
                       <span>{featuredPost.date}</span>
@@ -187,16 +189,16 @@ function Blog() {
                       <span>{featuredPost.category}</span>
                     </div>
 
-                    <h3 className="mt-6 max-w-xl text-3xl font-semibold leading-[1.08] tracking-[-0.045em]">
+                    <h3 className="mt-4 max-w-xl text-2xl font-semibold leading-[1.12] tracking-[-0.04em] md:mt-6 md:text-3xl md:leading-[1.08] md:tracking-[-0.045em]">
                       {featuredPost.title}
                     </h3>
 
-                    <p className="mt-5 max-w-xl text-lg leading-8 text-white/60">
+                    <p className="mt-3 mobile-line-clamp-3 max-w-xl text-sm leading-6 text-white/60 md:mt-5 md:text-lg md:leading-8">
                       {getPostDescription(featuredPost)}
                     </p>
                   </div>
 
-                  <div className="mt-10 inline-flex w-fit items-center gap-3 rounded-full bg-white px-6 py-3 text-sm font-semibold text-black transition group-hover:bg-white/90">
+                  <div className="mt-6 inline-flex w-fit items-center gap-3 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition group-hover:bg-white/90 md:mt-10 md:px-6">
                     Citește articolul
                     <ArrowRight
                       size={16}
@@ -208,13 +210,13 @@ function Blog() {
             </section>
           )}
 
-          <section className="mt-10">
+          <section className="mt-6 md:mt-10">
             {filteredPosts.length === 0 ? (
               <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-10 text-center text-white/60 md:backdrop-blur-xl">
                 Nu am găsit articole pentru căutarea ta.
               </div>
             ) : (
-              <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid gap-4 md:grid-cols-2 md:gap-5 lg:grid-cols-3">
                 {restPosts.map((post) => (
                   <BlogPostCard key={post.slug} post={post} />
                 ))}
@@ -244,9 +246,9 @@ function BlogPostCard({ post }) {
   return (
     <Link
       to={`/blog/${post.slug}`}
-      className="group block overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] p-4 shadow-[0_20px_80px_rgba(0,0,0,0.38)] transition duration-300 hover:-translate-y-1 hover:bg-white/[0.065] md:backdrop-blur-xl"
+      className="group block overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-3 shadow-[0_20px_80px_rgba(0,0,0,0.38)] transition duration-300 hover:-translate-y-1 hover:bg-white/[0.065] md:rounded-[2rem] md:p-4 md:backdrop-blur-xl"
     >
-      <div className="relative h-48 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black p-5 text-white">
+      <div className="relative h-36 overflow-hidden rounded-[1.2rem] border border-white/10 bg-black p-4 text-white md:h-48 md:rounded-[1.5rem] md:p-5">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_25%_25%,rgba(255,255,255,0.18),transparent_28%),radial-gradient(circle_at_85%_75%,rgba(185,170,145,0.12),transparent_30%)]" />
 
         <div className="relative flex h-full flex-col justify-between">
@@ -260,13 +262,13 @@ function BlogPostCard({ post }) {
             </span>
           </div>
 
-          <h3 className="max-w-sm text-2xl font-semibold leading-[1.05] tracking-[-0.045em]">
+          <h3 className="max-w-sm text-xl font-semibold leading-[1.08] tracking-[-0.04em] md:text-2xl md:leading-[1.05] md:tracking-[-0.045em]">
             {post.shortTitle || post.imageLabel || post.category}
           </h3>
         </div>
       </div>
 
-      <div className="px-2 py-5">
+      <div className="px-1 py-4 md:px-2 md:py-5">
         <div className="flex items-center gap-3 text-sm text-white/45">
           <span>{post.date}</span>
           <span aria-hidden="true">•</span>
@@ -276,15 +278,15 @@ function BlogPostCard({ post }) {
           </span>
         </div>
 
-        <h4 className="mt-4 text-2xl font-semibold leading-[1.12] tracking-[-0.045em] text-white">
+        <h4 className="mt-3 text-xl font-semibold leading-[1.16] tracking-[-0.04em] text-white md:mt-4 md:text-2xl md:leading-[1.12] md:tracking-[-0.045em]">
           {post.title}
         </h4>
 
-        <p className="mt-4 leading-7 text-white/55">
+        <p className="mt-3 mobile-line-clamp-3 text-sm leading-6 text-white/55 md:mt-4 md:text-base md:leading-7">
           {getPostDescription(post)}
         </p>
 
-        <div className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-white/65 transition group-hover:text-white">
+        <div className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-white/65 transition group-hover:text-white md:mt-6">
           Citește articolul
           <ArrowRight
             size={15}
@@ -298,31 +300,31 @@ function BlogPostCard({ post }) {
 
 function BlogCTA() {
   return (
-    <section className="mt-20">
-      <div className="relative overflow-hidden rounded-[2.2rem] border border-white/10 bg-white/[0.05] p-8 text-white shadow-[0_30px_110px_rgba(0,0,0,0.48)] md:rounded-[2.5rem] md:p-10 md:backdrop-blur-xl">
+    <section className="mt-12 md:mt-20">
+      <div className="relative overflow-hidden rounded-[1.6rem] border border-white/10 bg-white/[0.05] p-5 text-white shadow-[0_30px_110px_rgba(0,0,0,0.48)] md:rounded-[2.5rem] md:p-10 md:backdrop-blur-xl">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute right-[-8rem] top-[-8rem] hidden h-80 w-80 rounded-full bg-white/[0.08] blur-[100px] md:block" />
         </div>
 
         <div className="relative grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-xs font-medium uppercase tracking-[0.24em] text-white/50">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.06] px-3 py-2 text-xs font-medium uppercase tracking-[0.2em] text-white/50 md:mb-6 md:px-4 md:tracking-[0.24em]">
               <Sparkles size={14} />
               Din idee în structură
             </div>
 
-            <h2 className="max-w-3xl text-4xl font-semibold leading-[0.98] tracking-[-0.06em] md:text-6xl">
+            <h2 className="max-w-3xl text-3xl font-semibold leading-[1.02] tracking-[-0.045em] md:text-6xl md:leading-[0.98] md:tracking-[-0.06em]">
               Nu știi ce tip de site ți se potrivește?
             </h2>
 
-            <p className="mt-6 max-w-2xl text-base leading-8 text-white/60 md:text-lg">
+            <p className="mt-4 max-w-2xl text-sm leading-6 text-white/60 md:mt-6 md:text-lg md:leading-8">
               Poți începe de la obiectivul afacerii, nu de la un pachet ales la
               întâmplare. Structura potrivită se decide în funcție de ce vrei să
               obții.
             </p>
           </div>
 
-          <div className="rounded-[2rem] border border-white/10 bg-black/20 p-5">
+          <div className="rounded-[1.4rem] border border-white/10 bg-black/20 p-4 md:rounded-[2rem] md:p-5">
             <div className="grid gap-3">
               <CTAItem text="alegem tipul potrivit de site" />
               <CTAItem text="stabilim paginile importante" />

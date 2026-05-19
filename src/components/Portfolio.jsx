@@ -323,6 +323,47 @@ function InteractiveHotspots({ project, activeHotspot, setActiveHotspot }) {
   );
 }
 
+function MobileHotspotTabs({ hotspots, activeHotspot, setActiveHotspot }) {
+  const selectedHotspot =
+    hotspots.find((item) => item.id === activeHotspot) || hotspots[0];
+
+  if (!hotspots.length) return null;
+
+  return (
+    <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 md:hidden">
+      <p className="text-xs uppercase tracking-[0.22em] text-white/35">
+        Zone importante
+      </p>
+
+      <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+        {hotspots.map((hotspot, index) => {
+          const active = selectedHotspot.id === hotspot.id;
+
+          return (
+            <button
+              key={hotspot.id}
+              type="button"
+              onClick={() => setActiveHotspot(hotspot.id)}
+              aria-label={`Vezi zona ${hotspot.title}`}
+              className={`shrink-0 rounded-full border px-3 py-2 text-xs font-medium transition ${
+                active
+                  ? "border-white bg-white text-black"
+                  : "border-white/10 bg-white/[0.04] text-white/60"
+              }`}
+            >
+              {index + 1}. {hotspot.title}
+            </button>
+          );
+        })}
+      </div>
+
+      <p className="mt-3 text-sm leading-6 text-white/65">
+        {selectedHotspot.text}
+      </p>
+    </div>
+  );
+}
+
 function DeviceSwitcher({ device, setDevice }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -389,7 +430,7 @@ function PortfolioProjectModal({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[260] flex items-center justify-center px-5"
+      className="fixed inset-0 z-[260] flex items-center justify-center px-3 py-2 sm:px-5"
       initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 1 }}
@@ -405,12 +446,12 @@ function PortfolioProjectModal({
           delay: 0.12,
           ease: [0.22, 1, 0.36, 1],
         }}
-        className="relative max-h-[92vh] w-full max-w-7xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#080808] shadow-[0_24px_90px_rgba(0,0,0,0.65)]"
+        className="relative max-h-[calc(100dvh-1rem)] w-full max-w-7xl overflow-hidden rounded-[1.35rem] border border-white/10 bg-[#080808] shadow-[0_24px_90px_rgba(0,0,0,0.65)] md:max-h-[92vh] md:rounded-[2rem]"
         role="dialog"
         aria-modal="true"
         aria-labelledby="portfolio-modal-title"
       >
-        <div className="flex h-14 items-center justify-between border-b border-white/10 bg-white/[0.04] px-5">
+        <div className="flex h-14 items-center justify-between border-b border-white/10 bg-white/[0.04] px-4 md:px-5">
           <div className="flex items-center gap-3">
             <div className="flex gap-2">
               <span className="h-3 w-3 rounded-full bg-red-400" />
@@ -427,7 +468,7 @@ function PortfolioProjectModal({
             <button
               type="button"
               onClick={onPrev}
-              className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/55 transition hover:bg-white hover:text-black sm:flex"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/65 transition hover:bg-white hover:text-black sm:h-9 sm:w-9"
               aria-label="Proiect anterior"
             >
               <ChevronLeft size={18} />
@@ -436,7 +477,7 @@ function PortfolioProjectModal({
             <button
               type="button"
               onClick={onNext}
-              className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/55 transition hover:bg-white hover:text-black sm:flex"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/65 transition hover:bg-white hover:text-black sm:h-9 sm:w-9"
               aria-label="Proiect următor"
             >
               <ChevronRight size={18} />
@@ -445,40 +486,48 @@ function PortfolioProjectModal({
             <button
               type="button"
               onClick={onClose}
-              className="group h-9 w-9 rounded-full border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white hover:text-black"
-              aria-label="Închide preview"
+              className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/[0.06] text-white/75 transition hover:bg-white hover:text-black sm:h-9 sm:w-9"
+              aria-label="Închide preview-ul proiectului"
             >
               <X size={18} className="transition group-hover:rotate-90" />
             </button>
           </div>
         </div>
 
-        <div className="grid max-h-[calc(92vh-3.5rem)] overflow-y-auto lg:grid-cols-[0.42fr_0.58fr]">
-          <aside className="border-b border-white/10 p-6 lg:border-b-0 lg:border-r lg:p-7">
+        <div className="grid max-h-[calc(100dvh-4.5rem)] overflow-y-auto md:max-h-[calc(92vh-3.5rem)] lg:grid-cols-[0.42fr_0.58fr]">
+          <aside className="border-b border-white/10 p-4 lg:border-b-0 lg:border-r lg:p-7">
             <p className="text-sm uppercase tracking-[0.3em] text-white/35">
               {project.category}
             </p>
 
             <h2
               id="portfolio-modal-title"
-              className="mt-5 text-4xl font-semibold tracking-[-0.055em] text-white md:text-5xl"
+              className="mt-4 text-2xl font-semibold tracking-[-0.04em] text-white md:mt-5 md:text-5xl md:tracking-[-0.055em]"
             >
               {project.title}
             </h2>
 
-            <p className="mt-5 leading-8 text-white/55">{project.text}</p>
+            <p className="mt-3 mobile-line-clamp-3 text-sm leading-6 text-white/60 md:mt-5 md:text-base md:leading-8">
+              {project.text}
+            </p>
 
-            <div className="mt-7">
+            <div className="mt-7 hidden md:block">
               <CaseStudySummary project={project} />
             </div>
 
-            <div className="mt-7 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5">
-              <p className="text-sm uppercase tracking-[0.25em] text-white/30">
+            <MobileHotspotTabs
+              hotspots={hotspots}
+              activeHotspot={activeHotspot}
+              setActiveHotspot={setActiveHotspot}
+            />
+
+            <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 md:mt-7 md:rounded-[1.5rem] md:p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-white/35 md:text-sm md:tracking-[0.25em] md:text-white/30">
                 Ce primește clientul
               </p>
 
               <div className="mt-4 grid gap-3">
-                {deliverables.map((item) => (
+                {deliverables.slice(0, 4).map((item) => (
                   <div key={item} className="flex items-center gap-3">
                     <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-black">
                       <Check size={13} />
@@ -498,7 +547,7 @@ function PortfolioProjectModal({
                   onOpenContact?.("Standard");
                 }, 180);
               }}
-              className="group mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full bg-white px-6 py-4 font-semibold text-black transition hover:scale-[1.02] hover:bg-white/90"
+              className="group mt-5 inline-flex w-full items-center justify-center gap-3 rounded-full bg-white px-6 py-4 font-semibold text-black transition hover:scale-[1.02] hover:bg-white/90 md:mt-7"
             >
               Vreau un site asemănător
               <ArrowRight size={18} className="transition group-hover:translate-x-1" />
@@ -506,7 +555,7 @@ function PortfolioProjectModal({
           </aside>
 
           <section
-            className={`relative overflow-hidden bg-gradient-to-br p-4 md:p-7 ${project.theme?.modalBg ||
+            className={`relative hidden overflow-hidden bg-gradient-to-br p-4 md:block md:p-7 ${project.theme?.modalBg ||
               "from-white/10 via-white/5 to-transparent"
               }`}
           >

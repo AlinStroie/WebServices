@@ -15,10 +15,11 @@ function getPostReadingTime(post) {
 
 function BlogPostFloatingNav() {
   return (
-    <div className="fixed bottom-5 left-1/2 z-[120] flex -translate-x-1/2 items-center gap-2 rounded-full border border-white/10 bg-[#080808]/80 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl md:left-5 md:translate-x-0">
+    <div className="fixed bottom-4 left-4 z-[120] flex items-center gap-2 rounded-full border border-white/10 bg-[#080808]/80 p-2 shadow-[0_18px_70px_rgba(0,0,0,0.55)] backdrop-blur-xl md:bottom-5 md:left-5">
       <Link
         to="/blog"
-        className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
+        aria-label="Mergi la blog"
+        className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-semibold text-black transition hover:bg-white/90 md:px-4"
       >
         <Layers size={16} />
         Blog
@@ -26,7 +27,8 @@ function BlogPostFloatingNav() {
 
       <Link
         to="/"
-        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-4 py-2 text-sm font-semibold text-white/70 transition hover:bg-white hover:text-black"
+        aria-label="Mergi pe site"
+        className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.05] px-3 py-2 text-sm font-semibold text-white/70 transition hover:bg-white hover:text-black md:px-4"
       >
         <Home size={16} />
         Site
@@ -40,7 +42,7 @@ function renderBlock(block) {
     return (
       <h2
         key={block.text}
-        className="mt-12 text-3xl font-semibold tracking-[-0.04em] text-white md:text-4xl"
+        className="mt-8 text-2xl font-semibold tracking-[-0.035em] text-white md:mt-12 md:text-4xl md:tracking-[-0.04em]"
       >
         {block.text}
       </h2>
@@ -49,10 +51,10 @@ function renderBlock(block) {
 
   if (block.type === "list") {
     return (
-      <ul key={block.items.join("-")} className="mt-6 space-y-3">
+      <ul key={block.items.join("-")} className="mt-4 space-y-3 md:mt-6">
         {block.items.map((item) => (
-          <li key={item} className="flex gap-3 text-lg leading-8 text-white/65">
-            <span className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55" />
+          <li key={item} className="flex gap-3 text-base leading-7 text-white/65 md:text-lg md:leading-8">
+            <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55 md:mt-3" />
             <span>{item}</span>
           </li>
         ))}
@@ -64,7 +66,7 @@ function renderBlock(block) {
     return (
       <blockquote
         key={block.text}
-        className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-6 text-xl leading-8 text-white/75"
+        className="mt-6 rounded-[1.25rem] border border-white/10 bg-white/[0.045] p-4 text-lg leading-7 text-white/75 md:mt-8 md:rounded-[1.5rem] md:p-6 md:text-xl md:leading-8"
       >
         “{block.text}”
       </blockquote>
@@ -72,7 +74,7 @@ function renderBlock(block) {
   }
 
   return (
-    <p key={block.text} className="mt-6 text-lg leading-9 text-white/68">
+    <p key={block.text} className="mt-4 text-base leading-7 text-white/68 md:mt-6 md:text-lg md:leading-9">
       {block.text}
     </p>
   );
@@ -149,7 +151,7 @@ function BlogPost() {
   };
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-[#050505] pb-28 text-white">
+    <div className="relative min-h-screen overflow-hidden bg-[#050505] pb-24 text-white md:pb-28">
       <SEO
         title={post.title}
         description={getPostDescription(post)}
@@ -168,20 +170,20 @@ function BlogPost() {
 
       <BlogPostFloatingNav />
 
-      <main className="relative z-10 px-5 py-16 lg:px-8">
+      <main className="relative z-10 px-4 py-8 md:px-5 md:py-16 lg:px-8">
         <div className="mx-auto max-w-7xl">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_22rem] lg:gap-14">
             <article className="min-w-0">
-              <section className="pb-12 pt-8">
+              <section className="pb-8 pt-4 md:pb-12 md:pt-8">
                 <Link
                   to="/blog"
-                  className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white/65 transition hover:bg-white hover:text-black"
+                  className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white/65 transition hover:bg-white hover:text-black md:mb-8"
                 >
                   <ArrowLeft size={16} />
                   Înapoi la articole
                 </Link>
 
-                <div className="mb-6 flex flex-wrap items-center gap-3 text-sm text-white/50">
+                <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-white/50 md:mb-6 md:gap-3">
                   <span className="rounded-full border border-white/10 bg-white/[0.045] px-4 py-2">
                     {post.category}
                   </span>
@@ -192,42 +194,42 @@ function BlogPost() {
                   </span>
                 </div>
 
-                <h1 className="max-w-4xl text-5xl font-semibold leading-[0.95] tracking-[-0.06em] text-white md:text-7xl">
+                <h1 className="max-w-4xl text-3xl font-semibold leading-[1.04] tracking-[-0.045em] text-white md:text-7xl md:leading-[0.95] md:tracking-[-0.06em]">
                   {post.title}
                 </h1>
 
-                <p className="mt-7 max-w-3xl text-xl leading-9 text-white/62">
+                <p className="mt-4 max-w-3xl text-base leading-7 text-white/62 md:mt-7 md:text-xl md:leading-9">
                   {getPostDescription(post)}
                 </p>
               </section>
 
-              <div className="relative mb-12 h-80 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.045] text-white shadow-[0_24px_90px_rgba(0,0,0,0.42)] md:backdrop-blur-xl">
+              <div className="relative mb-8 h-48 overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.045] text-white shadow-[0_24px_90px_rgba(0,0,0,0.42)] md:mb-12 md:h-80 md:rounded-[2rem] md:backdrop-blur-xl">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.16),transparent_28%),radial-gradient(circle_at_80%_80%,rgba(185,170,145,0.12),transparent_34%)]" />
 
-                <div className="absolute bottom-8 left-8 right-8">
+                <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
                   <p className="text-sm uppercase tracking-[0.3em] text-white/40">
                     {post.category}
                   </p>
-                  <p className="mt-3 text-4xl font-semibold tracking-[-0.05em] text-white">
+                  <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-white md:text-4xl md:tracking-[-0.05em]">
                     {post.imageLabel || post.shortTitle || post.category}
                   </p>
                 </div>
               </div>
 
-              <section className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-6 shadow-[0_24px_90px_rgba(0,0,0,0.35)] md:p-10 md:backdrop-blur-xl">
+              <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-4 shadow-[0_24px_90px_rgba(0,0,0,0.35)] md:rounded-[2rem] md:p-10 md:backdrop-blur-xl">
                 <div className="mx-auto max-w-3xl">
                   {post.content.map(renderBlock)}
                 </div>
               </section>
 
-              <section className="my-12 overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.05] p-7 text-white shadow-[0_24px_90px_rgba(0,0,0,0.38)] md:backdrop-blur-xl">
+              <section className="my-8 overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.05] p-5 text-white shadow-[0_24px_90px_rgba(0,0,0,0.38)] md:my-12 md:rounded-[2rem] md:p-7 md:backdrop-blur-xl">
                 <div className="grid gap-6 md:grid-cols-[1fr_auto] md:items-center">
                   <div>
-                    <h2 className="text-3xl font-semibold tracking-[-0.04em] text-white">
+                    <h2 className="text-2xl font-semibold tracking-[-0.04em] text-white md:text-3xl">
                       Vrei să aplici ideile astea pe site-ul tău?
                     </h2>
 
-                    <p className="mt-4 max-w-2xl leading-7 text-white/60">
+                    <p className="mt-3 max-w-2xl text-sm leading-6 text-white/60 md:mt-4 md:text-base md:leading-7">
                       Poți porni de la structură, conținut și obiectiv, nu doar
                       de la design.
                     </p>
@@ -244,7 +246,7 @@ function BlogPost() {
               </section>
             </article>
 
-            <aside className="lg:pt-32">
+            <aside className="hidden lg:block lg:pt-32">
               <div className="sticky top-28 space-y-5">
                 <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-5 shadow-[0_18px_70px_rgba(0,0,0,0.35)] md:backdrop-blur-xl">
                   <p className="text-sm uppercase tracking-[0.3em] text-white/40">
