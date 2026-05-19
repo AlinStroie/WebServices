@@ -1,20 +1,24 @@
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 
 import Navbar from "../components/Navbar";
 import Hero from "../components/Hero";
 import Benefits from "../components/Benefits";
 import Services from "../components/Services";
-import Portfolio from "../components/Portfolio";
-import Process from "../components/Process";
-import Pricing from "../components/Pricing";
 import CTA from "../components/CTA";
 import Footer from "../components/Footer";
 import CookieBanner from "../components/CookieBanner";
 import LegalModal from "../components/LegalModal";
 import ContactDrawer from "../components/ContactDrawer";
 import ThreeDotWaveBackground from "../components/ThreeDotWaveBackground";
-import BlogPreview from "../components/BlogPreview";
-import BlogCarousel from "../components/BlogCarousel";
+
+const Portfolio = lazy(() => import("../components/Portfolio"));
+const Process = lazy(() => import("../components/Process"));
+const BlogCarousel = lazy(() => import("../components/BlogCarousel"));
+const Pricing = lazy(() => import("../components/Pricing"));
+
+function SectionLoader() {
+  return <div className="py-16" />;
+}
 
 function Home() {
   const [legalModal, setLegalModal] = useState(null);
@@ -54,20 +58,21 @@ function Home() {
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.06),transparent_34%),radial-gradient(circle_at_20%_75%,rgba(255,255,255,0.025),transparent_30%),radial-gradient(circle_at_85%_35%,rgba(255,255,255,0.035),transparent_32%)]" />
 
-        <div className="absolute -left-40 top-20 h-[28rem] w-[28rem] rounded-full bg-white/[0.025] blur-[120px]" />
-        <div className="absolute right-[-10rem] top-40 h-[30rem] w-[30rem] rounded-full bg-slate-300/[0.03] blur-[130px]" />
-        <div className="absolute bottom-[-12rem] left-1/3 h-[34rem] w-[34rem] rounded-full bg-white/[0.02] blur-[140px]" />
+        <div className="absolute -left-40 top-20 h-[28rem] w-[28rem] rounded-full bg-white/[0.025] blur-[70px] md:blur-[120px]" />
+        <div className="absolute right-[-10rem] top-40 hidden h-[30rem] w-[30rem] rounded-full bg-slate-300/[0.03] blur-[130px] md:block" />
+        <div className="absolute bottom-[-12rem] left-1/3 hidden h-[34rem] w-[34rem] rounded-full bg-white/[0.02] blur-[140px] md:block" />
 
-        <div className="absolute left-[-10%] top-[20%] h-[18rem] w-[120%] rotate-[-8deg] rounded-[100%] bg-white/[0.014] blur-[80px]" />
-        <div className="absolute left-[-10%] top-[48%] h-[16rem] w-[120%] rotate-[7deg] rounded-[100%] bg-white/[0.01] blur-[90px]" />
-        <div className="absolute left-[-10%] top-[72%] h-[15rem] w-[120%] rotate-[-5deg] rounded-[100%] bg-white/[0.008] blur-[95px]" />
+        <div className="absolute left-[-10%] top-[20%] h-[18rem] w-[120%] rotate-[-8deg] rounded-[100%] bg-white/[0.014] blur-[60px] md:blur-[80px]" />
+        <div className="absolute left-[-10%] top-[48%] hidden h-[16rem] w-[120%] rotate-[7deg] rounded-[100%] bg-white/[0.01] blur-[90px] md:block" />
+        <div className="absolute left-[-10%] top-[72%] hidden h-[15rem] w-[120%] rotate-[-5deg] rounded-[100%] bg-white/[0.008] blur-[95px] md:block" />
 
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.25)_68%,rgba(0,0,0,0.84)_100%)]" />
       </div>
 
+      {/* Fundal animat doar pe desktop */}
       <div className="hidden lg:block">
-  <ThreeDotWaveBackground paused={isOverlayOpen} />
-</div>
+        <ThreeDotWaveBackground paused={isOverlayOpen} />
+      </div>
 
       <div className="relative z-10">
         <Navbar
@@ -77,15 +82,30 @@ function Home() {
 
         <main>
           <Hero onOpenContact={() => openContact("Standard")} />
+
           <Benefits />
+
           <Services />
-          <Portfolio
-            onOverlayChange={setIsOverlayOpen}
-            onOpenContact={openContact}
-          />
-          <Process />
-          <BlogCarousel />
-          <Pricing onSelectPlan={openContact} />
+
+          <Suspense fallback={<SectionLoader />}>
+            <Portfolio
+              onOverlayChange={setIsOverlayOpen}
+              onOpenContact={openContact}
+            />
+          </Suspense>
+
+          <Suspense fallback={<SectionLoader />}>
+            <Process />
+          </Suspense>
+
+          <Suspense fallback={<SectionLoader />}>
+            <BlogCarousel />
+          </Suspense>
+
+          <Suspense fallback={<SectionLoader />}>
+            <Pricing onSelectPlan={openContact} />
+          </Suspense>
+
           <CTA onOpenContact={() => openContact("Standard")} />
         </main>
 

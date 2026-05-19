@@ -6,16 +6,22 @@ function CookieBanner({ onOpenPolicy }) {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const cookieChoice = localStorage.getItem("cookie-consent");
+  const cookieChoice = localStorage.getItem("cookie-consent");
 
-    if (!cookieChoice) {
-      const timer = setTimeout(() => {
+  if (!cookieChoice) {
+    const showBanner = () => {
+      setTimeout(() => {
         setVisible(true);
-      }, 700);
+      }, 1800);
+    };
 
-      return () => clearTimeout(timer);
+    if ("requestIdleCallback" in window) {
+      window.requestIdleCallback(showBanner);
+    } else {
+      showBanner();
     }
-  }, []);
+  }
+}, []);
 
   function acceptCookies() {
     localStorage.setItem("cookie-consent", "accepted");
