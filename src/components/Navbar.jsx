@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 
 import { siteConfig } from "../data/siteConfig";
+import logo from "../assets/logo_wtb.png";
 
 function Navbar({ onOpenContact }) {
   const [open, setOpen] = useState(false);
@@ -237,18 +238,32 @@ function Navbar({ onOpenContact }) {
         <a
           href="/"
           onClick={handleLogoClick}
-          className={`flex min-w-0 items-center gap-3 transition-all duration-500 ${
-            scrolled ? "scale-[0.94]" : "scale-100"
+          className={`group flex h-16 items-center overflow-hidden rounded-full border border-white/10 bg-white/[0.045] shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+            scrolled
+              ? "w-16 px-2 sm:w-[270px] sm:px-2.5"
+              : "w-16 px-2"
           }`}
           aria-label="Mergi sus pe pagină"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-sm font-black text-black shadow-[0_10px_30px_rgba(255,255,255,0.08)]">
-            {siteConfig.brand.logoLetter}
+          <span className="relative z-20 flex h-12 w-12 shrink-0 items-center justify-center overflow-visible rounded-full">
+            <img
+              src={logo}
+              alt="A Squared Studio"
+              className={`object-contain transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                scrolled ? "h-10 w-10" : "h-9 w-9 sm:h-10 sm:w-10"
+              }`}
+            />
           </span>
 
-          <span className="hidden text-sm font-bold tracking-[-0.03em] text-white sm:block">
-            {siteConfig.brand.name}
-          </span>
+         <span
+           className={`brand-font hidden whitespace-nowrap pl-3 text-[22px] leading-none tracking-[-0.03em] text-white transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:block ${
+           scrolled
+          ? "max-w-[100px] translate-x-0 translate-y-[3px] opacity-100"
+          : "max-w-0 -translate-x-8 opacity-0"
+          }`}
+          >
+             A Squared Studio
+        </span>
         </a>
 
         <div
