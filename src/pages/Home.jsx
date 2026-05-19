@@ -65,7 +65,9 @@ function Home() {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.25)_68%,rgba(0,0,0,0.84)_100%)]" />
       </div>
 
-      <ThreeDotWaveBackground paused={isOverlayOpen} />
+      <div className="hidden lg:block">
+  <ThreeDotWaveBackground paused={isOverlayOpen} />
+</div>
 
       <div className="relative z-10">
         <Navbar
@@ -77,7 +79,10 @@ function Home() {
           <Hero onOpenContact={() => openContact("Standard")} />
           <Benefits />
           <Services />
-          <Portfolio onOverlayChange={setIsOverlayOpen} />
+          <Portfolio
+            onOverlayChange={setIsOverlayOpen}
+            onOpenContact={openContact}
+          />
           <Process />
           <BlogCarousel />
           <Pricing onSelectPlan={openContact} />

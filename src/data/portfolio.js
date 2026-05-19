@@ -142,5 +142,46 @@ export const portfolio = [
       "Structură simplă pentru comandă",
       "Design responsive pentru cumpărători",
     ],
+
+    caseStudy: {
+  goal: "Creșterea numărului de programări printr-o prezentare clară a serviciilor.",
+  solution:
+    "Am pus accent pe hero clar, servicii explicate, beneficii vizibile și butoane de contact ușor de accesat.",
+  benefit:
+    "Vizitatorul înțelege rapid ce servicii există și poate cere o programare fără să caute informații prin pagină.",
+},
+
+deliverables: [
+  "homepage structurată",
+  "secțiune servicii",
+  "formular de contact",
+  "buton WhatsApp",
+  "design responsive",
+  "SEO de bază",
+],
+
+hotspots: [
+  {
+    id: "hero",
+    title: "Hero orientat spre acțiune",
+    text: "Prima zonă explică serviciul principal și trimite utilizatorul spre programare.",
+    x: "25%",
+    y: "24%",
+  },
+  {
+    id: "services",
+    title: "Servicii ușor de comparat",
+    text: "Serviciile sunt grupate clar, astfel încât utilizatorul să aleagă rapid ce îl interesează.",
+    x: "38%",
+    y: "56%",
+  },
+  {
+    id: "cta",
+    title: "Contact rapid",
+    text: "CTA-ul rămâne vizibil și reduce pașii până la cererea de ofertă sau programare.",
+    x: "74%",
+    y: "34%",
+  },
+]
   },
 ];

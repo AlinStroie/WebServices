@@ -1,6 +1,19 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUpRight, X } from "lucide-react";
+import {
+  ArrowRight,
+  ArrowUpRight,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Monitor,
+  MousePointer2,
+  Smartphone,
+  Tablet,
+  Target,
+  X,
+  Zap,
+} from "lucide-react";
 
 import AnimatedSection from "./AnimatedSection";
 import SectionHeader from "./SectionHeader";
@@ -9,37 +22,309 @@ import PortfolioMockupRenderer from "./mockups/PortfolioMockupRenderer";
 import { portfolio } from "../data/portfolio";
 import OverlayBackdrop from "./OverlayBackdrop";
 
+const deviceOptions = [
+  {
+    id: "desktop",
+    label: "Desktop",
+    icon: Monitor,
+    frameClass: "w-full max-w-4xl",
+    heightClass: "h-[34rem]",
+  },
+  {
+    id: "tablet",
+    label: "Tabletă",
+    icon: Tablet,
+    frameClass: "w-full max-w-2xl",
+    heightClass: "h-[34rem]",
+  },
+  {
+    id: "mobile",
+    label: "Mobil",
+    icon: Smartphone,
+    frameClass: "w-full max-w-[19rem]",
+    heightClass: "h-[34rem]",
+  },
+];
+
+function getProjectCase(project) {
+  return {
+    goal:
+      project.caseStudy?.goal ||
+      project.goal ||
+      "Crearea unei prezențe online clare, ușor de parcurs și orientate spre contact.",
+    solution:
+      project.caseStudy?.solution ||
+      project.solution ||
+      "Am structurat informația în secțiuni simple, cu mesaje clare, CTA-uri vizibile și design responsive.",
+    benefit:
+      project.caseStudy?.benefit ||
+      project.benefit ||
+      "Vizitatorul înțelege rapid ce oferă afacerea și are un traseu clar către cerere, programare sau contact.",
+  };
+}
+
+function getProjectHotspots(project) {
+  if (project.hotspots?.length) return project.hotspots;
+
+  return [
+    {
+      id: "hero",
+      title: "Hero clar",
+      text: "Prima zonă explică rapid cine este afacerea, ce oferă și ce acțiune ar trebui să facă vizitatorul.",
+      x: "22%",
+      y: "25%",
+    },
+    {
+      id: "cta",
+      title: "CTA vizibil",
+      text: "Butoanele importante sunt plasate în zone ușor de observat, pentru contact rapid sau cerere de ofertă.",
+      x: "73%",
+      y: "33%",
+    },
+    {
+      id: "services",
+      title: "Servicii organizate",
+      text: "Serviciile sunt grupate logic, ca utilizatorul să nu caute informația prin pagină.",
+      x: "35%",
+      y: "58%",
+    },
+    {
+      id: "trust",
+      title: "Elemente de încredere",
+      text: "Secțiunile de beneficii, proces, rezultate sau întrebări ajută vizitatorul să ia o decizie mai ușor.",
+      x: "68%",
+      y: "70%",
+    },
+  ];
+}
+
+function getProjectDeliverables(project) {
+  return (
+    project.deliverables || [
+      "structură pagini și secțiuni",
+      "design responsive",
+      "formular de contact",
+      "CTA-uri clare",
+      "SEO de bază",
+      "optimizare vizuală pentru conversie",
+    ]
+  );
+}
+
 function PortfolioCardPreview({ project }) {
   return (
     <div className="relative h-64 overflow-hidden rounded-[1.7rem] border border-white/10 bg-black/50 p-3">
       <div
-        className={`absolute inset-0 bg-gradient-to-br ${
-          project.theme?.glowFrom || "from-white/20"
-        } ${
-          project.theme?.glowVia || "via-white/10"
-        } to-transparent opacity-70`}
+        className={`absolute inset-0 bg-gradient-to-br ${project.theme?.glowFrom || "from-white/20"
+          } ${project.theme?.glowVia || "via-white/10"} to-transparent opacity-70`}
       />
 
       <div
-        className={`absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl transition-transform duration-500 group-hover:scale-110 ${
-          project.theme?.glowAccentOne || "bg-white/10"
-        }`}
+        className={`absolute -right-16 -top-16 h-44 w-44 rounded-full blur-3xl transition-transform duration-500 group-hover:scale-110 ${project.theme?.glowAccentOne || "bg-white/10"
+          }`}
       />
 
       <div
-        className={`absolute -bottom-16 -left-16 h-44 w-44 rounded-full blur-3xl transition-transform duration-500 group-hover:scale-110 ${
-          project.theme?.glowAccentTwo || "bg-white/10"
-        }`}
+        className={`absolute -bottom-16 -left-16 h-44 w-44 rounded-full blur-3xl transition-transform duration-500 group-hover:scale-110 ${project.theme?.glowAccentTwo || "bg-white/10"
+          }`}
       />
 
       <div className="relative h-full transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.03]">
         <PortfolioBrowserFrame project={project} size="card" />
       </div>
+
+      <div className="pointer-events-none absolute bottom-5 left-5 right-5 flex translate-y-4 items-center justify-between rounded-full border border-white/10 bg-black/65 px-4 py-2 opacity-0 backdrop-blur-xl transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+        <span className="text-xs font-medium text-white/65">
+          Vezi de ce funcționează
+        </span>
+
+        <ArrowRight size={15} className="text-white/65" />
+      </div>
     </div>
   );
 }
 
-function PortfolioProjectModal({ project, onClose }) {
+function CaseStudySummary({ project }) {
+  const projectCase = getProjectCase(project);
+
+  return (
+    <div className="grid gap-3">
+      <CaseRow
+        icon={Target}
+        label="Obiectiv"
+        text={projectCase.goal}
+      />
+
+      <CaseRow
+        icon={Zap}
+        label="Soluție"
+        text={projectCase.solution}
+      />
+
+      <CaseRow
+        icon={Check}
+        label="Beneficiu"
+        text={projectCase.benefit}
+      />
+    </div>
+  );
+}
+
+function CaseRow({ icon: Icon, label, text }) {
+  return (
+    <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.035] p-4">
+      <div className="mb-3 flex items-center gap-2 text-sm font-medium text-white/70">
+        <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white text-black">
+          <Icon size={16} />
+        </span>
+        {label}
+      </div>
+
+      <p className="text-sm leading-6 text-white/50">{text}</p>
+    </div>
+  );
+}
+
+function InteractiveHotspots({ project, activeHotspot, setActiveHotspot }) {
+  const hotspots = getProjectHotspots(project);
+  const currentHotspot = hotspots.find((item) => item.id === activeHotspot);
+
+  return (
+    <>
+      <div className="pointer-events-none absolute inset-0 z-20">
+        {hotspots.map((hotspot, index) => {
+          const active = currentHotspot?.id === hotspot.id;
+
+          return (
+            <button
+              key={hotspot.id}
+              type="button"
+              onMouseEnter={() => setActiveHotspot(hotspot.id)}
+              onMouseLeave={() => setActiveHotspot(null)}
+              onFocus={() => setActiveHotspot(hotspot.id)}
+              onBlur={() => setActiveHotspot(null)}
+              className="pointer-events-auto absolute group/hotspot"
+              style={{ left: hotspot.x, top: hotspot.y }}
+            >
+              <span className="relative flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
+                <span
+                  className={`relative flex h-12 w-12 items-center justify-center rounded-full border backdrop-blur-xl transition duration-300 ${
+                    active
+                      ? "scale-110 border-white bg-white text-black shadow-[0_0_55px_rgba(255,255,255,0.55)]"
+                      : "border-white bg-black/85 text-white shadow-[0_0_45px_rgba(0,0,0,0.65),0_0_28px_rgba(255,255,255,0.35)] group-hover/hotspot:scale-110 group-hover/hotspot:bg-white group-hover/hotspot:text-black"
+                  }`}
+                >
+                  <span className="relative z-10 text-sm font-bold">
+                    {index + 1}
+                  </span>
+
+                  <span className="absolute inset-[-8px] rounded-full border border-white/25" />
+                  <span className="absolute inset-[-16px] rounded-full border border-white/10" />
+
+                  <span
+                    className={`absolute inset-0 rounded-full ${
+                      active ? "animate-ping bg-white/25" : "bg-white/10"
+                    }`}
+                  />
+                </span>
+
+                <span
+                  className={`hidden whitespace-nowrap rounded-full border border-white/10 bg-black/75 px-3 py-1.5 text-xs font-medium text-white/75 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl transition md:inline-flex ${
+                    active
+                      ? "translate-x-1 opacity-100"
+                      : "opacity-0 group-hover/hotspot:translate-x-1 group-hover/hotspot:opacity-100"
+                  }`}
+                >
+                  {hotspot.title}
+                </span>
+              </span>
+            </button>
+          );
+        })}
+      </div>
+
+      <AnimatePresence>
+        {currentHotspot && (
+          <motion.div
+            key={currentHotspot.id}
+            initial={{ opacity: 0, y: 12, scale: 0.98 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 10, scale: 0.98 }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+            className="pointer-events-none absolute bottom-5 left-5 right-5 z-30 rounded-[1.5rem] border border-white/15 bg-black/82 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl"
+          >
+            <div className="mb-3 flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black">
+                <MousePointer2 size={17} />
+              </span>
+
+              <div>
+                <p className="text-sm font-semibold text-white">
+                  {currentHotspot.title}
+                </p>
+
+                <p className="mt-0.5 text-xs text-white/35">
+                  Zonă importantă în interfață
+                </p>
+              </div>
+            </div>
+
+            <p className="text-sm leading-6 text-white/58">
+              {currentHotspot.text}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
+  );
+}
+
+function DeviceSwitcher({ device, setDevice }) {
+  return (
+    <div className="flex flex-wrap gap-2">
+      {deviceOptions.map((item) => {
+        const Icon = item.icon;
+        const active = device === item.id;
+
+        return (
+          <button
+            key={item.id}
+            type="button"
+            onClick={() => setDevice(item.id)}
+            className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition ${active
+                ? "border-white bg-white text-black"
+                : "border-white/10 bg-white/[0.04] text-white/55 hover:bg-white/[0.08] hover:text-white"
+              }`}
+          >
+            <Icon size={16} />
+            {item.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
+function PortfolioProjectModal({
+  project,
+  onClose,
+  onNext,
+  onPrev,
+  onOpenContact,
+}) {
+  const [activeHotspot, setActiveHotspot] = useState(null);
+  const [device, setDevice] = useState("desktop");
+
+  const selectedDevice = useMemo(
+    () => deviceOptions.find((item) => item.id === device) || deviceOptions[0],
+    [device]
+  );
+
+  if (!project) return null;
+
+  const deliverables = getProjectDeliverables(project);
+  const hotspots = getProjectHotspots(project);
+
   return (
     <motion.div
       className="fixed inset-0 z-[260] flex items-center justify-center px-5"
@@ -47,130 +332,164 @@ function PortfolioProjectModal({ project, onClose }) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 1 }}
     >
-      {/* Layer întunecare */}
-      <motion.div
-        onClick={onClose}
-        className="absolute inset-0 bg-black/60"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{
-          duration: 0.45,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      />
-
-      {/* Layer blur smooth */}
-      <motion.div
-        onClick={onClose}
-        className="absolute inset-0 will-change-[opacity,backdrop-filter] [contain:paint]"
-        initial={{
-          opacity: 0,
-          backdropFilter: "blur(0px)",
-          WebkitBackdropFilter: "blur(0px)",
-        }}
-        animate={{
-          opacity: 1,
-          backdropFilter: "blur(7px)",
-          WebkitBackdropFilter: "blur(7px)",
-        }}
-        exit={{
-          opacity: 0,
-          backdropFilter: "blur(0px)",
-          WebkitBackdropFilter: "blur(0px)",
-        }}
-        transition={{
-          duration: 0.9,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      />
+      <OverlayBackdrop onClick={onClose} blur={7} opacity={0.62} duration={0.85} />
 
       <motion.div
-        initial={{
-          opacity: 0,
-          scale: 0.985,
-          y: 14,
-        }}
-        animate={{
-          opacity: 1,
-          scale: 1,
-          y: 0,
-        }}
-        exit={{
-          opacity: 0,
-          scale: 0.985,
-          y: 10,
-        }}
+        initial={{ opacity: 0, scale: 0.985, y: 14 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.985, y: 10 }}
         transition={{
           duration: 0.42,
-          delay: 0.14,
+          delay: 0.12,
           ease: [0.22, 1, 0.36, 1],
         }}
-        className="relative max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#080808] shadow-[0_24px_80px_rgba(0,0,0,0.55)] will-change-transform"
+        className="relative max-h-[92vh] w-full max-w-7xl overflow-hidden rounded-[2rem] border border-white/10 bg-[#080808] shadow-[0_24px_90px_rgba(0,0,0,0.65)]"
       >
-        <div className="flex h-12 items-center justify-between border-b border-white/10 bg-white/[0.04] px-5">
-          <div className="flex items-center gap-2">
-            <span className="h-3 w-3 rounded-full bg-red-400" />
-            <span className="h-3 w-3 rounded-full bg-yellow-400" />
-            <span className="h-3 w-3 rounded-full bg-green-400" />
+        <div className="flex h-14 items-center justify-between border-b border-white/10 bg-white/[0.04] px-5">
+          <div className="flex items-center gap-3">
+            <div className="flex gap-2">
+              <span className="h-3 w-3 rounded-full bg-red-400" />
+              <span className="h-3 w-3 rounded-full bg-yellow-400" />
+              <span className="h-3 w-3 rounded-full bg-green-400" />
+            </div>
 
-            <div className="ml-4 hidden rounded-full border border-white/10 bg-black/30 px-4 py-1 text-xs text-white/40 sm:block">
-              preview / {project.title.toLowerCase()}
+            <div className="hidden rounded-full border border-white/10 bg-black/30 px-4 py-1 text-xs text-white/40 sm:block">
+              case study / {project.title.toLowerCase()}
             </div>
           </div>
 
-          <button
-            type="button"
-            onClick={onClose}
-            className="group rounded-full border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white hover:text-black"
-            aria-label="Închide preview"
-          >
-            <X size={20} className="transition group-hover:rotate-90" />
-          </button>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={onPrev}
+              className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/55 transition hover:bg-white hover:text-black sm:flex"
+              aria-label="Proiect anterior"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={onNext}
+              className="hidden h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/[0.04] text-white/55 transition hover:bg-white hover:text-black sm:flex"
+              aria-label="Proiect următor"
+            >
+              <ChevronRight size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="group h-9 w-9 rounded-full border border-white/10 bg-white/[0.04] p-2 text-white/60 transition hover:bg-white hover:text-black"
+              aria-label="Închide preview"
+            >
+              <X size={18} className="transition group-hover:rotate-90" />
+            </button>
+          </div>
         </div>
 
-        <div className="grid max-h-[calc(90vh-3rem)] overflow-y-auto lg:grid-cols-[0.72fr_1.28fr]">
-          <div className="border-b border-white/10 p-7 lg:border-b-0 lg:border-r">
+        <div className="grid max-h-[calc(92vh-3.5rem)] overflow-y-auto lg:grid-cols-[0.42fr_0.58fr]">
+          <aside className="border-b border-white/10 p-6 lg:border-b-0 lg:border-r lg:p-7">
             <p className="text-sm uppercase tracking-[0.3em] text-white/35">
               {project.category}
             </p>
 
-            <h2 className="mt-5 text-4xl font-semibold tracking-[-0.05em] text-white md:text-5xl">
+            <h2 className="mt-5 text-4xl font-semibold tracking-[-0.055em] text-white md:text-5xl">
               {project.title}
             </h2>
 
             <p className="mt-5 leading-8 text-white/55">{project.text}</p>
 
-            <div className="mt-8 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5">
+            <div className="mt-7">
+              <CaseStudySummary project={project} />
+            </div>
+
+            <div className="mt-7 rounded-[1.5rem] border border-white/10 bg-white/[0.035] p-5">
               <p className="text-sm uppercase tracking-[0.25em] text-white/30">
-                Preview include
+                Ce primește clientul
               </p>
 
-              <ul className="mt-4 space-y-3 text-sm text-white/60">
-                {project.features.map((feature) => (
-                  <li key={feature}>{feature}</li>
-                ))}
-              </ul>
-            </div>
-          </div>
+              <div className="mt-4 grid gap-3">
+                {deliverables.map((item) => (
+                  <div key={item} className="flex items-center gap-3">
+                    <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-black">
+                      <Check size={13} />
+                    </span>
 
-          <div
-            className={`bg-gradient-to-br p-4 md:p-7 ${
-              project.theme?.modalBg ||
-              "from-white/10 via-white/5 to-transparent"
-            }`}
-          >
-            <div className="h-[34rem] overflow-hidden rounded-[1.7rem] border border-white/10 bg-white shadow-2xl">
-              <PortfolioMockupRenderer project={project} />
+                    <span className="text-sm text-white/58">{item}</span>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                setTimeout(() => {
+                  onOpenContact?.("Standard");
+                }, 180);
+              }}
+              className="group mt-7 inline-flex w-full items-center justify-center gap-3 rounded-full bg-white px-6 py-4 font-semibold text-black transition hover:scale-[1.02] hover:bg-white/90"
+            >
+              Vreau un site asemănător
+              <ArrowRight size={18} className="transition group-hover:translate-x-1" />
+            </button>
+          </aside>
+
+          <section
+            className={`relative overflow-hidden bg-gradient-to-br p-4 md:p-7 ${project.theme?.modalBg ||
+              "from-white/10 via-white/5 to-transparent"
+              }`}
+          >
+            <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-sm font-medium text-white/70">
+                  Preview interactiv
+                </p>
+                <p className="mt-1 text-sm text-white/40">
+                  Treci cu mouse-ul peste puncte pentru a vedea rolul fiecărei zone.
+                </p>
+              </div>
+
+              <DeviceSwitcher device={device} setDevice={setDevice} />
+            </div>
+
+            <div className="flex min-h-[36rem] items-center justify-center">
+              <motion.div
+                key={device}
+                initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+                className={`relative ${selectedDevice.frameClass}`}
+              >
+                <div
+  className={`relative overflow-hidden rounded-[1.7rem] border border-white/10 bg-white shadow-2xl ${selectedDevice.heightClass}`}
+>
+  <div
+    className="pointer-events-none h-full select-none"
+    onContextMenu={(event) => event.preventDefault()}
+    onDragStart={(event) => event.preventDefault()}
+  >
+    <PortfolioMockupRenderer project={project} />
+  </div>
+
+  <InteractiveHotspots
+    project={{ ...project, hotspots }}
+    activeHotspot={activeHotspot}
+    setActiveHotspot={setActiveHotspot}
+  />
+</div>
+              </motion.div>
+            </div>
+          </section>
         </div>
       </motion.div>
     </motion.div>
   );
 }
 
-function Portfolio({ onOverlayChange }) {
+function Portfolio({ onOverlayChange, onOpenContact }) {
   const [selectedProject, setSelectedProject] = useState(null);
 
   function openProject(project) {
@@ -183,14 +502,30 @@ function Portfolio({ onOverlayChange }) {
     onOverlayChange?.(false);
   }
 
+  function getCurrentIndex() {
+    return portfolio.findIndex((item) => item.id === selectedProject?.id);
+  }
+
+  function goNextProject() {
+    const currentIndex = getCurrentIndex();
+    const nextIndex = currentIndex >= portfolio.length - 1 ? 0 : currentIndex + 1;
+    setSelectedProject(portfolio[nextIndex]);
+  }
+
+  function goPrevProject() {
+    const currentIndex = getCurrentIndex();
+    const prevIndex = currentIndex <= 0 ? portfolio.length - 1 : currentIndex - 1;
+    setSelectedProject(portfolio[prevIndex]);
+  }
+
   return (
     <>
       <AnimatedSection id="portofoliu" className="px-5 py-24 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <SectionHeader
             eyebrow="Portofoliu"
-            title="Exemple de proiecte pe care le putem construi."
-            text="Mockup-uri orientative pentru afaceri locale, servicii, portofolii și magazine online simple."
+            title="Nu arătăm doar cum arată un site. Arătăm de ce funcționează."
+            text="Explorează proiectele ca studii de caz interactive: obiectiv, soluție, beneficii și zone importante din interfață."
           />
 
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
@@ -205,9 +540,7 @@ function Portfolio({ onOverlayChange }) {
 
                 <div className="p-4">
                   <div className="mb-4 flex items-center justify-between gap-4">
-                    <p className="text-sm text-white/40">
-                      {project.category}
-                    </p>
+                    <p className="text-sm text-white/40">{project.category}</p>
 
                     <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/10 text-white/45 transition group-hover:bg-white group-hover:text-black">
                       <ArrowUpRight size={18} />
@@ -218,9 +551,18 @@ function Portfolio({ onOverlayChange }) {
                     {project.title}
                   </h3>
 
-                  <p className="mt-3 leading-7 text-white/50">
-                    {project.text}
-                  </p>
+                  <p className="mt-3 leading-7 text-white/50">{project.text}</p>
+
+                  <div className="mt-5 flex flex-wrap gap-2">
+                    {(project.features || []).slice(0, 3).map((feature) => (
+                      <span
+                        key={feature}
+                        className="rounded-full border border-white/10 bg-white/[0.035] px-3 py-1.5 text-xs text-white/45"
+                      >
+                        {feature}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </button>
             ))}
@@ -234,6 +576,9 @@ function Portfolio({ onOverlayChange }) {
             key={selectedProject.id}
             project={selectedProject}
             onClose={closeProject}
+            onNext={goNextProject}
+            onPrev={goPrevProject}
+            onOpenContact={onOpenContact}
           />
         )}
       </AnimatePresence>
