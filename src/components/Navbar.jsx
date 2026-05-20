@@ -382,13 +382,13 @@ function Navbar({ onOpenContact }) {
           <button
             type="button"
             onClick={handleOfferClick}
-            className={`group inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/55 px-5 py-2.5 text-sm font-semibold text-white/65 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-500 hover:bg-white/[0.08] hover:text-white ${
+            className={`group inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/100 px-5 py-2.5 text-sm font-semibold text-black/100 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-500 hover:bg-white/[0.08] hover:text-white ${
               scrolled ? "scale-[0.96]" : "scale-100"
             }`}
           >
             <span>Cere ofertă</span>
 
-            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition group-hover:rotate-45 group-hover:bg-white/[0.14] group-hover:text-white">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-black/55 text-white/70 transition group-hover:rotate-45 group-hover:bg-white/[0.14] group-hover:text-white">
               <ArrowUpRight size={14} />
             </span>
           </button>
