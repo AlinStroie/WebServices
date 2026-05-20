@@ -5,6 +5,7 @@ import { ArrowLeft, ArrowRight, Clock, Home, Layers } from "lucide-react";
 import SEO from "../components/SEO";
 import { siteConfig } from "../data/siteConfig";
 import { apiFetch } from "../lib/api";
+import { trackBlogView } from "../lib/analytics";
 
 function getPostDescription(post) {
   return post?.description || post?.excerpt || post?.metaDescription || "";
@@ -180,6 +181,7 @@ function BlogPost() {
         const allPosts = blogResponse.data || [];
 
         setPost(currentPost);
+        trackBlogView(currentPost.slug);
 
         setRelatedPosts(
           allPosts

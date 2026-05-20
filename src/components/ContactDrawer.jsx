@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
@@ -19,6 +19,15 @@ import OverlayBackdrop from "./OverlayBackdrop";
 import { siteConfig } from "../data/siteConfig";
 import { apiFetch } from "../lib/api";
 
+import {
+  getAnalyticsContext,
+  trackContactError,
+  trackContactStart,
+  trackContactSubmit,
+  trackContactSuccess,
+  trackPricingClick,
+} from "../lib/analytics";
+
 const plans = ["Basic", "Standard", "Premium"];
 
 const drawerTransition = {
@@ -34,6 +43,7 @@ function ContactDrawer({
   onOpenPolicy,
 }) {
   const navigate = useNavigate();
+  const formStartedRef = useRef(false);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -88,6 +98,11 @@ function ContactDrawer({
   }, [open, onClose]);
 
   function updateField(field, value) {
+    if (!formStartedRef.current && field !== "gdpr") {
+      formStartedRef.current = true;
+      trackContactStart(field);
+    }
+
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -134,9 +149,14 @@ function ContactDrawer({
 
     if (!validateForm()) return;
 
+    const plan = selectedPlan || "Nespecificat";
+    const analyticsContext = getAnalyticsContext();
+
     try {
       setSubmitting(true);
       setErrors({});
+
+      trackContactSubmit(plan);
 
       await apiFetch("/contact", {
         method: "POST",
@@ -145,12 +165,22 @@ function ContactDrawer({
           email: formData.email.trim(),
           phone: formData.phone.trim(),
           message: formData.message.trim(),
-          selectedPlan: selectedPlan || "Nespecificat",
+          selectedPlan: plan,
           gdprAccepted: formData.gdpr,
           sourcePage: window.location.pathname,
           website: "",
+
+          sessionId: analyticsContext.sessionId,
+          utmSource: analyticsContext.utmSource,
+          utmMedium: analyticsContext.utmMedium,
+          utmCampaign: analyticsContext.utmCampaign,
+          utmContent: analyticsContext.utmContent,
+          utmTerm: analyticsContext.utmTerm,
+          consentAnalytics: analyticsContext.consentAnalytics,
         }),
       });
+
+      trackContactSuccess(plan);
 
       setFormData({
         name: "",
@@ -160,9 +190,13 @@ function ContactDrawer({
         gdpr: false,
       });
 
+      formStartedRef.current = false;
+
       onClose?.();
       navigate("/succes");
     } catch (error) {
+      trackContactError(error.message);
+
       setErrors((prev) => ({
         ...prev,
         submit:
@@ -272,7 +306,10 @@ function ContactDrawer({
                       <button
                         key={plan}
                         type="button"
-                        onClick={() => setSelectedPlan?.(plan)}
+                        onClick={() => {
+                          setSelectedPlan?.(plan);
+                          trackPricingClick(plan);
+                        }}
                         className={`rounded-[1.25rem] border px-4 py-4 text-left transition ${
                           selectedPlan === plan
                             ? "border-white bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.10)]"

@@ -39,4 +39,14 @@ export const contactSchema = z.object({
   // Câmpul acesta va fi ascuns în frontend.
   // Utilizatorii reali nu îl completează, boții da.
   website: z.string().optional().default(""),
+
+  sessionId: z.string().trim().max(120).optional(),
+
+  utmSource: z.string().trim().max(120).optional(),
+  utmMedium: z.string().trim().max(120).optional(),
+  utmCampaign: z.string().trim().max(160).optional(),
+  utmContent: z.string().trim().max(160).optional(),
+  utmTerm: z.string().trim().max(160).optional(),
+
+  consentAnalytics: z.boolean().optional(),
 });

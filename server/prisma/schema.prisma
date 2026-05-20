@@ -27,11 +27,19 @@ enum ContactStatus {
 // Tipurile de evenimente pentru analytics.
 enum AnalyticsEventType {
   PAGE_VIEW
-  CTA_CLICK
-  FORM_OPEN
-  FORM_SUBMIT
   BLOG_VIEW
-  PORTFOLIO_VIEW
+  SCROLL_DEPTH
+  TIME_ON_PAGE
+  CTA_CLICK
+  PRICING_VIEW
+  PRICING_CLICK
+  CONTACT_OPEN
+  CONTACT_START
+  CONTACT_SUBMIT
+  CONTACT_SUCCESS
+  CONTACT_ERROR
+  OUTBOUND_CLICK
+  ERROR
 }
 
 // Roluri pentru viitorul dashboard de admin.
@@ -57,7 +65,7 @@ model AdminUser {
 
 // Articolele de blog.
 // În loc să ai articolele hardcodate în JS,
-// le vom ține în baza de date.
+// le ținem în baza de date.
 model BlogPost {
   id              String     @id @default(cuid())
   title           String
@@ -80,7 +88,6 @@ model BlogPost {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  // Indexurile ajută la căutare/filtrare mai rapidă.
   @@index([status])
   @@index([publishedAt])
   @@index([featured])
@@ -89,9 +96,9 @@ model BlogPost {
 // Categorii pentru blog.
 // Exemplu: Web Design, SEO, UX, Business etc.
 model BlogCategory {
-  id          String   @id @default(cuid())
+  id          String  @id @default(cuid())
   name        String
-  slug        String   @unique
+  slug        String  @unique
   description String?
 
   posts BlogPost[]
@@ -103,9 +110,9 @@ model BlogCategory {
 // Taguri pentru blog.
 // Exemplu: conversie, website, responsive, branding etc.
 model BlogTag {
-  id        String   @id @default(cuid())
-  name      String
-  slug      String   @unique
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
 
   posts BlogPostTag[]
 
@@ -126,7 +133,7 @@ model BlogPostTag {
 }
 
 // Cererile primite prin formularul din ContactDrawer.
-// Le salvăm în DB înainte/după trimiterea emailului.
+// Aici stocăm date personale, separate de analytics.
 model ContactSubmission {
   id           String        @id @default(cuid())
   name         String
@@ -137,10 +144,27 @@ model ContactSubmission {
   gdprAccepted Boolean       @default(false)
   status       ContactStatus @default(NEW)
 
+  // Contextul paginii de unde a venit cererea.
   sourcePage String?
   userAgent  String?
   ipAddress  String?
 
+  // Legătură opțională cu sesiunea anonimă de analytics.
+  // Important: analytics nu conține nume/email/telefon.
+  sessionId String?
+
+  // UTM-uri pentru campanii.
+  // Exemplu: Instagram, Google Ads, TikTok, newsletter etc.
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
+  // Dacă utilizatorul a acceptat tracking analytics.
+  consentAnalytics Boolean @default(false)
+
+  // Status email.
   emailSent  Boolean @default(false)
   emailError String?
 
@@ -150,27 +174,73 @@ model ContactSubmission {
   @@index([status])
   @@index([createdAt])
   @@index([email])
+  @@index([sessionId])
+  @@index([utmSource])
+  @@index([utmCampaign])
+}
+
+// Sesiune anonimă de analytics.
+// Nu salvăm nume, email, telefon sau mesaj aici.
+model AnalyticsSession {
+  id        String @id @default(cuid())
+  sessionId String @unique
+
+  // Consimțământ pentru analytics avansat.
+  consentAnalytics Boolean @default(false)
+
+  // Prima și ultima pagină văzută în sesiune.
+  firstPath String?
+  lastPath  String?
+
+  // Referrer și UTM-uri.
+  referrer String?
+
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
+  // Informații generale, non-personale/pseudonimizate.
+  deviceType    String?
+  browser       String?
+  ipHash        String?
+  userAgentHash String?
+
+  startedAt   DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  convertedAt DateTime?
+
+  events AnalyticsEvent[]
+
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([convertedAt])
+  @@index([utmSource])
+  @@index([utmCampaign])
 }
 
 // Evenimente pentru analytics.
 // Exemplu: page view, click pe CTA, deschidere formular, submit formular.
+// Metadata trebuie folosită doar pentru detalii non-personale.
 model AnalyticsEvent {
   id        String             @id @default(cuid())
+  sessionId String
   type      AnalyticsEventType
-  path      String?
-  label     String?
-  value     String?
 
-  sessionId String?
-  userAgent String?
-  ipAddress String?
-  referrer  String?
+  path  String?
+  label String?
+  value String?
+
+  metadata Json?
 
   createdAt DateTime @default(now())
 
+  session AnalyticsSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@index([sessionId])
   @@index([type])
   @@index([path])
-  @@index([sessionId])
   @@index([createdAt])
 }
 
