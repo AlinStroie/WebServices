@@ -143,7 +143,7 @@ function Home() {
   );
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setCookieReady(true), 1400);
+    const timer = window.setTimeout(() => setCookieReady(true), 300);
 
     return () => window.clearTimeout(timer);
   }, []);
@@ -187,10 +187,15 @@ function Home() {
   }
 
   function openLegalModal(type) {
-    setLegalModal(type);
-    setIsOverlayOpen(true);
-    trackCtaClick(`Deschidere politică - ${type}`, type);
+  if (type === "privacy" || type === "cookies") {
+    window.location.href = "/privacy";
+    return;
   }
+
+  setLegalModal(type);
+  setIsOverlayOpen(true);
+  trackCtaClick(`Deschidere politică - ${type}`, type);
+}
 
   function closeLegalModal() {
     setLegalModal(null);
