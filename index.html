@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#030303" />
     <meta name="robots" content="index, follow" />
 
-    <title>A Squared Studio - Creare site-uri web</title>
+    <title>A Squared Studio</title>
     <meta
       name="description"
       content="Creare site-uri de prezentare, landing page-uri și portofolii responsive pentru afaceri care vor o imagine profesională online."
@@ -16,12 +16,12 @@
       content="creare site web, site de prezentare, landing page, web design, portofoliu, SEO basic, mentenanță website"
     />
 
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/src/assets/logo_wtb.png" />
     <link rel="canonical" href="https://example.com/" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="A Squared Studio" />
-    <meta property="og:title" content="A Squared Studio - Creare site-uri web" />
+    <meta property="og:title" content="A Squared Studio" />
     <meta
       property="og:description"
       content="Site-uri clare, rapide și bine structurate pentru afaceri care vor o prezență online profesionistă."
@@ -30,7 +30,7 @@
     <meta property="og:locale" content="ro_RO" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="A Squared Studio - Creare site-uri web" />
+    <meta name="twitter:title" content="A Squared Studio" />
     <meta
       name="twitter:description"
       content="Site-uri clare, rapide și bine structurate pentru afaceri care vor o prezență online profesionistă."
@@ -76,24 +76,14 @@
       }
 
       .loader-logo {
-        display: flex;
-        height: 56px;
-        width: 56px;
-        align-items: center;
-        justify-content: center;
-        border-radius: 18px;
-        background: white;
-        color: black;
-        font-family: Inter, system-ui, sans-serif;
-        font-size: 20px;
-        font-weight: 900;
-        letter-spacing: -0.08em;
-        box-shadow: 0 24px 90px rgba(255, 255, 255, 0.14);
+       display: flex;
+      justify-content: center;
+      align-items: center;
       }
 
       .loader-text {
         font-family: Inter, system-ui, sans-serif;
-        font-size: 13px;
+        font-size: 25px;
         font-weight: 600;
         color: rgba(255, 255, 255, 0.65);
       }
@@ -103,8 +93,10 @@
   <body>
     <div id="initial-loader">
       <div class="loader-card">
-        <div class="loader-logo">A²</div>
-        <div class="loader-text">Se încarcă experiența</div>
+        <div class="loader-logo">
+          <img src="/src/assets/logo_wtb.png" alt="Logo" style="width: 120px; height: auto;" />
+        </div>
+        <div class="loader-text">Se încarcă experiența...</div>
       </div>
     </div>
 

@@ -40,7 +40,7 @@ export const siteConfig = {
   },
 
   seo: {
-    defaultTitle: "A Squared Studio - creare site-uri web",
+    defaultTitle: "A Squared Studio",
     titleTemplate: "%s | A Squared Studio",
     description:
       "Creare site-uri de prezentare, landing page-uri și portofolii responsive pentru afaceri care vor o imagine profesională online.",

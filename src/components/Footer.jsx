@@ -114,6 +114,9 @@ function Footer({ onOpenPolicy, onOpenContact }) {
         <p>
           © 2026 {siteConfig.brand.name}. Toate drepturile rezervate.
         </p>
+        <p className="text-xs text-white/35">
+          Aldea Alexandru-Ioan PFA | CUI: RO52634205 | Nr. Reg. Com. : F2025038136000
+        </p>
 
         <div className="flex flex-wrap gap-4">
           <button

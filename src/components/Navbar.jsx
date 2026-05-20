@@ -238,7 +238,7 @@ function Navbar({ onOpenContact }) {
         <a
           href="/"
           onClick={handleLogoClick}
-          className={`group flex h-16 items-center overflow-hidden rounded-full border border-white/10 bg-white/[0.045] shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          className={`group flex h-16 items-center overflow-hidden rounded-full border border-white/10 bg-black/55 text-white/55 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.08] hover:text-white ${
             scrolled
               ? "w-16 px-2 sm:w-[270px] sm:px-2.5"
               : "w-16 px-2"
@@ -256,7 +256,7 @@ function Navbar({ onOpenContact }) {
           </span>
 
          <span
-           className={`brand-font hidden whitespace-nowrap pl-3 text-[22px] leading-none tracking-[-0.03em] text-white transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:block ${
+           className={`brand-font hidden whitespace-nowrap pl-3 text-[22px] leading-none tracking-normal text-[#FFFFFF] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:block ${
            scrolled
           ? "max-w-[100px] translate-x-0 translate-y-[3px] opacity-100"
           : "max-w-0 -translate-x-8 opacity-0"
@@ -279,7 +279,7 @@ function Navbar({ onOpenContact }) {
             <button
               type="button"
               onClick={() => setContactMenuOpen((prev) => !prev)}
-              className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.035] px-4 py-2.5 text-sm font-semibold text-white/65 transition-all duration-500 hover:bg-white/[0.08] hover:text-white ${
+              className={`inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/55 px-4 py-2.5 text-sm font-semibold text-white/65 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-500 hover:bg-white/[0.08] hover:text-white ${
                 scrolled ? "scale-[0.96]" : "scale-100"
               }`}
               aria-expanded={contactMenuOpen}
@@ -382,15 +382,13 @@ function Navbar({ onOpenContact }) {
           <button
             type="button"
             onClick={handleOfferClick}
-            className={`group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black shadow-[0_10px_35px_rgba(255,255,255,0.08)] transition-all duration-500 hover:scale-[1.03] hover:bg-white/90 ${
+            className={`group inline-flex items-center gap-2 rounded-full border border-white/10 bg-black/55 px-5 py-2.5 text-sm font-semibold text-white/65 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-500 hover:bg-white/[0.08] hover:text-white ${
               scrolled ? "scale-[0.96]" : "scale-100"
             }`}
           >
-            <span className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-black/10 to-transparent transition duration-700 group-hover:translate-x-full" />
+            <span>Cere ofertă</span>
 
-            <span className="relative">Cere ofertă</span>
-
-            <span className="relative flex h-6 w-6 items-center justify-center rounded-full bg-black text-white transition group-hover:rotate-45">
+            <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white/[0.08] text-white/70 transition group-hover:rotate-45 group-hover:bg-white/[0.14] group-hover:text-white">
               <ArrowUpRight size={14} />
             </span>
           </button>
