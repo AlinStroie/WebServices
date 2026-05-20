@@ -1,0 +1,12 @@
+# Dependințele instalate local
+node_modules
+
+# Fișier cu parole, chei, conexiuni DB etc.
+.env
+
+# Loguri și fișiere temporare
+npm-debug.log*
+.DS_Store
+
+# Coverage pentru teste, dacă vom adăuga mai târziu
+coverage

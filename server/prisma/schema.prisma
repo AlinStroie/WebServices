@@ -1,0 +1,232 @@
+// Prisma Client este codul generat automat de Prisma,
+// prin care backendul vorbește cu baza de date.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Statusurile posibile pentru articolele de blog.
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Statusurile pentru cererile primite prin formular.
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// Tipurile de evenimente pentru analytics.
+enum AnalyticsEventType {
+  PAGE_VIEW
+  CTA_CLICK
+  FORM_OPEN
+  FORM_SUBMIT
+  BLOG_VIEW
+  PORTFOLIO_VIEW
+}
+
+// Roluri pentru viitorul dashboard de admin.
+enum AdminRole {
+  OWNER
+  ADMIN
+  EDITOR
+}
+
+// Utilizator admin pentru viitor.
+// Nu îl folosim încă, dar pregătim baza pentru dashboard.
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(ADMIN)
+  active       Boolean   @default(true)
+
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Articolele de blog.
+// În loc să ai articolele hardcodate în JS,
+// le vom ține în baza de date.
+model BlogPost {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  excerpt         String?
+  content         String
+  coverImage      String?
+  status          BlogStatus @default(DRAFT)
+  featured        Boolean    @default(false)
+  readingMinutes  Int?
+  metaTitle       String?
+  metaDescription String?
+  publishedAt     DateTime?
+
+  categoryId String?
+  category   BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  tags BlogPostTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Indexurile ajută la căutare/filtrare mai rapidă.
+  @@index([status])
+  @@index([publishedAt])
+  @@index([featured])
+}
+
+// Categorii pentru blog.
+// Exemplu: Web Design, SEO, UX, Business etc.
+model BlogCategory {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+
+  posts BlogPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Taguri pentru blog.
+// Exemplu: conversie, website, responsive, branding etc.
+model BlogTag {
+  id        String   @id @default(cuid())
+  name      String
+  slug      String   @unique
+
+  posts BlogPostTag[]
+
+  createdAt DateTime @default(now())
+}
+
+// Tabel de legătură între articole și taguri.
+// Un articol poate avea mai multe taguri,
+// iar un tag poate aparține mai multor articole.
+model BlogPostTag {
+  postId String
+  tagId  String
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+// Cererile primite prin formularul din ContactDrawer.
+// Le salvăm în DB înainte/după trimiterea emailului.
+model ContactSubmission {
+  id           String        @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  selectedPlan String?
+  message      String
+  gdprAccepted Boolean       @default(false)
+  status       ContactStatus @default(NEW)
+
+  sourcePage String?
+  userAgent  String?
+  ipAddress  String?
+
+  emailSent  Boolean @default(false)
+  emailError String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+}
+
+// Evenimente pentru analytics.
+// Exemplu: page view, click pe CTA, deschidere formular, submit formular.
+model AnalyticsEvent {
+  id        String             @id @default(cuid())
+  type      AnalyticsEventType
+  path      String?
+  label     String?
+  value     String?
+
+  sessionId String?
+  userAgent String?
+  ipAddress String?
+  referrer  String?
+
+  createdAt DateTime @default(now())
+
+  @@index([type])
+  @@index([path])
+  @@index([sessionId])
+  @@index([createdAt])
+}
+
+// Proiectele din portofoliu.
+// Mai târziu putem muta portofoliul din JS în DB.
+model PortfolioProject {
+  id          String  @id @default(cuid())
+  title       String
+  slug        String  @unique
+  category    String?
+  description String
+  image       String?
+  url         String?
+  featured    Boolean @default(false)
+  order       Int     @default(0)
+  published   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published])
+  @@index([featured])
+  @@index([order])
+}
+
+// Texte modificabile din site.
+// Exemplu: hero.title, footer.description, cta.text etc.
+model SiteText {
+  id    String  @id @default(cuid())
+  key   String  @unique
+  value String
+  group String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
+}
+
+// Setări firmă.
+// Exemplu: email, telefon, adresă, CUI, social links etc.
+model CompanySetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Imagini/media folosite în blog, portofoliu etc.
+model MediaAsset {
+  id   String  @id @default(cuid())
+  url  String
+  alt  String?
+  type String?
+
+  createdAt DateTime @default(now())
+}
