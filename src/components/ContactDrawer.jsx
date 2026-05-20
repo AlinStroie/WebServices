@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
   Check,
-  CheckCircle2,
   ChevronRight,
   Mail,
   MessageCircle,
@@ -17,6 +17,16 @@ import {
 
 import OverlayBackdrop from "./OverlayBackdrop";
 import { siteConfig } from "../data/siteConfig";
+import { apiFetch } from "../lib/api";
+
+import {
+  getAnalyticsContext,
+  trackContactError,
+  trackContactStart,
+  trackContactSubmit,
+  trackContactSuccess,
+  trackPricingClick,
+} from "../lib/analytics";
 
 const plans = ["Basic", "Standard", "Premium"];
 
@@ -32,6 +42,9 @@ function ContactDrawer({
   setSelectedPlan,
   onOpenPolicy,
 }) {
+  const navigate = useNavigate();
+  const formStartedRef = useRef(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -41,7 +54,7 @@ function ContactDrawer({
   });
 
   const [errors, setErrors] = useState({});
-  const [success, setSuccess] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   const email =
     siteConfig?.contact?.email ||
@@ -85,6 +98,11 @@ function ContactDrawer({
   }, [open, onClose]);
 
   function updateField(field, value) {
+    if (!formStartedRef.current && field !== "gdpr") {
+      formStartedRef.current = true;
+      trackContactStart(field);
+    }
+
     setFormData((prev) => ({
       ...prev,
       [field]: value,
@@ -93,6 +111,7 @@ function ContactDrawer({
     setErrors((prev) => ({
       ...prev,
       [field]: "",
+      submit: "",
     }));
   }
 
@@ -106,14 +125,14 @@ function ContactDrawer({
     }
 
     if (!emailRegex.test(formData.email.trim())) {
-      nextErrors.email = "Introdu o adresa de email valida.";
+      nextErrors.email = "Introdu o adresă de email validă.";
     }
 
     if (phoneDigitsOnly.length < 10) {
-      nextErrors.phone = "Numarul trebuie sa aiba minimum 10 cifre.";
+      nextErrors.phone = "Numărul trebuie să aibă minimum 10 cifre.";
     }
 
-    if (!formData.message.trim()) {
+    if (formData.message.trim().length < 10) {
       nextErrors.message = "Scrie câteva detalii despre proiect.";
     }
 
@@ -125,20 +144,68 @@ function ContactDrawer({
     return Object.keys(nextErrors).length === 0;
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
 
     if (!validateForm()) return;
 
-    setSuccess(true);
+    const plan = selectedPlan || "Nespecificat";
+    const analyticsContext = getAnalyticsContext();
 
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      message: "",
-      gdpr: false,
-    });
+    try {
+      setSubmitting(true);
+      setErrors({});
+
+      trackContactSubmit(plan);
+
+      await apiFetch("/contact", {
+        method: "POST",
+        body: JSON.stringify({
+          name: formData.name.trim(),
+          email: formData.email.trim(),
+          phone: formData.phone.trim(),
+          message: formData.message.trim(),
+          selectedPlan: plan,
+          gdprAccepted: formData.gdpr,
+          sourcePage: window.location.pathname,
+          website: "",
+
+          sessionId: analyticsContext.sessionId,
+          utmSource: analyticsContext.utmSource,
+          utmMedium: analyticsContext.utmMedium,
+          utmCampaign: analyticsContext.utmCampaign,
+          utmContent: analyticsContext.utmContent,
+          utmTerm: analyticsContext.utmTerm,
+          consentAnalytics: analyticsContext.consentAnalytics,
+        }),
+      });
+
+      trackContactSuccess(plan);
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        message: "",
+        gdpr: false,
+      });
+
+      formStartedRef.current = false;
+
+      onClose?.();
+      navigate("/succes");
+    } catch (error) {
+      trackContactError(error.message);
+
+      setErrors((prev) => ({
+        ...prev,
+        submit:
+          error.message ||
+          "Cererea nu a putut fi trimisă momentan. Încearcă din nou.",
+      }));
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -182,7 +249,7 @@ function ContactDrawer({
             </motion.button>
 
             <aside
-              className="relative z-10 flex h-full w-full flex-col border-l border-white/10 bg-[#050505]/95 shadow-[0_0_130px_rgba(0,0,0,0.9)] backdrop-blur-2xl lg:shadow-[0_0_130px_rgba(0,0,0,0.9)]"
+              className="relative z-10 flex h-full w-full flex-col border-l border-white/10 bg-[#050505]/95 shadow-[0_0_130px_rgba(0,0,0,0.9)] backdrop-blur-2xl"
               role="dialog"
               aria-modal="true"
               aria-labelledby="contact-drawer-title"
@@ -239,7 +306,10 @@ function ContactDrawer({
                       <button
                         key={plan}
                         type="button"
-                        onClick={() => setSelectedPlan?.(plan)}
+                        onClick={() => {
+                          setSelectedPlan?.(plan);
+                          trackPricingClick(plan);
+                        }}
                         className={`rounded-[1.25rem] border px-4 py-4 text-left transition ${
                           selectedPlan === plan
                             ? "border-white bg-white text-black shadow-[0_0_40px_rgba(255,255,255,0.10)]"
@@ -260,7 +330,7 @@ function ContactDrawer({
                           {plan === "Basic" &&
                             "Pentru un site simplu, clar și rapid."}
                           {plan === "Standard" &&
-                            "Pentru un website complet, cu structura solida."}
+                            "Pentru un website complet, cu structură solidă."}
                           {plan === "Premium" &&
                             "Pentru proiecte personalizate și funcții extra."}
                         </span>
@@ -271,9 +341,9 @@ function ContactDrawer({
 
                 <div className="mb-6 grid gap-4 md:grid-cols-3">
                   {[
-                    "Discutam obiectivul",
+                    "Discutăm obiectivul",
                     "Stabilim structura",
-                    "Pregatim oferta",
+                    "Pregătim oferta",
                   ].map((item) => (
                     <div
                       key={item}
@@ -290,20 +360,13 @@ function ContactDrawer({
                   ))}
                 </div>
 
-                {success && (
+                {errors.submit && (
                   <motion.div
                     initial={{ opacity: 0, y: 12 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 flex items-start gap-3 rounded-[1.5rem] border border-emerald-400/20 bg-emerald-400/10 p-4 text-emerald-100"
+                    className="mb-6 rounded-[1.5rem] border border-red-400/20 bg-red-400/10 p-4 text-sm leading-6 text-red-100"
                   >
-                    <CheckCircle2 className="mt-0.5" size={20} />
-                    <div>
-                      <p className="font-semibold">Cererea a fost pregatita.</p>
-                      <p className="mt-1 text-sm leading-6 text-emerald-100/70">
-                        Momentan formularul afișează confirmare locală. Pentru
-                        trimitere reala, trebuie conectat la email/backend.
-                      </p>
-                    </div>
+                    {errors.submit}
                   </motion.div>
                 )}
 
@@ -325,7 +388,7 @@ function ContactDrawer({
                           updateField("name", event.target.value)
                         }
                         className="drawer-input"
-                        placeholder="Numele tau"
+                        placeholder="Numele tău"
                       />
                     </FieldWrapper>
 
@@ -413,11 +476,16 @@ function ContactDrawer({
 
                   <button
                     type="submit"
-                    className="group relative mt-5 inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-white/20 bg-white px-6 py-4 font-semibold text-black shadow-[0_18px_65px_rgba(255,255,255,0.12)] transition hover:scale-[1.01] hover:bg-white/90"
+                    disabled={submitting}
+                    className={`group relative mt-5 inline-flex w-full items-center justify-center gap-3 overflow-hidden rounded-full border border-white/20 bg-white px-6 py-4 font-semibold text-black shadow-[0_18px_65px_rgba(255,255,255,0.12)] transition hover:scale-[1.01] hover:bg-white/90 ${
+                      submitting ? "cursor-not-allowed opacity-60" : ""
+                    }`}
                   >
                     <span className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 skew-x-[-18deg] bg-gradient-to-r from-transparent via-black/10 to-transparent opacity-0 transition-all duration-700 group-hover:left-full group-hover:opacity-100" />
 
-                    <span className="relative leading-none">Trimite cererea</span>
+                    <span className="relative leading-none">
+                      {submitting ? "Se trimite..." : "Trimite cererea"}
+                    </span>
 
                     <span className="relative grid h-7 w-7 shrink-0 place-items-center rounded-full bg-black text-white transition duration-300 group-hover:rotate-45">
                       <Send
@@ -461,7 +529,7 @@ function ContactDrawer({
                     <Phone size={18} className="text-white/60" />
                     <p className="mt-3 text-sm text-white/35">Telefon</p>
                     <p className="mt-1 text-sm font-medium text-white">
-                      Suna direct
+                      Sună direct
                     </p>
                   </a>
                 </div>

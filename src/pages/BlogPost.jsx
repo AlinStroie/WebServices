@@ -1,16 +1,48 @@
+import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { ArrowLeft, ArrowRight, Clock, Home, Layers } from "lucide-react";
 
 import SEO from "../components/SEO";
-import { blogPosts } from "../data/blogPosts";
 import { siteConfig } from "../data/siteConfig";
+import { apiFetch } from "../lib/api";
+import { trackBlogView } from "../lib/analytics";
 
 function getPostDescription(post) {
-  return post.description || post.excerpt || "";
+  return post?.description || post?.excerpt || post?.metaDescription || "";
 }
 
 function getPostReadingTime(post) {
-  return post.readingTime || post.readTime || "5 min";
+  if (post?.readingTime) return post.readingTime;
+  if (post?.readTime) return post.readTime;
+  if (post?.readingMinutes) return `${post.readingMinutes} min`;
+  return "5 min";
+}
+
+function getPostCategory(post) {
+  if (typeof post?.category === "string") return post.category;
+  return post?.category?.name || "Blog";
+}
+
+function formatDate(date) {
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("ro-RO", {
+    day: "2-digit",
+    month: "long",
+    year: "numeric",
+  }).format(new Date(date));
+}
+
+function parseContent(content) {
+  if (Array.isArray(content)) return content;
+  if (typeof content !== "string") return [];
+
+  try {
+    const parsed = JSON.parse(content);
+    return Array.isArray(parsed) ? parsed : [];
+  } catch {
+    return [];
+  }
 }
 
 function BlogPostFloatingNav() {
@@ -37,11 +69,11 @@ function BlogPostFloatingNav() {
   );
 }
 
-function renderBlock(block) {
+function renderBlock(block, index) {
   if (block.type === "heading") {
     return (
       <h2
-        key={block.text}
+        key={`${block.text}-${index}`}
         className="mt-8 text-2xl font-semibold tracking-[-0.035em] text-white md:mt-12 md:text-4xl md:tracking-[-0.04em]"
       >
         {block.text}
@@ -51,9 +83,12 @@ function renderBlock(block) {
 
   if (block.type === "list") {
     return (
-      <ul key={block.items.join("-")} className="mt-4 space-y-3 md:mt-6">
-        {block.items.map((item) => (
-          <li key={item} className="flex gap-3 text-base leading-7 text-white/65 md:text-lg md:leading-8">
+      <ul key={`list-${index}`} className="mt-4 space-y-3 md:mt-6">
+        {(block.items || []).map((item, itemIndex) => (
+          <li
+            key={`${item}-${itemIndex}`}
+            className="flex gap-3 text-base leading-7 text-white/65 md:text-lg md:leading-8"
+          >
             <span className="mt-2.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white/55 md:mt-3" />
             <span>{item}</span>
           </li>
@@ -65,7 +100,7 @@ function renderBlock(block) {
   if (block.type === "quote") {
     return (
       <blockquote
-        key={block.text}
+        key={`${block.text}-${index}`}
         className="mt-6 rounded-[1.25rem] border border-white/10 bg-white/[0.045] p-4 text-lg leading-7 text-white/75 md:mt-8 md:rounded-[1.5rem] md:p-6 md:text-xl md:leading-8"
       >
         “{block.text}”
@@ -74,7 +109,10 @@ function renderBlock(block) {
   }
 
   return (
-    <p key={block.text} className="mt-4 text-base leading-7 text-white/68 md:mt-6 md:text-lg md:leading-9">
+    <p
+      key={`${block.text}-${index}`}
+      className="mt-4 text-base leading-7 text-white/68 md:mt-6 md:text-lg md:leading-9"
+    >
       {block.text}
     </p>
   );
@@ -88,7 +126,7 @@ function RelatedPostCard({ post }) {
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-white/50">
-          {post.category}
+          {getPostCategory(post)}
         </span>
 
         <span className="flex h-8 w-8 items-center justify-center rounded-full border border-white/10 text-white/45 transition group-hover:bg-white group-hover:text-black">
@@ -114,9 +152,68 @@ function RelatedPostCard({ post }) {
 
 function BlogPost() {
   const { slug } = useParams();
-  const post = blogPosts.find((item) => item.slug === slug);
 
-  if (!post) {
+  const [post, setPost] = useState(null);
+  const [relatedPosts, setRelatedPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  const contentBlocks = useMemo(() => {
+    return parseContent(post?.content);
+  }, [post]);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadPost() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const [postResponse, blogResponse] = await Promise.all([
+          apiFetch(`/blog/${slug}`),
+          apiFetch("/blog"),
+        ]);
+
+        if (!active) return;
+
+        const currentPost = postResponse.data;
+        const allPosts = blogResponse.data || [];
+
+        setPost(currentPost);
+        trackBlogView(currentPost.slug);
+
+        setRelatedPosts(
+          allPosts
+            .filter((item) => item.slug !== currentPost.slug)
+            .slice(0, 3)
+        );
+      } catch (err) {
+        if (!active) return;
+        setError("Articolul nu există sau nu a putut fi încărcat.");
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadPost();
+
+    return () => {
+      active = false;
+    };
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#050505] px-5 text-white">
+        <p className="text-sm text-white/50">Se încarcă articolul...</p>
+      </div>
+    );
+  }
+
+  if (error || !post) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#050505] px-5 text-white">
         <div className="text-center">
@@ -133,16 +230,15 @@ function BlogPost() {
     );
   }
 
-  const relatedPosts = blogPosts
-    .filter((item) => item.slug !== post.slug)
-    .slice(0, 3);
+  const postCategory = getPostCategory(post);
+  const postDate = formatDate(post.publishedAt || post.date);
 
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     headline: post.title,
     description: getPostDescription(post),
-    datePublished: post.date,
+    datePublished: post.publishedAt || post.date,
     mainEntityOfPage: `/blog/${post.slug}`,
     author: {
       "@type": "Organization",
@@ -153,7 +249,7 @@ function BlogPost() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050505] pb-24 text-white md:pb-28">
       <SEO
-        title={post.title}
+        title={post.metaTitle || post.title}
         description={getPostDescription(post)}
         type="article"
         path={`/blog/${post.slug}`}
@@ -185,9 +281,9 @@ function BlogPost() {
 
                 <div className="mb-5 flex flex-wrap items-center gap-2 text-sm text-white/50 md:mb-6 md:gap-3">
                   <span className="rounded-full border border-white/10 bg-white/[0.045] px-4 py-2">
-                    {post.category}
+                    {postCategory}
                   </span>
-                  <span>{post.date}</span>
+                  <span>{postDate}</span>
                   <span className="flex items-center gap-2">
                     <Clock size={15} />
                     {getPostReadingTime(post)}
@@ -204,21 +300,31 @@ function BlogPost() {
               </section>
 
               <div className="relative mb-8 h-48 overflow-hidden rounded-[1.5rem] border border-white/10 bg-white/[0.045] text-white shadow-[0_24px_90px_rgba(0,0,0,0.42)] md:mb-12 md:h-80 md:rounded-[2rem] md:backdrop-blur-xl">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.16),transparent_28%),radial-gradient(circle_at_80%_80%,rgba(185,170,145,0.12),transparent_34%)]" />
+                {post.coverImage ? (
+                  <img
+                    src={post.coverImage}
+                    alt={post.title}
+                    className="absolute inset-0 h-full w-full object-cover opacity-70"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.16),transparent_28%),radial-gradient(circle_at_80%_80%,rgba(185,170,145,0.12),transparent_34%)]" />
+                )}
+
+                <div className="absolute inset-0 bg-black/20" />
 
                 <div className="absolute bottom-5 left-5 right-5 md:bottom-8 md:left-8 md:right-8">
                   <p className="text-sm uppercase tracking-[0.3em] text-white/40">
-                    {post.category}
+                    {postCategory}
                   </p>
                   <p className="mt-3 text-2xl font-semibold tracking-[-0.04em] text-white md:text-4xl md:tracking-[-0.05em]">
-                    {post.imageLabel || post.shortTitle || post.category}
+                    {post.imageLabel || post.shortTitle || postCategory}
                   </p>
                 </div>
               </div>
 
               <section className="rounded-[1.5rem] border border-white/10 bg-white/[0.045] p-4 shadow-[0_24px_90px_rgba(0,0,0,0.35)] md:rounded-[2rem] md:p-10 md:backdrop-blur-xl">
                 <div className="mx-auto max-w-3xl">
-                  {post.content.map(renderBlock)}
+                  {contentBlocks.map(renderBlock)}
                 </div>
               </section>
 

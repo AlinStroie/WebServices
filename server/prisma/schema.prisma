@@ -1,0 +1,302 @@
+// Prisma Client este codul generat automat de Prisma,
+// prin care backendul vorbește cu baza de date.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Statusurile posibile pentru articolele de blog.
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+// Statusurile pentru cererile primite prin formular.
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+  ARCHIVED
+}
+
+// Tipurile de evenimente pentru analytics.
+enum AnalyticsEventType {
+  PAGE_VIEW
+  BLOG_VIEW
+  SCROLL_DEPTH
+  TIME_ON_PAGE
+  CTA_CLICK
+  PRICING_VIEW
+  PRICING_CLICK
+  CONTACT_OPEN
+  CONTACT_START
+  CONTACT_SUBMIT
+  CONTACT_SUCCESS
+  CONTACT_ERROR
+  OUTBOUND_CLICK
+  ERROR
+}
+
+// Roluri pentru viitorul dashboard de admin.
+enum AdminRole {
+  OWNER
+  ADMIN
+  EDITOR
+}
+
+// Utilizator admin pentru viitor.
+// Nu îl folosim încă, dar pregătim baza pentru dashboard.
+model AdminUser {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  role         AdminRole @default(ADMIN)
+  active       Boolean   @default(true)
+
+  lastLoginAt DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+// Articolele de blog.
+// În loc să ai articolele hardcodate în JS,
+// le ținem în baza de date.
+model BlogPost {
+  id              String     @id @default(cuid())
+  title           String
+  slug            String     @unique
+  excerpt         String?
+  content         String
+  coverImage      String?
+  status          BlogStatus @default(DRAFT)
+  featured        Boolean    @default(false)
+  readingMinutes  Int?
+  metaTitle       String?
+  metaDescription String?
+  publishedAt     DateTime?
+
+  categoryId String?
+  category   BlogCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  tags BlogPostTag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([featured])
+}
+
+// Categorii pentru blog.
+// Exemplu: Web Design, SEO, UX, Business etc.
+model BlogCategory {
+  id          String  @id @default(cuid())
+  name        String
+  slug        String  @unique
+  description String?
+
+  posts BlogPost[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Taguri pentru blog.
+// Exemplu: conversie, website, responsive, branding etc.
+model BlogTag {
+  id   String @id @default(cuid())
+  name String
+  slug String @unique
+
+  posts BlogPostTag[]
+
+  createdAt DateTime @default(now())
+}
+
+// Tabel de legătură între articole și taguri.
+// Un articol poate avea mai multe taguri,
+// iar un tag poate aparține mai multor articole.
+model BlogPostTag {
+  postId String
+  tagId  String
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+}
+
+// Cererile primite prin formularul din ContactDrawer.
+// Aici stocăm date personale, separate de analytics.
+model ContactSubmission {
+  id           String        @id @default(cuid())
+  name         String
+  email        String
+  phone        String?
+  selectedPlan String?
+  message      String
+  gdprAccepted Boolean       @default(false)
+  status       ContactStatus @default(NEW)
+
+  // Contextul paginii de unde a venit cererea.
+  sourcePage String?
+  userAgent  String?
+  ipAddress  String?
+
+  // Legătură opțională cu sesiunea anonimă de analytics.
+  // Important: analytics nu conține nume/email/telefon.
+  sessionId String?
+
+  // UTM-uri pentru campanii.
+  // Exemplu: Instagram, Google Ads, TikTok, newsletter etc.
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
+  // Dacă utilizatorul a acceptat tracking analytics.
+  consentAnalytics Boolean @default(false)
+
+  // Status email.
+  emailSent  Boolean @default(false)
+  emailError String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([email])
+  @@index([sessionId])
+  @@index([utmSource])
+  @@index([utmCampaign])
+}
+
+// Sesiune anonimă de analytics.
+// Nu salvăm nume, email, telefon sau mesaj aici.
+model AnalyticsSession {
+  id        String @id @default(cuid())
+  sessionId String @unique
+
+  // Consimțământ pentru analytics avansat.
+  consentAnalytics Boolean @default(false)
+
+  // Prima și ultima pagină văzută în sesiune.
+  firstPath String?
+  lastPath  String?
+
+  // Referrer și UTM-uri.
+  referrer String?
+
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+
+  // Informații generale, non-personale/pseudonimizate.
+  deviceType    String?
+  browser       String?
+  ipHash        String?
+  userAgentHash String?
+
+  startedAt   DateTime @default(now())
+  lastSeenAt  DateTime @default(now())
+  convertedAt DateTime?
+
+  events AnalyticsEvent[]
+
+  @@index([startedAt])
+  @@index([lastSeenAt])
+  @@index([convertedAt])
+  @@index([utmSource])
+  @@index([utmCampaign])
+}
+
+// Evenimente pentru analytics.
+// Exemplu: page view, click pe CTA, deschidere formular, submit formular.
+// Metadata trebuie folosită doar pentru detalii non-personale.
+model AnalyticsEvent {
+  id        String             @id @default(cuid())
+  sessionId String
+  type      AnalyticsEventType
+
+  path  String?
+  label String?
+  value String?
+
+  metadata Json?
+
+  createdAt DateTime @default(now())
+
+  session AnalyticsSession @relation(fields: [sessionId], references: [sessionId], onDelete: Cascade)
+
+  @@index([sessionId])
+  @@index([type])
+  @@index([path])
+  @@index([createdAt])
+}
+
+// Proiectele din portofoliu.
+// Mai târziu putem muta portofoliul din JS în DB.
+model PortfolioProject {
+  id          String  @id @default(cuid())
+  title       String
+  slug        String  @unique
+  category    String?
+  description String
+  image       String?
+  url         String?
+  featured    Boolean @default(false)
+  order       Int     @default(0)
+  published   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([published])
+  @@index([featured])
+  @@index([order])
+}
+
+// Texte modificabile din site.
+// Exemplu: hero.title, footer.description, cta.text etc.
+model SiteText {
+  id    String  @id @default(cuid())
+  key   String  @unique
+  value String
+  group String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
+}
+
+// Setări firmă.
+// Exemplu: email, telefon, adresă, CUI, social links etc.
+model CompanySetting {
+  id    String @id @default(cuid())
+  key   String @unique
+  value String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// Imagini/media folosite în blog, portofoliu etc.
+model MediaAsset {
+  id   String  @id @default(cuid())
+  url  String
+  alt  String?
+  type String?
+
+  createdAt DateTime @default(now())
+}

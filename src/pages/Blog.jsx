@@ -8,18 +8,38 @@ import {
   Search,
   Sparkles,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import SEO from "../components/SEO";
-import { blogPosts } from "../data/blogPosts";
 import { siteConfig } from "../data/siteConfig";
+import { apiFetch } from "../lib/api";
 
 function getPostDescription(post) {
-  return post.description || post.excerpt || "";
+  return post.description || post.excerpt || post.metaDescription || "";
 }
 
 function getPostReadingTime(post) {
-  return post.readingTime || post.readTime || "5 min";
+  if (post.readingTime) return post.readingTime;
+  if (post.readTime) return post.readTime;
+  if (post.readingMinutes) return `${post.readingMinutes} min`;
+  return "5 min";
+}
+
+function getPostCategory(post) {
+  if (typeof post.category === "string") return post.category;
+  return post.category?.name || "Blog";
+}
+
+function getPostDate(post) {
+  const date = post.publishedAt || post.date;
+
+  if (!date) return "";
+
+  return new Intl.DateTimeFormat("ro-RO", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  }).format(new Date(date));
 }
 
 function BlogFloatingNav() {
@@ -48,17 +68,51 @@ function BlogFloatingNav() {
 
 function Blog() {
   const [query, setQuery] = useState("");
+  const [posts, setPosts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadPosts() {
+      try {
+        setLoading(true);
+        setError("");
+
+        const response = await apiFetch("/blog");
+
+        if (!active) return;
+
+        setPosts(response.data || []);
+      } catch (err) {
+        if (!active) return;
+
+        setError("Articolele nu au putut fi încărcate momentan.");
+      } finally {
+        if (active) {
+          setLoading(false);
+        }
+      }
+    }
+
+    loadPosts();
+
+    return () => {
+      active = false;
+    };
+  }, []);
 
   const filteredPosts = useMemo(() => {
     const value = query.trim().toLowerCase();
 
-    if (!value) return blogPosts;
+    if (!value) return posts;
 
-    return blogPosts.filter((post) => {
+    return posts.filter((post) => {
       const text = [
         post.title,
         post.shortTitle,
-        post.category,
+        getPostCategory(post),
         post.description,
         post.excerpt,
         post.imageLabel,
@@ -69,7 +123,7 @@ function Blog() {
 
       return text.includes(value);
     });
-  }, [query]);
+  }, [query, posts]);
 
   const featuredPost = filteredPosts[0];
   const restPosts = filteredPosts.slice(1);
@@ -80,14 +134,43 @@ function Blog() {
     name: `Blog ${siteConfig.brand.name}`,
     description:
       "Articole despre site-uri de prezentare, landing page-uri, SEO de bază și design web modern.",
-    blogPost: blogPosts.map((post) => ({
+    blogPost: posts.map((post) => ({
       "@type": "BlogPosting",
       headline: post.title,
       description: getPostDescription(post),
-      datePublished: post.date,
+      datePublished: post.publishedAt || post.date,
       url: `/blog/${post.slug}`,
     })),
   };
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#050505] px-5 text-white">
+        <p className="text-sm text-white/50">Se încarcă articolele...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#050505] px-5 text-white">
+        <div className="text-center">
+          <h1 className="text-3xl font-semibold text-white">
+            Nu am putut încărca blogul.
+          </h1>
+
+          <p className="mt-3 text-white/55">{error}</p>
+
+          <Link
+            to="/"
+            className="mt-6 inline-flex rounded-full bg-white px-6 py-3 font-semibold text-black"
+          >
+            Înapoi pe site
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-[#050505] pb-24 text-white md:pb-28">
@@ -142,7 +225,7 @@ function Blog() {
               </label>
 
               <div className="mt-4 hidden gap-3 sm:grid sm:grid-cols-3">
-                <BlogStat value={blogPosts.length} label="articole" />
+                <BlogStat value={posts.length} label="articole" />
                 <BlogStat value="5 min" label="citire medie" />
                 <BlogStat value="SEO" label="conținut util" />
               </div>
@@ -165,13 +248,15 @@ function Blog() {
                       </p>
 
                       <h2 className="mt-4 max-w-xl text-3xl font-semibold leading-[1.02] tracking-[-0.045em] md:mt-5 md:text-6xl md:leading-[1] md:tracking-[-0.055em]">
-                        {featuredPost.shortTitle || featuredPost.title}
+                        {featuredPost.shortTitle ||
+                          featuredPost.imageLabel ||
+                          featuredPost.title}
                       </h2>
                     </div>
 
                     <div className="mt-6 flex flex-wrap gap-2 md:mt-10 md:gap-3">
                       <span className="rounded-full bg-white px-4 py-2 text-sm font-semibold text-black">
-                        {featuredPost.category}
+                        {getPostCategory(featuredPost)}
                       </span>
 
                       <span className="rounded-full border border-white/10 bg-white/[0.06] px-4 py-2 text-sm text-white/70">
@@ -184,9 +269,9 @@ function Blog() {
                 <div className="flex flex-col justify-between border-t border-white/10 bg-black/20 p-5 md:p-10 lg:border-l lg:border-t-0">
                   <div>
                     <div className="flex flex-wrap items-center gap-3 text-sm text-white/45">
-                      <span>{featuredPost.date}</span>
+                      <span>{getPostDate(featuredPost)}</span>
                       <span aria-hidden="true">•</span>
-                      <span>{featuredPost.category}</span>
+                      <span>{getPostCategory(featuredPost)}</span>
                     </div>
 
                     <h3 className="mt-4 max-w-xl text-2xl font-semibold leading-[1.12] tracking-[-0.04em] md:mt-6 md:text-3xl md:leading-[1.08] md:tracking-[-0.045em]">
@@ -243,6 +328,8 @@ function BlogStat({ value, label }) {
 }
 
 function BlogPostCard({ post }) {
+  const category = getPostCategory(post);
+
   return (
     <Link
       to={`/blog/${post.slug}`}
@@ -254,7 +341,7 @@ function BlogPostCard({ post }) {
         <div className="relative flex h-full flex-col justify-between">
           <div className="flex items-center justify-between gap-4">
             <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-              {post.category}
+              {category}
             </p>
 
             <span className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/[0.07] transition group-hover:bg-white group-hover:text-black">
@@ -263,14 +350,14 @@ function BlogPostCard({ post }) {
           </div>
 
           <h3 className="max-w-sm text-xl font-semibold leading-[1.08] tracking-[-0.04em] md:text-2xl md:leading-[1.05] md:tracking-[-0.045em]">
-            {post.shortTitle || post.imageLabel || post.category}
+            {post.shortTitle || post.imageLabel || category}
           </h3>
         </div>
       </div>
 
       <div className="px-1 py-4 md:px-2 md:py-5">
         <div className="flex items-center gap-3 text-sm text-white/45">
-          <span>{post.date}</span>
+          <span>{getPostDate(post)}</span>
           <span aria-hidden="true">•</span>
           <span className="inline-flex items-center gap-1">
             <Clock size={14} />

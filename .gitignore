@@ -1,6 +1,9 @@
-node_modules
-dist
 .env
 .env.local
-.vscode
-.DS_Store
+.env.production
+server/.env
+server/.env.local
+server/.env.production
+node_modules
+dist
+server/node_modules

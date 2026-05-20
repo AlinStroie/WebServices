@@ -1,373 +1,239 @@
-# Web Services Portfolio
+# A Squared Studio — Web Services Portfolio
 
-Un website modern de prezentare pentru servicii web, construit cu **React**, **Vite** și **Tailwind CSS**. Proiectul este gândit pentru o agenție mică, freelancer sau studio digital care oferă servicii de creare site-uri, landing page-uri, portofolii, magazine online simple, mentenanță și optimizare SEO de bază.
+![React](https://img.shields.io/badge/React-Frontend-61DAFB?style=for-the-badge&logo=react&logoColor=000)
+![Vite](https://img.shields.io/badge/Vite-Build-646CFF?style=for-the-badge&logo=vite&logoColor=fff)
+![Express](https://img.shields.io/badge/Express-Backend-000000?style=for-the-badge&logo=express&logoColor=fff)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Database-4169E1?style=for-the-badge&logo=postgresql&logoColor=fff)
+![Prisma](https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma&logoColor=fff)
 
-Designul este inspirat de stilul modern, premium și minimalist: fundal închis, text mare, carduri elegante, animații fine și layout responsive.
+Modern portfolio website for a web services studio, built with a React frontend and a secure Express backend.
+
+The project includes a dynamic blog, contact form with email delivery, PostgreSQL database, privacy-friendly analytics, cookie consent flow and production-ready backend structure.
 
 ---
 
 ## Preview
 
-Website-ul include următoarele secțiuni:
-
-- Navbar responsive
-- Hero section cu mesaj principal și call-to-action
-- Beneficii
-- Servicii
-- Portofoliu / Showcase
-- Proces de lucru
-- Pachete de prețuri
-- Call-to-action final
-- Formular de contact
-- Footer
+```txt
+Frontend: React + Vite
+Backend: Express + Prisma
+Database: PostgreSQL
+Email: Brevo SMTP
+Analytics: Custom privacy-first tracking
+```
 
 ---
 
-## Tehnologii folosite
+## Features
 
-- React
-- Vite
-- Tailwind CSS
-- Framer Motion
-- Lucide React
-- JavaScript
+### Frontend
+
+- Responsive landing page
+- Modern animated UI
+- Portfolio sections
+- Dynamic blog pages
+- Contact drawer
+- Success page after form submission
+- Cookie consent banner
+- Privacy policy page
+- SEO components
+- Mobile-first structure
+
+### Backend
+
+- Express REST API
+- PostgreSQL database
+- Prisma ORM
+- Blog API
+- Contact form API
+- Email sending through SMTP
+- Custom analytics API
+- Rate limiting
+- Input validation with Zod
+- Security headers with Helmet
+- CORS configuration
+- Centralized error handling
+
+### Analytics
+
+- Anonymous session tracking
+- Page views
+- Blog views
+- CTA clicks
+- Pricing clicks
+- Contact form events
+- Outbound link tracking
+- UTM tracking
+- Conversion tracking
+- Consent-based advanced analytics
 
 ---
 
-## Funcționalități
+## Tech Stack
 
-- Design modern, dark și minimalist
-- Layout responsive pentru desktop, tabletă și mobil
-- Animații smooth la scroll și hover
-- Componente reutilizabile
-- Date separate în fișiere dedicate
-- Formular de contact cu mesaj local de succes
-- Structură clară și ușor de modificat
-- Secțiuni potrivite pentru site de agenție / freelancer
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, Tailwind CSS |
+| Animations | Framer Motion |
+| Backend | Node.js, Express |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Validation | Zod |
+| Email | Nodemailer + Brevo SMTP |
+| Security | Helmet, CORS, Rate Limit, HPP |
+| Analytics | Custom event tracking |
 
 ---
 
-## Structura proiectului
+## Project Structure
 
 ```txt
 web-services-portfolio/
-│
-├── public/
-│
 ├── src/
 │   ├── components/
-│   │   ├── AnimatedSection.jsx
-│   │   ├── Benefits.jsx
-│   │   ├── Contact.jsx
-│   │   ├── CTA.jsx
-│   │   ├── Footer.jsx
-│   │   ├── Hero.jsx
-│   │   ├── Navbar.jsx
-│   │   ├── Portfolio.jsx
-│   │   ├── Pricing.jsx
-│   │   ├── Process.jsx
-│   │   ├── SectionHeader.jsx
-│   │   └── Services.jsx
-│   │
-│   ├── data/
-│   │   ├── benefits.js
-│   │   ├── portfolio.js
-│   │   ├── pricing.js
-│   │   ├── process.js
-│   │   └── services.js
-│   │
 │   ├── pages/
-│   │   └── Home.jsx
-│   │
-│   ├── App.jsx
-│   ├── main.jsx
-│   └── index.css
+│   ├── lib/
+│   └── data/
 │
-├── index.html
-├── package.json
-├── vite.config.js
-└── README.md
+├── server/
+│   ├── prisma/
+│   └── src/
+│       ├── config/
+│       ├── lib/
+│       ├── middleware/
+│       ├── routes/
+│       └── validators/
 ```
 
 ---
 
-## Instalare și rulare locală
+## Environment Variables
 
-### 1. Clonează repository-ul
+### Frontend `.env`
 
-```bash
-git clone https://github.com/AlinStroie/WebServices.git
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
 ```
 
-### 2. Intră în folderul proiectului
+### Backend `server/.env`
 
-```bash
-cd WebServices
-```
+```env
+NODE_ENV=development
+PORT=5000
+CLIENT_URL=http://localhost:5174
 
-### 3. Instalează dependențele
+DATABASE_URL="postgresql://USER:PASSWORD@localhost:5432/webservices_db"
 
-```bash
-npm install
-```
-
-### 4. Pornește serverul de dezvoltare
-
-```bash
-npm run dev
-```
-
-După rulare, proiectul va fi disponibil de obicei la:
-
-```txt
-http://localhost:5173/
+SMTP_HOST=smtp-relay.brevo.com
+SMTP_PORT=587
+SMTP_USER=your_brevo_user
+SMTP_PASS=your_brevo_smtp_key
+SMTP_FROM="A Squared Studio <your@email.com>"
+COMPANY_EMAIL=your@email.com
 ```
 
 ---
 
-## Build pentru producție
+## Installation
 
-Pentru generarea versiunii finale:
-
-```bash
-npm run build
-```
-
-Fișierele generate vor fi în folderul:
-
-```txt
-dist/
-```
-
-Pentru preview local al build-ului:
-
-```bash
-npm run preview
-```
-
----
-
-## Personalizare proiect
-
-### Schimbarea numelui brandului
-
-Numele brandului poate fi modificat în:
-
-```txt
-src/components/Navbar.jsx
-src/components/Footer.jsx
-```
-
-Caută:
-
-```txt
-WebNova Studio
-```
-
-și înlocuiește cu numele dorit.
-
----
-
-### Modificarea serviciilor
-
-Serviciile se modifică din:
-
-```txt
-src/data/services.js
-```
-
-Acolo poți schimba:
-
-- titlul serviciului;
-- descrierea;
-- iconița folosită.
-
----
-
-### Modificarea beneficiilor
-
-Beneficiile se modifică din:
-
-```txt
-src/data/benefits.js
-```
-
----
-
-### Modificarea portofoliului
-
-Proiectele demo se modifică din:
-
-```txt
-src/data/portfolio.js
-```
-
-Fiecare proiect are:
-
-- titlu;
-- categorie;
-- descriere;
-- gradient vizual.
-
----
-
-### Modificarea pachetelor de preț
-
-Pachetele se modifică din:
-
-```txt
-src/data/pricing.js
-```
-
-Exemplu:
-
-```js
-{
-  name: "Basic",
-  price: "de la 300€",
-  description: "Pentru site simplu de prezentare sau pagină one-page.",
-  highlight: false,
-  features: [
-    "Design responsive",
-    "Până la 4 secțiuni",
-    "Formular de contact",
-    "Buton WhatsApp",
-    "SEO basic",
-  ],
-}
-```
-
----
-
-### Modificarea datelor de contact
-
-Datele de contact se modifică din:
-
-```txt
-src/components/Contact.jsx
-src/components/Footer.jsx
-```
-
-Poți schimba:
-
-- email;
-- telefon;
-- locație;
-- textul formularului.
-
----
-
-## Formularul de contact
-
-Formularul de contact este momentan local. La trimitere, acesta afișează un mesaj de succes, dar nu trimite email și nu salvează datele într-o bază de date.
-
-Pentru funcționalitate reală, formularul poate fi conectat ulterior la:
-
-- EmailJS;
-- Formspree;
-- un backend propriu;
-- o funcție serverless.
-
----
-
-## Securitate
-
-În forma actuală, formularul nu trimite date către server, deci riscurile sunt reduse.
-
-Pentru o variantă de producție, sunt recomandate:
-
-- validare client-side;
-- validare server-side;
-- limitare număr cereri;
-- protecție anti-spam;
-- honeypot field;
-- protecție CSRF dacă se folosește autentificare sau sesiune;
-- evitarea expunerii cheilor API în frontend.
-
----
-
-## Design
-
-Direcția vizuală a proiectului:
-
-- fundal negru / foarte închis;
-- text alb și gri deschis;
-- accente discrete;
-- carduri cu border subtil;
-- efect glass / blur;
-- colțuri rotunjite;
-- spațiere generoasă;
-- animații fine;
-- aspect premium și minimalist.
-
----
-
-## Secțiuni principale
-
-### Hero
-
-Secțiune principală cu titlu mare, subtitlu și butoane call-to-action.
-
-### Beneficii
-
-Prezintă avantajele principale ale serviciilor oferite.
-
-### Servicii
-
-Listă de servicii web:
-
-- site de prezentare;
-- landing page;
-- portofoliu personal;
-- magazin online simplu;
-- redesign site vechi;
-- mentenanță lunară.
-
-### Portofoliu
-
-Proiecte fictive/demo care pot fi înlocuite cu proiecte reale.
-
-### Proces
-
-Pașii de lucru de la idee până la publicarea site-ului.
-
-### Prețuri
-
-Trei pachete orientative:
-
-- Basic;
-- Standard;
-- Premium.
-
-### Contact
-
-Formular simplu și date de contact.
-
----
-
-## Comenzi utile
+### Frontend
 
 ```bash
 npm install
 npm run dev
-npm run build
-npm run preview
+```
+
+### Backend
+
+```bash
+cd server
+npm install
+npm run dev
 ```
 
 ---
 
-## Status proiect
+## Database
 
-Proiectul este funcțional și poate fi rulat local. Este potrivit ca bază pentru un site real de prezentare, portofoliu sau servicii web.
+Run Prisma migrations:
+
+```bash
+cd server
+npx prisma migrate dev
+npx prisma generate
+```
+
+Open Prisma Studio:
+
+```bash
+npx prisma studio
+```
 
 ---
 
-## Autor
+## API Overview
 
-Proiect realizat de **Alin Stroie**.
+```txt
+GET    /api/health
+GET    /api/blog
+GET    /api/blog/:slug
+POST   /api/contact
+POST   /api/analytics/event
+```
 
 ---
 
-## Licență
+## Production Notes
 
-Acest proiect poate fi folosit și modificat în scop personal, educațional sau comercial.
+Before deployment, update:
+
+```txt
+CLIENT_URL
+VITE_API_BASE_URL
+DATABASE_URL
+SMTP credentials
+CORS origins
+production environment variables
+```
+
+Use Prisma deploy migrations in production:
+
+```bash
+npx prisma migrate deploy
+```
+
+---
+
+## Privacy & Security
+
+The project uses a privacy-first analytics structure:
+
+- no personal data stored inside analytics events
+- contact form data is stored separately
+- advanced tracking is consent-based
+- essential cookies remain always active
+- analytics and marketing tracking can be disabled by the user
+
+Security measures include:
+
+- request validation
+- rate limiting
+- HTTP security headers
+- CORS restrictions
+- honeypot anti-spam field
+- centralized error handling
+
+---
+
+## Status
+
+```txt
+Frontend        ✅ Ready
+Backend         ✅ Ready
+Blog API        ✅ Ready
+Contact Form    ✅ Ready
+Email Delivery  ✅ Ready
+Analytics       ✅ Ready
+Cookie Consent  ✅ Ready
+Production Prep ⏳ In progress
+```

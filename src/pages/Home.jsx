@@ -6,6 +6,11 @@ import Hero from "../components/Hero";
 import SEO from "../components/SEO";
 import { siteConfig } from "../data/siteConfig";
 
+import {
+  trackContactOpen,
+  trackCtaClick,
+} from "../lib/analytics";
+
 const Benefits = lazy(() => import("../components/Benefits"));
 const Services = lazy(() => import("../components/Services"));
 const Portfolio = lazy(() => import("../components/Portfolio"));
@@ -31,6 +36,7 @@ function LazyOnView({ children, minHeight = 280, rootMargin = "520px 0px" }) {
 
   useEffect(() => {
     if (visible) return;
+
     const element = ref.current;
     if (!element) return;
 
@@ -45,6 +51,7 @@ function LazyOnView({ children, minHeight = 280, rootMargin = "520px 0px" }) {
     );
 
     observer.observe(element);
+
     return () => observer.disconnect();
   }, [rootMargin, visible]);
 
@@ -61,8 +68,6 @@ function LazyOnView({ children, minHeight = 280, rootMargin = "520px 0px" }) {
   );
 }
 
-
-
 function FloatingQuickActions({ onOpenContact, hidden }) {
   const [visible, setVisible] = useState(false);
 
@@ -73,6 +78,7 @@ function FloatingQuickActions({ onOpenContact, hidden }) {
 
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
+
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -91,7 +97,10 @@ function FloatingQuickActions({ onOpenContact, hidden }) {
 
       <button
         type="button"
-        onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+        onClick={() => {
+          trackCtaClick("Înapoi sus", "floating_scroll_top");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
         aria-label="Înapoi sus"
         className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-black/75 text-white shadow-[0_18px_70px_rgba(0,0,0,0.45)] transition hover:bg-white hover:text-black focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
       >
@@ -134,7 +143,8 @@ function Home() {
   );
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setCookieReady(true), 1400);
+    const timer = window.setTimeout(() => setCookieReady(true), 300);
+
     return () => window.clearTimeout(timer);
   }, []);
 
@@ -147,9 +157,11 @@ function Home() {
     if (!canShowWave) return;
 
     const show = () => setShowDesktopWave(true);
-    const idleId = "requestIdleCallback" in window
-      ? window.requestIdleCallback(show, { timeout: 1600 })
-      : window.setTimeout(show, 900);
+
+    const idleId =
+      "requestIdleCallback" in window
+        ? window.requestIdleCallback(show, { timeout: 1600 })
+        : window.setTimeout(show, 900);
 
     return () => {
       if ("cancelIdleCallback" in window) {
@@ -160,10 +172,13 @@ function Home() {
     };
   }, []);
 
-  function openContact(plan = "Standard") {
+  function openContact(plan = "Standard", source = "unknown") {
     setSelectedPlan(plan);
     setContactOpen(true);
     setIsOverlayOpen(true);
+
+    trackContactOpen(source);
+    trackCtaClick(`Deschidere formular - ${source}`, plan);
   }
 
   function closeContact() {
@@ -172,9 +187,15 @@ function Home() {
   }
 
   function openLegalModal(type) {
-    setLegalModal(type);
-    setIsOverlayOpen(true);
+  if (type === "privacy" || type === "cookies") {
+    window.location.href = "/privacy";
+    return;
   }
+
+  setLegalModal(type);
+  setIsOverlayOpen(true);
+  trackCtaClick(`Deschidere politică - ${type}`, type);
+}
 
   function closeLegalModal() {
     setLegalModal(null);
@@ -205,12 +226,12 @@ function Home() {
 
       <div className="relative z-10">
         <Navbar
-          onOpenContact={() => openContact("Standard")}
+          onOpenContact={() => openContact("Standard", "navbar")}
           onOpenPolicy={openLegalModal}
         />
 
         <main>
-          <Hero onOpenContact={() => openContact("Standard")} />
+          <Hero onOpenContact={() => openContact("Standard", "hero")} />
 
           <LazyOnView minHeight={300}>
             <Benefits />
@@ -223,7 +244,9 @@ function Home() {
           <LazyOnView minHeight={460}>
             <Portfolio
               onOverlayChange={setIsOverlayOpen}
-              onOpenContact={openContact}
+              onOpenContact={(plan = "Standard") =>
+                openContact(plan, "portfolio")
+              }
             />
           </LazyOnView>
 
@@ -236,24 +259,28 @@ function Home() {
           </LazyOnView>
 
           <LazyOnView minHeight={520}>
-            <Pricing onSelectPlan={openContact} />
+            <Pricing
+              onSelectPlan={(plan = "Standard") =>
+                openContact(plan, `pricing_${String(plan).toLowerCase()}`)
+              }
+            />
           </LazyOnView>
 
           <LazyOnView minHeight={360}>
-            <CTA onOpenContact={() => openContact("Standard")} />
+            <CTA onOpenContact={() => openContact("Standard", "main_cta")} />
           </LazyOnView>
         </main>
 
         <LazyOnView minHeight={360} rootMargin="320px 0px">
           <Footer
-            onOpenContact={() => openContact("Standard")}
+            onOpenContact={() => openContact("Standard", "footer")}
             onOpenPolicy={openLegalModal}
           />
         </LazyOnView>
 
         <FloatingQuickActions
           hidden={isOverlayOpen}
-          onOpenContact={() => openContact("Standard")}
+          onOpenContact={() => openContact("Standard", "floating_offer")}
         />
 
         {cookieReady && (
