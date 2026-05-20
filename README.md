@@ -20,54 +20,74 @@ Backend: Express + Prisma
 Database: PostgreSQL
 Email: Brevo SMTP
 Analytics: Custom privacy-first tracking
-Features
-Frontend
-Responsive landing page
-Modern animated UI
-Portfolio sections
-Dynamic blog pages
-Contact drawer
-Success page after form submission
-Cookie consent banner
-Privacy policy page
-SEO components
-Mobile-first structure
-Backend
-Express REST API
-PostgreSQL database
-Prisma ORM
-Blog API
-Contact form API
-Email sending through SMTP
-Custom analytics API
-Rate limiting
-Input validation with Zod
-Security headers with Helmet
-CORS configuration
-Centralized error handling
-Analytics
-Anonymous session tracking
-Page views
-Blog views
-CTA clicks
-Pricing clicks
-Contact form events
-Outbound link tracking
-UTM tracking
-Conversion tracking
-Consent-based advanced analytics
-Tech Stack
-Layer	Technology
-Frontend	React, Vite, Tailwind CSS
-Animations	Framer Motion
-Backend	Node.js, Express
-Database	PostgreSQL
-ORM	Prisma
-Validation	Zod
-Email	Nodemailer + Brevo SMTP
-Security	Helmet, CORS, Rate Limit, HPP
-Analytics	Custom event tracking
-Project Structure
+```
+
+---
+
+## Features
+
+### Frontend
+
+- Responsive landing page
+- Modern animated UI
+- Portfolio sections
+- Dynamic blog pages
+- Contact drawer
+- Success page after form submission
+- Cookie consent banner
+- Privacy policy page
+- SEO components
+- Mobile-first structure
+
+### Backend
+
+- Express REST API
+- PostgreSQL database
+- Prisma ORM
+- Blog API
+- Contact form API
+- Email sending through SMTP
+- Custom analytics API
+- Rate limiting
+- Input validation with Zod
+- Security headers with Helmet
+- CORS configuration
+- Centralized error handling
+
+### Analytics
+
+- Anonymous session tracking
+- Page views
+- Blog views
+- CTA clicks
+- Pricing clicks
+- Contact form events
+- Outbound link tracking
+- UTM tracking
+- Conversion tracking
+- Consent-based advanced analytics
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend | React, Vite, Tailwind CSS |
+| Animations | Framer Motion |
+| Backend | Node.js, Express |
+| Database | PostgreSQL |
+| ORM | Prisma |
+| Validation | Zod |
+| Email | Nodemailer + Brevo SMTP |
+| Security | Helmet, CORS, Rate Limit, HPP |
+| Analytics | Custom event tracking |
+
+---
+
+## Project Structure
+
+```txt
 web-services-portfolio/
 ├── src/
 │   ├── components/
@@ -83,10 +103,21 @@ web-services-portfolio/
 │       ├── middleware/
 │       ├── routes/
 │       └── validators/
-Environment Variables
-Frontend .env
+```
+
+---
+
+## Environment Variables
+
+### Frontend `.env`
+
+```env
 VITE_API_BASE_URL=http://localhost:5000/api
-Backend server/.env
+```
+
+### Backend `server/.env`
+
+```env
 NODE_ENV=development
 PORT=5000
 CLIENT_URL=http://localhost:5174
@@ -99,64 +130,104 @@ SMTP_USER=your_brevo_user
 SMTP_PASS=your_brevo_smtp_key
 SMTP_FROM="A Squared Studio <your@email.com>"
 COMPANY_EMAIL=your@email.com
-Installation
-Frontend
+```
+
+---
+
+## Installation
+
+### Frontend
+
+```bash
 npm install
 npm run dev
-Backend
+```
+
+### Backend
+
+```bash
 cd server
 npm install
 npm run dev
-Database
+```
+
+---
+
+## Database
 
 Run Prisma migrations:
 
+```bash
 cd server
 npx prisma migrate dev
 npx prisma generate
+```
 
 Open Prisma Studio:
 
+```bash
 npx prisma studio
-API Overview
+```
+
+---
+
+## API Overview
+
+```txt
 GET    /api/health
 GET    /api/blog
 GET    /api/blog/:slug
 POST   /api/contact
 POST   /api/analytics/event
-Production Notes
+```
+
+---
+
+## Production Notes
 
 Before deployment, update:
 
+```txt
 CLIENT_URL
 VITE_API_BASE_URL
 DATABASE_URL
 SMTP credentials
 CORS origins
 production environment variables
+```
 
 Use Prisma deploy migrations in production:
 
+```bash
 npx prisma migrate deploy
-Privacy & Security
+```
+
+---
+
+## Privacy & Security
 
 The project uses a privacy-first analytics structure:
 
-no personal data stored inside analytics events
-contact form data is stored separately
-advanced tracking is consent-based
-essential cookies remain always active
-analytics and marketing tracking can be disabled by the user
+- no personal data stored inside analytics events
+- contact form data is stored separately
+- advanced tracking is consent-based
+- essential cookies remain always active
+- analytics and marketing tracking can be disabled by the user
 
 Security measures include:
 
-request validation
-rate limiting
-HTTP security headers
-CORS restrictions
-honeypot anti-spam field
-centralized error handling
-Status
+- request validation
+- rate limiting
+- HTTP security headers
+- CORS restrictions
+- honeypot anti-spam field
+- centralized error handling
+
+---
+
+## Status
+
+```txt
 Frontend        ✅ Ready
 Backend         ✅ Ready
 Blog API        ✅ Ready
@@ -165,3 +236,4 @@ Email Delivery  ✅ Ready
 Analytics       ✅ Ready
 Cookie Consent  ✅ Ready
 Production Prep ⏳ In progress
+```
