@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { CheckCircle2, ArrowRight, Home } from "lucide-react";
+import { ArrowRight, CheckCircle2, Home } from "lucide-react";
 
 import SEO from "../components/SEO";
 

@@ -72,10 +72,10 @@ router.post(
         },
       });
 
-      return res.status(500).json({
-        success: false,
+      return res.json({
+        success: true,
         message:
-          "Cererea a fost salvată, dar emailul nu a putut fi trimis momentan.",
+          "Cererea a fost salvată. Emailul nu a putut fi trimis momentan, dar datele sunt înregistrate.",
       });
     }
 

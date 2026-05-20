@@ -3,11 +3,12 @@ import nodemailer from "nodemailer";
 import { env } from "../config/env.js";
 
 // Transporterul SMTP.
-// Acesta este responsabil cu trimiterea emailurilor.
+// Pentru Outlook folosim port 587 + STARTTLS.
 const transporter = nodemailer.createTransport({
   host: env.SMTP_HOST,
-  port: env.SMTP_PORT,
-  secure: env.SMTP_PORT === 465,
+  port: Number(env.SMTP_PORT),
+  secure: false,
+  requireTLS: true,
   auth: {
     user: env.SMTP_USER,
     pass: env.SMTP_PASS,
