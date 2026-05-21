@@ -89,6 +89,10 @@ export function getAdminAnalytics(days = 30) {
   return adminApiFetch(`/admin/analytics/overview?days=${days}`);
 }
 
+export function getAdminAnalyticsTimeseries(days = 30) {
+  return adminApiFetch(`/admin/analytics/timeseries?days=${days}`);
+}
+
 export function getAdminBlogPosts(params = {}) {
   const searchParams = new URLSearchParams();
 

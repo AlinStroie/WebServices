@@ -274,4 +274,109 @@ router.get(
   })
 );
 
+// GET /api/admin/analytics/timeseries
+// Returnează date grupate pe zile pentru grafice.
+router.get(
+  "/timeseries",
+  asyncHandler(async (req, res) => {
+    const days = Math.min(Math.max(Number(req.query.days || 30), 1), 365);
+
+    const fromDate = new Date();
+    fromDate.setDate(fromDate.getDate() - days);
+    fromDate.setHours(0, 0, 0, 0);
+
+    const [events, contacts] = await Promise.all([
+      prisma.analyticsEvent.findMany({
+        where: {
+          createdAt: {
+            gte: fromDate,
+          },
+          type: {
+            in: [
+              "PAGE_VIEW",
+              "BLOG_VIEW",
+              "CTA_CLICK",
+              "PRICING_CLICK",
+              "CONTACT_OPEN",
+              "CONTACT_SUCCESS",
+              "OUTBOUND_CLICK",
+            ],
+          },
+        },
+        select: {
+          type: true,
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      }),
+
+      prisma.contactSubmission.findMany({
+        where: {
+          createdAt: {
+            gte: fromDate,
+          },
+        },
+        select: {
+          createdAt: true,
+        },
+        orderBy: {
+          createdAt: "asc",
+        },
+      }),
+    ]);
+
+    const dayMap = new Map();
+
+    for (let index = 0; index <= days; index += 1) {
+      const date = new Date(fromDate);
+      date.setDate(fromDate.getDate() + index);
+
+      const key = date.toISOString().slice(0, 10);
+
+      dayMap.set(key, {
+        date: key,
+        pageViews: 0,
+        blogViews: 0,
+        ctaClicks: 0,
+        pricingClicks: 0,
+        contactOpens: 0,
+        contactSuccess: 0,
+        outboundClicks: 0,
+        contacts: 0,
+      });
+    }
+
+    events.forEach((event) => {
+      const key = event.createdAt.toISOString().slice(0, 10);
+      const row = dayMap.get(key);
+
+      if (!row) return;
+
+      if (event.type === "PAGE_VIEW") row.pageViews += 1;
+      if (event.type === "BLOG_VIEW") row.blogViews += 1;
+      if (event.type === "CTA_CLICK") row.ctaClicks += 1;
+      if (event.type === "PRICING_CLICK") row.pricingClicks += 1;
+      if (event.type === "CONTACT_OPEN") row.contactOpens += 1;
+      if (event.type === "CONTACT_SUCCESS") row.contactSuccess += 1;
+      if (event.type === "OUTBOUND_CLICK") row.outboundClicks += 1;
+    });
+
+    contacts.forEach((contact) => {
+      const key = contact.createdAt.toISOString().slice(0, 10);
+      const row = dayMap.get(key);
+
+      if (!row) return;
+
+      row.contacts += 1;
+    });
+
+    return res.json({
+      success: true,
+      data: Array.from(dayMap.values()),
+    });
+  })
+);
+
 export default router;
