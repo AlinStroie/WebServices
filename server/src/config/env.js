@@ -22,15 +22,11 @@ const envSchema = z.object({
 
   // Secret separat pentru autentificarea admin.
   // Trebuie să fie lung și greu de ghicit.
-  ADMIN_JWT_SECRET: z.string().min(32),
-
-  // Numele cookie-ului httpOnly folosit pentru sesiunea de admin.
+ ADMIN_JWT_SECRET: z.string().min(32),
   ADMIN_COOKIE_NAME: z.string().default("asquared_admin_token"),
-
-  // Folosite doar pentru seed-ul primului admin.
-  // Nu sunt necesare în logica normală de login după ce adminul există în DB.
-  ADMIN_EMAIL: z.string().email().optional(),
-  ADMIN_PASSWORD: z.string().min(8).optional(),
+  ADMIN_EMAIL: z.string().email(),
+  ADMIN_PASSWORD: z.string().min(8),
+  ADMIN_LOGIN_RATE_LIMIT_MAX: z.coerce.number().default(5),
 
   // Emailul firmei.
   COMPANY_EMAIL: z.string().email(),

@@ -2,6 +2,7 @@
 // prin care backendul vorbește cu baza de date.
 generator client {
   provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {

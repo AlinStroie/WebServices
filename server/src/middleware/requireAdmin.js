@@ -1,8 +1,5 @@
 import { prisma } from "../lib/prisma.js";
-import {
-  getAdminCookieName,
-  verifyAdminToken,
-} from "../lib/adminAuth.js";
+import { getAdminCookieName, verifyAdminToken } from "../lib/adminAuth.js";
 
 export async function requireAdmin(req, res, next) {
   try {
@@ -12,15 +9,15 @@ export async function requireAdmin(req, res, next) {
     if (!token) {
       return res.status(401).json({
         success: false,
-        message: "Nu ești autentificat.",
+        message: "Neautorizat.",
       });
     }
 
-    const payload = verifyAdminToken(token);
+    const decoded = verifyAdminToken(token);
 
     const admin = await prisma.adminUser.findUnique({
       where: {
-        id: payload.sub,
+        id: decoded.id,
       },
       select: {
         id: true,
@@ -33,37 +30,21 @@ export async function requireAdmin(req, res, next) {
     if (!admin || !admin.active) {
       return res.status(401).json({
         success: false,
-        message: "Cont admin invalid sau inactiv.",
+        message: "Sesiune invalidă.",
       });
     }
 
-    req.admin = admin;
+    req.admin = {
+      id: admin.id,
+      email: admin.email,
+      role: admin.role,
+    };
 
     return next();
   } catch {
     return res.status(401).json({
       success: false,
-      message: "Sesiune expirată sau invalidă.",
+      message: "Sesiune invalidă sau expirată.",
     });
   }
-}
-
-export function requireRole(...roles) {
-  return function roleMiddleware(req, res, next) {
-    if (!req.admin) {
-      return res.status(401).json({
-        success: false,
-        message: "Nu ești autentificat.",
-      });
-    }
-
-    if (!roles.includes(req.admin.role)) {
-      return res.status(403).json({
-        success: false,
-        message: "Nu ai permisiunea necesară.",
-      });
-    }
-
-    return next();
-  };
 }
