@@ -11,62 +11,20 @@ import {
   trackCtaClick,
 } from "../lib/analytics";
 
-const Benefits = lazy(() => import("../components/Benefits"));
-const Services = lazy(() => import("../components/Services"));
-const Portfolio = lazy(() => import("../components/Portfolio"));
-const Process = lazy(() => import("../components/Process"));
-const BlogCarousel = lazy(() => import("../components/BlogCarousel"));
-const Pricing = lazy(() => import("../components/Pricing"));
-const CTA = lazy(() => import("../components/CTA"));
-const Footer = lazy(() => import("../components/Footer"));
+import Benefits from "../components/Benefits";
+import Services from "../components/Services";
+import Portfolio from "../components/Portfolio";
+import Process from "../components/Process";
+import BlogCarousel from "../components/BlogCarousel";
+import Pricing from "../components/Pricing";
+import CTA from "../components/CTA";
+import Footer from "../components/Footer";
 const CookieBanner = lazy(() => import("../components/CookieBanner"));
 const LegalModal = lazy(() => import("../components/LegalModal"));
 const ContactDrawer = lazy(() => import("../components/ContactDrawer"));
 const ThreeDotWaveBackground = lazy(() =>
   import("../components/ThreeDotWaveBackground")
 );
-
-function SectionLoader({ minHeight = 280 }) {
-  return <div aria-hidden="true" style={{ minHeight }} />;
-}
-
-function LazyOnView({ children, minHeight = 280, rootMargin = "520px 0px" }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    if (visible) return;
-
-    const element = ref.current;
-    if (!element) return;
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          observer.disconnect();
-        }
-      },
-      { rootMargin, threshold: 0.01 }
-    );
-
-    observer.observe(element);
-
-    return () => observer.disconnect();
-  }, [rootMargin, visible]);
-
-  return (
-    <div ref={ref}>
-      {visible ? (
-        <Suspense fallback={<SectionLoader minHeight={minHeight} />}>
-          {children}
-        </Suspense>
-      ) : (
-        <SectionLoader minHeight={minHeight} />
-      )}
-    </div>
-  );
-}
 
 function FloatingQuickActions({ onOpenContact, hidden }) {
   const [visible, setVisible] = useState(false);
@@ -233,50 +191,34 @@ function Home() {
         <main>
           <Hero onOpenContact={() => openContact("Standard", "hero")} />
 
-          <LazyOnView minHeight={300}>
-            <Benefits />
-          </LazyOnView>
+          <Benefits />
 
-          <LazyOnView minHeight={340}>
-            <Services />
-          </LazyOnView>
+          <Services />
 
-          <LazyOnView minHeight={460}>
-            <Portfolio
-              onOverlayChange={setIsOverlayOpen}
-              onOpenContact={(plan = "Standard") =>
-                openContact(plan, "portfolio")
-              }
-            />
-          </LazyOnView>
+          <Portfolio
+            onOverlayChange={setIsOverlayOpen}
+            onOpenContact={(plan = "Standard") =>
+              openContact(plan, "portfolio")
+            }
+          />
 
-          <LazyOnView minHeight={440}>
-            <Process />
-          </LazyOnView>
+          <Process />
 
-          <LazyOnView minHeight={500}>
-            <BlogCarousel />
-          </LazyOnView>
+          <BlogCarousel />
 
-          <LazyOnView minHeight={520}>
-            <Pricing
-              onSelectPlan={(plan = "Standard") =>
-                openContact(plan, `pricing_${String(plan).toLowerCase()}`)
-              }
-            />
-          </LazyOnView>
+          <Pricing
+            onSelectPlan={(plan = "Standard") =>
+              openContact(plan, `pricing_${String(plan).toLowerCase()}`)
+            }
+          />
 
-          <LazyOnView minHeight={360}>
-            <CTA onOpenContact={() => openContact("Standard", "main_cta")} />
-          </LazyOnView>
+          <CTA onOpenContact={() => openContact("Standard", "main_cta")} />
         </main>
 
-        <LazyOnView minHeight={360} rootMargin="320px 0px">
-          <Footer
-            onOpenContact={() => openContact("Standard", "footer")}
-            onOpenPolicy={openLegalModal}
-          />
-        </LazyOnView>
+        <Footer
+          onOpenContact={() => openContact("Standard", "footer")}
+          onOpenPolicy={openLegalModal}
+        />
 
         <FloatingQuickActions
           hidden={isOverlayOpen}

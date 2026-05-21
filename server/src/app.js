@@ -15,6 +15,7 @@ import { env, isProduction } from "./config/env.js";
 import { globalLimiter } from "./middleware/rateLimiters.js";
 import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
+import seoRoutes from "./routes/seo.routes.js";
 
 export const app = express();
 
@@ -89,6 +90,9 @@ app.get("/api/health", (req, res) => {
     message: "Backend is running.",
   });
 });
+
+// SEO routes
+app.use("/", seoRoutes);
 
 // Rute API
 app.use("/api/blog", blogRoutes);
