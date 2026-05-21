@@ -7,6 +7,13 @@ import ScrollToTop from "./components/ScrollToTop";
 import FormSuccess from "./pages/FormSuccess";
 import AnalyticsTracker from "./components/AnalyticsTracker";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminLayout from "./pages/admin/AdminLayout";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import AdminContacts from "./pages/admin/AdminContacts";
+import AdminAnalytics from "./pages/admin/AdminAnalytics";
+import AdminBlog from "./pages/admin/AdminBlog";
+import AdminBlogEditor from "./pages/admin/AdminBlogEditor";
 
 
 function App() {
@@ -21,6 +28,16 @@ function App() {
         <Route path="/succes" element={<FormSuccess />} />
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/politica-confidentialitate" element={<PrivacyPolicy />} />
+        <Route path="/admin/login" element={<AdminLogin />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route index element={<AdminDashboard />} />
+          <Route path="blog" element={<AdminBlog />} />
+          <Route path="blog/new" element={<AdminBlogEditor />} />
+          <Route path="blog/:id/edit" element={<AdminBlogEditor />} />
+          <Route path="contacts" element={<AdminContacts />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+        </Route>
       </Routes>
     </>
   );

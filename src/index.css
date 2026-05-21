@@ -205,3 +205,41 @@ body {
   font-family: "TheBoldFont", Arial, sans-serif !important;
   font-weight: 700 !important;
 }
+
+.admin-input {
+  width: 100%;
+  min-height: 44px;
+  border-radius: 1rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(0 0 0 / 0.35);
+  padding: 0.75rem 1rem;
+  color: white;
+  outline: none;
+}
+
+.admin-input::placeholder {
+  color: rgb(255 255 255 / 0.25);
+}
+
+.admin-input:focus {
+  border-color: rgb(255 255 255 / 0.3);
+}
+
+.admin-textarea {
+  width: 100%;
+  border-radius: 1rem;
+  border: 1px solid rgb(255 255 255 / 0.1);
+  background: rgb(0 0 0 / 0.35);
+  padding: 0.75rem 1rem;
+  color: white;
+  outline: none;
+  resize: vertical;
+}
+
+.admin-textarea::placeholder {
+  color: rgb(255 255 255 / 0.25);
+}
+
+.admin-textarea:focus {
+  border-color: rgb(255 255 255 / 0.3);
+}
