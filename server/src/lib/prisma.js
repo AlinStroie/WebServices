@@ -1,10 +1,13 @@
-// PrismaClient este clientul generat de Prisma.
-// Îl folosim ca să comunicăm cu baza de date.
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../generated/prisma/client.js";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-import { isProduction } from "../config/env.js";
+import { env, isProduction } from "../config/env.js";
 
-// Creăm o singură instanță Prisma pentru tot backendul.
+const adapter = new PrismaPg({
+  connectionString: env.DATABASE_URL,
+});
+
 export const prisma = new PrismaClient({
+  adapter,
   log: isProduction ? ["error"] : ["error", "warn"],
 });
