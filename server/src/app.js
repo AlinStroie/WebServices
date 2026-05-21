@@ -5,6 +5,7 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import hpp from "hpp";
+import adminRoutes from "./routes/admin/index.js";
 
 import blogRoutes from "./routes/blog.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
@@ -93,6 +94,7 @@ app.get("/api/health", (req, res) => {
 app.use("/api/blog", blogRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/admin", adminRoutes);
 
 // 404
 app.use(notFound);

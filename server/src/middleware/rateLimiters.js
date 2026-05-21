@@ -40,3 +40,15 @@ export const analyticsLimiter = rateLimit({
     message: "Prea multe evenimente trimise.",
   },
 });
+
+export const adminLoginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    message:
+      "Prea multe încercări de autentificare. Încearcă din nou mai târziu.",
+  },
+});

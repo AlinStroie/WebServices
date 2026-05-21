@@ -63,6 +63,23 @@ model AdminUser {
   updatedAt   DateTime @updatedAt
 }
 
+model AdminAuditLog {
+  id        String   @id @default(cuid())
+  adminId   String?
+  action    String
+  entity    String?
+  entityId  String?
+  metadata  Json?
+  ipHash    String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  @@index([adminId])
+  @@index([action])
+  @@index([entity])
+  @@index([createdAt])
+}
+
 // Articolele de blog.
 // În loc să ai articolele hardcodate în JS,
 // le ținem în baza de date.
