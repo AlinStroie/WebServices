@@ -1,22 +1,23 @@
 import { isProduction } from "../config/env.js";
 
-// Middleware central pentru erori.
-// Dacă apare o eroare într-o rută, ajunge aici.
-export function errorHandler(error, req, res, next) {
-  // În terminal păstrăm eroarea pentru debug.
-  console.error(error);
+// Middleware global pentru erori.
+// În development afișează și stack trace.
+// În production ascunde detaliile tehnice.
+export function errorHandler(err, req, res, next) {
+  console.error(err);
 
-  const statusCode = error.statusCode || 500;
+  const statusCode = err.statusCode || err.status || 500;
 
-  res.status(statusCode).json({
+  const message =
+    isProduction && statusCode === 500
+      ? "A apărut o eroare internă."
+      : err.message || "A apărut o eroare.";
+
+  return res.status(statusCode).json({
     success: false,
-
-    // În producție nu arătăm detalii tehnice utilizatorului.
-    message: isProduction
-      ? "A apărut o eroare pe server."
-      : error.message || "Server error.",
-
-    // Stack trace doar local, nu în production.
-    ...(isProduction ? {} : { stack: error.stack }),
+    message,
+    ...(!isProduction && {
+      stack: err.stack,
+    }),
   });
 }

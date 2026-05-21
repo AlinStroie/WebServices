@@ -1,12 +1,22 @@
-# Dependințele instalate local
+# Dependencies
 node_modules
 
-# Fișier cu parole, chei, conexiuni DB etc.
+# Environment files
 .env
+.env.local
+.env.production
+.env.development
 
-# Loguri și fișiere temporare
+# Build output
+dist
+
+# Logs and temporary files
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 .DS_Store
+Thumbs.db
 
-# Coverage pentru teste, dacă vom adăuga mai târziu
+# Test coverage
 coverage
