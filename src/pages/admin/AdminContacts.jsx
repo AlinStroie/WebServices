@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 import {
   getAdminContacts,
@@ -108,7 +109,12 @@ function AdminContacts() {
                 items.map((item) => (
                   <tr key={item.id} className="text-white/70">
                     <td className="p-4">
-                      <p className="font-medium text-white">{item.name}</p>
+                      <p className="font-medium text-white"><Link
+                        to={`/admin/contacts/${item.id}`}
+                        className="font-medium text-white underline-offset-4 transition hover:underline"
+                      >
+                        {item.name}
+                      </Link></p>
                       <p className="mt-1 text-xs text-white/35">
                         {new Date(item.createdAt).toLocaleString("ro-RO")}
                       </p>

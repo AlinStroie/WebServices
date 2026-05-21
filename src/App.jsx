@@ -14,6 +14,7 @@ import AdminContacts from "./pages/admin/AdminContacts";
 import AdminAnalytics from "./pages/admin/AdminAnalytics";
 import AdminBlog from "./pages/admin/AdminBlog";
 import AdminBlogEditor from "./pages/admin/AdminBlogEditor";
+import AdminContactDetails from "./pages/admin/AdminContactDetails";
 
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
           <Route path="blog/new" element={<AdminBlogEditor />} />
           <Route path="blog/:id/edit" element={<AdminBlogEditor />} />
           <Route path="contacts" element={<AdminContacts />} />
+          <Route path="contacts/:id" element={<AdminContactDetails />} />
           <Route path="analytics" element={<AdminAnalytics />} />
         </Route>
       </Routes>
