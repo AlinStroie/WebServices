@@ -1,234 +1,182 @@
 import { Link } from "react-router-dom";
-
 import SEO from "../components/SEO";
 import { siteConfig } from "../data/siteConfig";
 
-function Section({ title, children }) {
-  return (
-    <section className="border-b border-white/10 py-10">
-      <h2 className="text-2xl font-semibold tracking-tight text-white">
-        {title}
-      </h2>
-
-      <div className="mt-5 space-y-4 text-base leading-8 text-white/60">
-        {children}
-      </div>
-    </section>
-  );
-}
-
 function PrivacyPolicy() {
-  const companyName = siteConfig?.brand?.name || "A Squared Studio";
-  const email =
+  const companyName =
+    siteConfig?.company?.name || "A Squared Studio";
+
+  const companyEmail =
     siteConfig?.contact?.email ||
     siteConfig?.company?.email ||
     "contact@example.com";
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <main className="min-h-screen bg-black px-5 py-28 text-white lg:px-8">
       <SEO
-        title={`Politica de confidențialitate | ${companyName}`}
-        description="Informații despre modul în care colectăm, folosim și protejăm datele personale și preferințele privind cookie-urile."
+        title="Politica de confidențialitate / GDPR"
+        description="Informații despre modul în care colectăm, folosim și protejăm datele personale."
       />
 
-      <main className="mx-auto max-w-4xl px-5 py-24 lg:px-8">
+      <section className="mx-auto max-w-4xl">
         <Link
           to="/"
-          className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-white/60 transition hover:bg-white hover:text-black"
+          className="mb-8 inline-flex rounded-full border border-white/10 px-4 py-2 text-sm text-white/50 transition hover:bg-white hover:text-black"
         >
-          Înapoi pe site
+          Înapoi la site
         </Link>
 
-        <div className="mt-10">
-          <p className="text-sm uppercase tracking-[0.28em] text-white/35">
-            Privacy Policy
-          </p>
+        <p className="text-sm uppercase tracking-[0.35em] text-white/35">
+          Legal
+        </p>
 
-          <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
-            Politica de confidențialitate
-          </h1>
+        <h1 className="mt-4 text-4xl font-semibold tracking-tight md:text-6xl">
+          Politica de confidențialitate / GDPR
+        </h1>
 
-          <p className="mt-6 text-lg leading-8 text-white/55">
-            Ultima actualizare: 20 mai 2026
-          </p>
+        <p className="mt-6 text-lg leading-8 text-white/55">
+          Această politică explică modul în care {companyName} colectează,
+          folosește, stochează și protejează datele personale transmise prin
+          website.
+        </p>
+
+        <div className="mt-12 space-y-8 text-white/60">
+          <LegalSection title="1. Operatorul datelor">
+            <p>
+              Operatorul datelor este {companyName}. Pentru orice solicitare
+              privind datele personale, ne poți contacta la adresa:
+              <span className="text-white"> {companyEmail}</span>.
+            </p>
+            <p className="mt-3">
+              După definitivarea datelor firmei/PFA, această secțiune trebuie
+              completată cu denumirea completă, forma juridică, sediul și datele
+              de identificare.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="2. Ce date colectăm">
+            <p>Prin formularul de contact putem colecta:</p>
+            <ul className="mt-4 list-disc space-y-2 pl-6">
+              <li>nume și prenume;</li>
+              <li>adresă de email;</li>
+              <li>număr de telefon, dacă este completat;</li>
+              <li>mesajul transmis prin formular;</li>
+              <li>pachetul sau serviciul selectat;</li>
+              <li>pagina de pe care a fost trimisă solicitarea.</li>
+            </ul>
+            <p className="mt-4">
+              Pentru securitate, prevenirea spamului și diagnosticarea erorilor,
+              putem colecta și date tehnice precum adresa IP, tipul browserului,
+              dispozitivul folosit și user-agent-ul, dacă această funcție este
+              activată în backend.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="3. Scopul prelucrării">
+            <p>Datele sunt folosite pentru:</p>
+            <ul className="mt-4 list-disc space-y-2 pl-6">
+              <li>preluarea și analizarea cererilor trimise prin formular;</li>
+              <li>contactarea persoanei care a solicitat o ofertă;</li>
+              <li>pregătirea unei propuneri comerciale;</li>
+              <li>administrarea solicitărilor primite;</li>
+              <li>securitatea site-ului și prevenirea abuzurilor;</li>
+              <li>
+                analizarea performanței site-ului, doar dacă utilizatorul a
+                acceptat cookie-urile de analiză.
+              </li>
+            </ul>
+          </LegalSection>
+
+          <LegalSection title="4. Temeiul legal">
+            <p>
+              Datele din formular sunt prelucrate pentru a răspunde unei cereri
+              transmise de utilizator și pentru demersuri precontractuale.
+              Datele tehnice strict necesare pot fi prelucrate pentru interesul
+              legitim de securitate și prevenire a abuzurilor. Datele de
+              analytics sunt prelucrate doar pe baza consimțământului.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="5. Analytics și UTM">
+            <p>
+              Website-ul poate folosi analytics propriu pentru a înțelege cum
+              este utilizat site-ul: pagini vizitate, clickuri pe butoane,
+              interacțiuni cu blogul, formularul și sursele de trafic UTM.
+            </p>
+            <p className="mt-3">
+              Aceste date sunt colectate doar dacă utilizatorul acceptă
+              cookie-urile de analiză. Dacă utilizatorul refuză analytics, nu
+              salvăm sessionId, UTM-uri sau evenimente de tracking asociate
+              formularului.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="6. Unde sunt stocate datele">
+            <p>
+              Datele formularului sunt salvate în baza de date a aplicației și
+              pot fi transmise prin email către adresa firmei. Pentru funcționarea
+              site-ului putem folosi servicii precum Vercel pentru frontend,
+              Railway/PostgreSQL pentru backend și baza de date și Brevo sau alt
+              furnizor SMTP pentru trimiterea emailurilor.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="7. Durata de stocare">
+            <p>
+              Cererile trimise prin formular sunt păstrate atât timp cât este
+              necesar pentru gestionarea solicitării și a comunicării comerciale,
+              dar nu mai mult decât este rezonabil pentru scopul pentru care au
+              fost colectate. Cererile pot fi șterse manual din admin panel.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="8. Drepturile tale">
+            <p>Ai dreptul să soliciți:</p>
+            <ul className="mt-4 list-disc space-y-2 pl-6">
+              <li>acces la datele personale;</li>
+              <li>rectificarea datelor incorecte;</li>
+              <li>ștergerea datelor, în condițiile legii;</li>
+              <li>restricționarea prelucrării;</li>
+              <li>opoziție față de anumite prelucrări;</li>
+              <li>retragerea consimțământului pentru analytics;</li>
+              <li>portabilitatea datelor, unde este aplicabil.</li>
+            </ul>
+            <p className="mt-4">
+              Pentru exercitarea acestor drepturi, ne poți contacta la{" "}
+              <span className="text-white">{companyEmail}</span>.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="9. Dreptul de a depune plângere">
+            <p>
+              Dacă apreciezi că datele tale sunt prelucrate necorespunzător,
+              poți contacta Autoritatea Națională de Supraveghere a Prelucrării
+              Datelor cu Caracter Personal.
+            </p>
+          </LegalSection>
+
+          <LegalSection title="10. Actualizarea politicii">
+            <p>
+              Această politică poate fi actualizată periodic, în funcție de
+              modificările tehnice ale site-ului, de serviciile folosite sau de
+              cerințele legale aplicabile.
+            </p>
+            <p className="mt-3 text-white/40">
+              Ultima actualizare: mai 2026.
+            </p>
+          </LegalSection>
         </div>
+      </section>
+    </main>
+  );
+}
 
-        <Section title="1. Cine suntem">
-          <p>
-            Această politică explică modul în care {companyName} colectează și
-            folosește datele atunci când vizitezi website-ul, completezi
-            formularul de contact sau interacționezi cu serviciile noastre.
-          </p>
-
-          <p>
-            Pentru întrebări legate de datele personale, ne poți contacta la{" "}
-            <a
-              href={`mailto:${email}`}
-              className="text-white underline underline-offset-4"
-            >
-              {email}
-            </a>
-            .
-          </p>
-        </Section>
-
-        <Section title="2. Ce date colectăm">
-          <p>
-            Putem colecta date pe care ni le oferi direct, precum nume, email,
-            telefon, mesajul trimis prin formular și pachetul selectat.
-          </p>
-
-          <p>
-            Putem colecta și date tehnice limitate, precum pagina vizitată,
-            referrer, UTM-uri, tip de dispozitiv, browser, evenimente de
-            navigare și identificatori pseudonimizați ai sesiunii.
-          </p>
-        </Section>
-
-        <Section title="3. De ce folosim datele">
-          <p>Folosim datele pentru:</p>
-
-          <ul className="list-disc space-y-2 pl-6">
-            <li>a răspunde cererilor trimise prin formular;</li>
-            <li>a pregăti oferte și discuții comerciale;</li>
-            <li>a trimite notificări legate de solicitarea ta;</li>
-            <li>a proteja website-ul împotriva abuzurilor și spamului;</li>
-            <li>a înțelege, cu acordul tău, cum este folosit website-ul;</li>
-            <li>a îmbunătăți conținutul, experiența și campaniile.</li>
-          </ul>
-        </Section>
-
-        <Section title="4. Cookie-uri și tehnologii similare">
-          <p>
-            Folosim cookie-uri esențiale pentru funcționarea website-ului și
-            pentru salvarea preferințelor tale de confidențialitate.
-          </p>
-
-          <p>
-            Cookie-urile sau tehnologiile de analytics și marketing sunt
-            folosite doar dacă alegi să le accepți din bannerul de cookies sau
-            din Privacy Settings.
-          </p>
-
-          <div className="overflow-hidden rounded-2xl border border-white/10">
-            <table className="w-full border-collapse text-left text-sm">
-              <thead className="bg-white/[0.05] text-white">
-                <tr>
-                  <th className="p-4">Categorie</th>
-                  <th className="p-4">Scop</th>
-                  <th className="p-4">Necesare?</th>
-                </tr>
-              </thead>
-
-              <tbody className="divide-y divide-white/10 text-white/60">
-                <tr>
-                  <td className="p-4">Essential</td>
-                  <td className="p-4">
-                    Funcționarea website-ului, securitate, salvarea
-                    preferințelor.
-                  </td>
-                  <td className="p-4">Da</td>
-                </tr>
-
-                <tr>
-                  <td className="p-4">Analytics and Marketing</td>
-                  <td className="p-4">
-                    Măsurarea performanței paginilor, CTA-urilor, campaniilor
-                    și conversiilor.
-                  </td>
-                  <td className="p-4">Nu, doar cu acord</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </Section>
-
-        <Section title="5. Analytics și tracking">
-          <p>
-            Pentru analytics folosim o sesiune anonimă/pseudonimizată. Aceasta
-            poate include pagina de intrare, ultima pagină vizitată, UTM-uri,
-            tipul dispozitivului, browserul, evenimente precum vizualizări de
-            pagină, clickuri pe CTA și trimiterea formularului.
-          </p>
-
-          <p>
-            Evenimentele avansate, precum scroll depth, time on page și
-            metadata suplimentară, sunt folosite doar dacă ai acceptat categoria
-            Analytics and Marketing.
-          </p>
-
-          <p>
-            Datele personale din formular, precum nume, email, telefon și mesaj,
-            sunt păstrate separat de evenimentele de analytics.
-          </p>
-        </Section>
-
-        <Section title="6. Furnizori și servicii terțe">
-          <p>
-            Putem folosi furnizori terți pentru hosting, baze de date,
-            trimiterea emailurilor, analytics, securitate și servicii tehnice.
-            Acești furnizori procesează datele în scopul furnizării
-            serviciilor necesare website-ului.
-          </p>
-
-          <p>
-            Exemple de servicii care pot fi folosite: hosting web, PostgreSQL,
-            Brevo pentru trimiterea emailurilor, servicii de securitate,
-            servicii de analytics sau platforme de reclame, dacă sunt activate
-            ulterior.
-          </p>
-        </Section>
-
-        <Section title="7. Cât timp păstrăm datele">
-          <p>
-            Datele din formular sunt păstrate atât timp cât este necesar pentru
-            gestionarea cererii și pentru evidențe comerciale rezonabile.
-          </p>
-
-          <p>
-            Datele de analytics sunt folosite pentru analiză internă și pot fi
-            șterse sau agregate periodic. Preferințele de cookies rămân salvate
-            în browser până când le modifici sau le ștergi.
-          </p>
-        </Section>
-
-        <Section title="8. Drepturile tale">
-          <p>
-            Poți solicita acces la datele tale, corectarea lor, ștergerea lor,
-            restricționarea prelucrării sau retragerea consimțământului, acolo
-            unde este cazul.
-          </p>
-
-          <p>
-            Pentru orice cerere, ne poți scrie la{" "}
-            <a
-              href={`mailto:${email}`}
-              className="text-white underline underline-offset-4"
-            >
-              {email}
-            </a>
-            .
-          </p>
-        </Section>
-
-        <Section title="9. Securitate">
-          <p>
-            Folosim măsuri tehnice și organizatorice rezonabile pentru a proteja
-            datele, inclusiv validare server-side, limitare requesturi,
-            protecții anti-spam, configurări de securitate HTTP și separarea
-            datelor personale de analytics.
-          </p>
-        </Section>
-
-        <Section title="10. Modificări ale politicii">
-          <p>
-            Putem actualiza această politică atunci când modificăm website-ul,
-            serviciile, furnizorii sau modul de prelucrare a datelor. Data
-            ultimei actualizări va fi afișată în partea de sus a paginii.
-          </p>
-        </Section>
-      </main>
-    </div>
+function LegalSection({ title, children }) {
+  return (
+    <section className="rounded-[2rem] border border-white/10 bg-white/[0.03] p-6 md:p-8">
+      <h2 className="text-xl font-semibold text-white">{title}</h2>
+      <div className="mt-4 leading-7">{children}</div>
+    </section>
   );
 }
 

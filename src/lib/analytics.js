@@ -5,19 +5,6 @@ const SESSION_KEY = "asquared_session_id";
 const UTM_KEY = "asquared_utm_data";
 const CONSENT_KEY = "asquared_cookie_consent";
 
-const minimalEvents = new Set([
-  "PAGE_VIEW",
-  "BLOG_VIEW",
-  "CTA_CLICK",
-  "PRICING_CLICK",
-  "CONTACT_OPEN",
-  "CONTACT_SUBMIT",
-  "CONTACT_SUCCESS",
-  "CONTACT_ERROR",
-  "OUTBOUND_CLICK",
-  "ERROR",
-]);
-
 export function getSessionId() {
   try {
     let sessionId = sessionStorage.getItem(SESSION_KEY);
@@ -84,15 +71,16 @@ export function getAnalyticsContext() {
 export function trackEvent(type, payload = {}) {
   const consentAnalytics = hasAnalyticsConsent();
 
-  // Evenimentele avansate se trimit doar dacă există consimțământ.
-  if (!minimalEvents.has(type) && !consentAnalytics) {
+  // Variantă conservatoare GDPR:
+  // nu trimitem niciun eveniment de analytics fără acord explicit.
+  if (!consentAnalytics) {
     return;
   }
 
   const body = {
     type,
     sessionId: getSessionId(),
-    consentAnalytics,
+    consentAnalytics: true,
 
     path: payload.path || window.location.pathname,
     label: payload.label,
@@ -102,7 +90,7 @@ export function trackEvent(type, payload = {}) {
 
     ...captureUtmParams(),
 
-    metadata: consentAnalytics ? payload.metadata : undefined,
+    metadata: payload.metadata,
   };
 
   const url = `${API_BASE}/analytics/event`;

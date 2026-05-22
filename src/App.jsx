@@ -6,6 +6,8 @@ import BlogPost from "./pages/BlogPost";
 import FormSuccess from "./pages/FormSuccess";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
+import CookiePolicy from "./pages/CookiePolicy";
+import Terms from "./pages/Terms";
 
 import ScrollToTop from "./components/ScrollToTop";
 import AnalyticsTracker from "./components/AnalyticsTracker";
@@ -35,6 +37,8 @@ function App() {
 
         <Route path="/privacy" element={<PrivacyPolicy />} />
         <Route path="/politica-confidentialitate" element={<PrivacyPolicy />} />
+        <Route path="/cookies" element={<CookiePolicy />} />
+        <Route path="/terms" element={<Terms />} />
 
         <Route path="/admin/login" element={<AdminLogin />} />
 

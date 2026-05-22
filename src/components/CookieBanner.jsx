@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 
 const CONSENT_KEY = "asquared_cookie_consent";
@@ -26,10 +27,11 @@ function saveConsent(consent) {
   window.dispatchEvent(new Event("cookie-consent-updated"));
 }
 
-function CookieBanner({ onOpenPolicy }) {
+function CookieBanner() {
   const [visible, setVisible] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
-  const [analyticsMarketing, setAnalyticsMarketing] = useState(false);
+  const [analytics, setAnalytics] = useState(false);
+  const [marketing, setMarketing] = useState(false);
 
   useEffect(() => {
     const saved = getSavedConsent();
@@ -39,7 +41,27 @@ function CookieBanner({ onOpenPolicy }) {
       return () => window.clearTimeout(timer);
     }
 
-    setAnalyticsMarketing(Boolean(saved.analytics || saved.marketing));
+    setAnalytics(Boolean(saved.analytics));
+    setMarketing(Boolean(saved.marketing));
+  }, []);
+
+  // Permite redeschiderea setărilor din footer:
+  // window.dispatchEvent(new Event("open-cookie-settings"))
+  useEffect(() => {
+    function openCookieSettings() {
+      const saved = getSavedConsent();
+
+      setAnalytics(Boolean(saved?.analytics));
+      setMarketing(Boolean(saved?.marketing));
+      setVisible(false);
+      setSettingsOpen(true);
+    }
+
+    window.addEventListener("open-cookie-settings", openCookieSettings);
+
+    return () => {
+      window.removeEventListener("open-cookie-settings", openCookieSettings);
+    };
   }, []);
 
   function acceptAll() {
@@ -48,6 +70,8 @@ function CookieBanner({ onOpenPolicy }) {
       marketing: true,
     });
 
+    setAnalytics(true);
+    setMarketing(true);
     setVisible(false);
     setSettingsOpen(false);
   }
@@ -58,14 +82,16 @@ function CookieBanner({ onOpenPolicy }) {
       marketing: false,
     });
 
+    setAnalytics(false);
+    setMarketing(false);
     setVisible(false);
     setSettingsOpen(false);
   }
 
   function confirmSettings() {
     saveConsent({
-      analytics: analyticsMarketing,
-      marketing: analyticsMarketing,
+      analytics,
+      marketing,
     });
 
     setVisible(false);
@@ -74,7 +100,10 @@ function CookieBanner({ onOpenPolicy }) {
 
   function openSettings() {
     const saved = getSavedConsent();
-    setAnalyticsMarketing(Boolean(saved?.analytics || saved?.marketing));
+
+    setAnalytics(Boolean(saved?.analytics));
+    setMarketing(Boolean(saved?.marketing));
+    setVisible(false);
     setSettingsOpen(true);
   }
 
@@ -90,14 +119,15 @@ function CookieBanner({ onOpenPolicy }) {
             className="fixed bottom-4 left-4 z-[240] w-[calc(100%-2rem)] max-w-[430px] rounded-xl border border-white/10 bg-[#171717]/95 p-5 text-white shadow-[0_24px_90px_rgba(0,0,0,0.55)] backdrop-blur-xl"
           >
             <p className="text-sm font-semibold leading-6 text-white/90">
-              We use cookies to collect data and improve our services.{" "}
-              <button
-                type="button"
-                onClick={() => onOpenPolicy?.("privacy")}
+              Folosim cookie-uri esențiale pentru funcționarea site-ului și,
+              doar cu acordul tău, cookie-uri de analiză pentru a îmbunătăți
+              experiența.{" "}
+              <Link
+                to="/cookies"
                 className="underline decoration-white/40 underline-offset-4 transition hover:text-white"
               >
-                Learn more
-              </button>
+                Află mai multe
+              </Link>
             </p>
 
             <div className="mt-4 flex flex-wrap items-center gap-3">
@@ -106,7 +136,7 @@ function CookieBanner({ onOpenPolicy }) {
                 onClick={acceptAll}
                 className="rounded-md border border-white/10 bg-white px-4 py-2 text-sm font-semibold text-black transition hover:bg-white/90"
               >
-                Accept
+                Acceptă
               </button>
 
               <button
@@ -114,7 +144,7 @@ function CookieBanner({ onOpenPolicy }) {
                 onClick={optOut}
                 className="rounded-md border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
               >
-                Opt out
+                Respinge
               </button>
 
               <button
@@ -122,7 +152,7 @@ function CookieBanner({ onOpenPolicy }) {
                 onClick={openSettings}
                 className="rounded-md px-3 py-2 text-sm font-semibold text-white/60 transition hover:text-white"
               >
-                Privacy settings
+                Setări cookies
               </button>
             </div>
           </motion.div>
@@ -145,13 +175,13 @@ function CookieBanner({ onOpenPolicy }) {
               className="w-full max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-[#171717] text-white shadow-[0_24px_120px_rgba(0,0,0,0.75)]"
             >
               <div className="flex items-center justify-between border-b border-white/10 px-6 py-5">
-                <h2 className="text-lg font-semibold">Privacy Settings</h2>
+                <h2 className="text-lg font-semibold">Setări cookies</h2>
 
                 <button
                   type="button"
                   onClick={() => setSettingsOpen(false)}
                   className="text-2xl leading-none text-white/30 transition hover:text-white"
-                  aria-label="Close privacy settings"
+                  aria-label="Închide setările cookies"
                 >
                   ×
                 </button>
@@ -160,79 +190,118 @@ function CookieBanner({ onOpenPolicy }) {
               <div className="divide-y divide-white/10">
                 <div className="flex items-center justify-between gap-6 px-6 py-5">
                   <div>
-                    <h3 className="font-semibold">Essential</h3>
+                    <h3 className="font-semibold">Esențiale</h3>
+
                     <p className="mt-1 max-w-lg text-sm leading-6 text-white/55">
-                      These technologies are necessary for the website to
-                      function, remember privacy choices and protect the service.
+                      Acestea sunt necesare pentru funcționarea site-ului,
+                      salvarea preferințelor de confidențialitate și protejarea
+                      serviciului.
                     </p>
 
-                    <button
-                      type="button"
-                      onClick={() => onOpenPolicy?.("cookies")}
-                      className="mt-1 text-sm text-white/75 underline underline-offset-4 transition hover:text-white"
+                    <Link
+                      to="/cookies"
+                      onClick={() => setSettingsOpen(false)}
+                      className="mt-1 inline-block text-sm text-white/75 underline underline-offset-4 transition hover:text-white"
                     >
-                      Learn more
-                    </button>
+                      Află mai multe
+                    </Link>
                   </div>
 
                   <div className="flex shrink-0 flex-col items-end gap-1">
                     <button
                       type="button"
                       disabled
-                      aria-label="Essential cookies always enabled"
-                      title="Essential cookies are always active"
+                      aria-label="Cookie-urile esențiale sunt mereu active"
+                      title="Cookie-urile esențiale sunt mereu active"
                       className="relative h-7 w-12 cursor-not-allowed rounded-full bg-emerald-500/80 opacity-90 ring-1 ring-emerald-300/40"
                     >
                       <span className="absolute right-1 top-1 h-5 w-5 rounded-full bg-white shadow-sm" />
                     </button>
 
                     <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-emerald-300/70">
-                      Always on
+                      Mereu active
                     </span>
                   </div>
                 </div>
 
                 <div className="flex items-center justify-between gap-6 px-6 py-5">
                   <div>
-                    <h3 className="font-semibold">Analytics and Marketing</h3>
+                    <h3 className="font-semibold">Analytics</h3>
+
                     <p className="mt-1 max-w-lg text-sm leading-6 text-white/55">
-                      By opting in, you allow us to measure usage, understand
-                      which pages perform better and improve marketing campaigns.
+                      Ne ajută să măsurăm folosirea site-ului: pagini vizitate,
+                      clickuri, interacțiuni cu blogul și formularul. Sunt
+                      active doar dacă accepți.
                     </p>
 
-                    <button
-                      type="button"
-                      onClick={() => onOpenPolicy?.("cookies")}
-                      className="mt-1 text-sm text-white/75 underline underline-offset-4 transition hover:text-white"
+                    <Link
+                      to="/cookies"
+                      onClick={() => setSettingsOpen(false)}
+                      className="mt-1 inline-block text-sm text-white/75 underline underline-offset-4 transition hover:text-white"
                     >
-                      Learn more
-                    </button>
+                      Află mai multe
+                    </Link>
                   </div>
 
                   <button
                     type="button"
-                    onClick={() =>
-                      setAnalyticsMarketing((current) => !current)
-                    }
-                    className={`relative h-6 w-11 shrink-0 rounded-full transition ${analyticsMarketing ? "bg-emerald-500/80" : "bg-white/15"
-                      }`}
-                    aria-label="Toggle analytics and marketing cookies"
+                    onClick={() => setAnalytics((current) => !current)}
+                    className={`relative h-6 w-11 shrink-0 rounded-full transition ${
+                      analytics ? "bg-emerald-500/80" : "bg-white/15"
+                    }`}
+                    aria-label="Activează sau dezactivează cookie-urile de analytics"
                   >
                     <span
-                      className={`absolute top-1 h-4 w-4 rounded-full bg-white transition ${analyticsMarketing ? "right-1" : "left-1"
-                        }`}
+                      className={`absolute top-1 h-4 w-4 rounded-full bg-white transition ${
+                        analytics ? "right-1" : "left-1"
+                      }`}
+                    />
+                  </button>
+                </div>
+
+                <div className="flex items-center justify-between gap-6 px-6 py-5">
+                  <div>
+                    <h3 className="font-semibold">Marketing</h3>
+
+                    <p className="mt-1 max-w-lg text-sm leading-6 text-white/55">
+                      În prezent nu folosim cookie-uri de marketing activ, dar
+                      această categorie rămâne separată pentru eventuale
+                      campanii viitoare.
+                    </p>
+
+                    <Link
+                      to="/cookies"
+                      onClick={() => setSettingsOpen(false)}
+                      className="mt-1 inline-block text-sm text-white/75 underline underline-offset-4 transition hover:text-white"
+                    >
+                      Află mai multe
+                    </Link>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setMarketing((current) => !current)}
+                    className={`relative h-6 w-11 shrink-0 rounded-full transition ${
+                      marketing ? "bg-emerald-500/80" : "bg-white/15"
+                    }`}
+                    aria-label="Activează sau dezactivează cookie-urile de marketing"
+                  >
+                    <span
+                      className={`absolute top-1 h-4 w-4 rounded-full bg-white transition ${
+                        marketing ? "right-1" : "left-1"
+                      }`}
                     />
                   </button>
                 </div>
               </div>
 
-              <div className="flex justify-end gap-3 border-t border-white/10 px-6 py-5">
+              <div className="flex flex-col gap-3 border-t border-white/10 px-6 py-5 sm:flex-row sm:justify-end">
                 <button
                   type="button"
-                  onClick={() => setSettingsOpen(false)}
+                  onClick={optOut}
                   className="rounded-md border border-white/10 bg-white/[0.04] px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
                 >
-                  Cancel
+                  Respinge opționalele
                 </button>
 
                 <button
@@ -240,7 +309,7 @@ function CookieBanner({ onOpenPolicy }) {
                   onClick={confirmSettings}
                   className="rounded-md bg-emerald-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-emerald-500"
                 >
-                  Confirm
+                  Salvează setările
                 </button>
               </div>
             </motion.div>

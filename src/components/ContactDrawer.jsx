@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   ArrowRight,
@@ -128,7 +128,9 @@ function ContactDrawer({
       nextErrors.email = "Introdu o adresă de email validă.";
     }
 
-    if (phoneDigitsOnly.length < 10) {
+    // Telefonul este opțional.
+    // Îl validăm doar dacă utilizatorul a completat ceva.
+    if (formData.phone.trim() && phoneDigitsOnly.length < 10) {
       nextErrors.phone = "Numărul trebuie să aibă minimum 10 cifre.";
     }
 
@@ -152,6 +154,14 @@ function ContactDrawer({
     const plan = selectedPlan || "Nespecificat";
     const analyticsContext = getAnalyticsContext();
 
+    // Pentru o variantă mai sigură GDPR:
+    // trimitem sessionId și UTM doar dacă utilizatorul a acceptat analytics.
+    const safeAnalyticsContext = analyticsContext.consentAnalytics
+      ? analyticsContext
+      : {
+          consentAnalytics: false,
+        };
+
     try {
       setSubmitting(true);
       setErrors({});
@@ -163,20 +173,20 @@ function ContactDrawer({
         body: JSON.stringify({
           name: formData.name.trim(),
           email: formData.email.trim(),
-          phone: formData.phone.trim(),
+          phone: formData.phone.trim() || null,
           message: formData.message.trim(),
           selectedPlan: plan,
           gdprAccepted: formData.gdpr,
           sourcePage: window.location.pathname,
           website: "",
 
-          sessionId: analyticsContext.sessionId,
-          utmSource: analyticsContext.utmSource,
-          utmMedium: analyticsContext.utmMedium,
-          utmCampaign: analyticsContext.utmCampaign,
-          utmContent: analyticsContext.utmContent,
-          utmTerm: analyticsContext.utmTerm,
-          consentAnalytics: analyticsContext.consentAnalytics,
+          sessionId: safeAnalyticsContext.sessionId,
+          utmSource: safeAnalyticsContext.utmSource,
+          utmMedium: safeAnalyticsContext.utmMedium,
+          utmCampaign: safeAnalyticsContext.utmCampaign,
+          utmContent: safeAnalyticsContext.utmContent,
+          utmTerm: safeAnalyticsContext.utmTerm,
+          consentAnalytics: safeAnalyticsContext.consentAnalytics,
         }),
       });
 
@@ -393,7 +403,7 @@ function ContactDrawer({
                     </FieldWrapper>
 
                     <FieldWrapper
-                      label="Telefon"
+                      label="Telefon, opțional"
                       icon={<Phone size={16} />}
                       error={errors.phone}
                     >
@@ -458,7 +468,9 @@ function ContactDrawer({
                     />
 
                     <span className="text-sm leading-6 text-white/55">
-                      Sunt de acord cu prelucrarea datelor conform{" "}
+                      Sunt de acord ca datele introduse în formular să fie
+                      prelucrate pentru a primi un răspuns la cererea mea,
+                      conform{" "}
                       <button
                         type="button"
                         onClick={() => onOpenPolicy?.("privacy")}
@@ -543,14 +555,14 @@ function ContactDrawer({
                   </p>
 
                   <div className="flex flex-wrap items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={() => onOpenPolicy?.("cookies")}
+                    <Link
+                      to="/cookies"
+                      onClick={onClose}
                       className="inline-flex items-center gap-2 text-white/45 transition hover:text-white"
                     >
                       Politica de cookies
                       <ArrowRight size={15} />
-                    </button>
+                    </Link>
 
                     <button
                       type="button"
