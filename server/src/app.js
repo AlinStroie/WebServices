@@ -31,6 +31,8 @@ app.use(
 // Permitem frontendul pe 5173 și 5174
 const allowedOrigins = [
   env.CLIENT_URL,
+  "https://asquaredstudio.ro",
+  "https://www.asquaredstudio.ro",
   "http://localhost:5173",
   "http://localhost:5174",
 ];
