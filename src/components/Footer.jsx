@@ -36,6 +36,10 @@ function Footer({ onOpenPolicy, onOpenContact }) {
               Proces
             </a>
 
+            <a href="#blog" className="hover:text-white">
+              Blog
+            </a>
+
             <a href="#preturi" className="hover:text-white">
               Prețuri
             </a>
@@ -48,26 +52,12 @@ function Footer({ onOpenPolicy, onOpenContact }) {
               Contact
             </button>
 
-            <button
-              type="button"
-              onClick={() => onOpenPolicy("privacy")}
-              className="text-left hover:text-white"
-            >
-              GDPR
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onOpenPolicy("cookies")}
-              className="text-left hover:text-white"
-            >
-              Cookies
-            </button>
+             
           </div>
         </div>
 
         <div>
-          <h4 className="mb-4 font-semibold">Servicii</h4>
+          <h4 className="mb-4 font-semibold text-white">Servicii</h4>
 
           <div className="flex flex-col gap-3 text-white/45">
             <span>Site-uri de prezentare</span>
@@ -105,7 +95,34 @@ function Footer({ onOpenPolicy, onOpenContact }) {
               WhatsApp
             </a>
 
-            <span>{siteConfig.contact.location}</span>
+           
+          <span>{siteConfig.contact.location}</span>
+
+             <h4 className="mt-6 mb-4 font-semibold text-white">Legal</h4>
+
+            <button
+              type="button"
+              onClick={() => onOpenPolicy("cookies")}
+              className="text-left hover:text-white"
+            >
+              Cookies
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onOpenPolicy("privacy")}
+              className="text-left hover:text-white"
+            >
+              GDPR
+            </button>
+
+            <button type="button"
+            onClick={() => onOpenPolicy("privacy")}
+            className=" text-left hover:text-white">
+              Termeni și condiții
+            </button>
+
+
           </div>
         </div>
       </div>
@@ -114,27 +131,9 @@ function Footer({ onOpenPolicy, onOpenContact }) {
         <p>
           © 2026 {siteConfig.brand.name}. Toate drepturile rezervate.
         </p>
-        <p className="text-xs text-white/35">
-          Aldea Alexandru-Ioan PFA | CUI: RO52634205 | Nr. Reg. Com. : F2025038136000
+        <p className="text-sm text-white/35">
+          Aldea Alexandru-Ioan PFA | CUI: RO52634205
         </p>
-
-        <div className="flex flex-wrap gap-4">
-          <button
-            type="button"
-            onClick={() => onOpenPolicy("privacy")}
-            className="hover:text-white"
-          >
-            Politica de confidențialitate
-          </button>
-
-          <button
-            type="button"
-            onClick={() => onOpenPolicy("cookies")}
-            className="hover:text-white"
-          >
-            Politica de cookies
-          </button>
-        </div>
       </div>
     </footer>
   );
