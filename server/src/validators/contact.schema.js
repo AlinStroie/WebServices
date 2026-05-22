@@ -1,7 +1,21 @@
 import { z } from "zod";
 
-// Schema pentru formularul de contact.
-// Aici controlăm ce date acceptă backendul.
+// Transformă "", null și undefined în undefined.
+// Bun pentru câmpuri opționale.
+const emptyToUndefined = (value) => {
+  if (value === null || value === undefined) return undefined;
+
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    return trimmed === "" ? undefined : trimmed;
+  }
+
+  return value;
+};
+
+const optionalTrimmedString = (max = 160) =>
+  z.preprocess(emptyToUndefined, z.string().max(max).optional());
+
 export const contactSchema = z.object({
   name: z
     .string()
@@ -15,15 +29,18 @@ export const contactSchema = z.object({
     .email("Email invalid.")
     .max(160, "Emailul este prea lung."),
 
-  phone: z
-    .string()
-    .trim()
-    .min(7, "Numărul este prea scurt.")
-    .max(30, "Numărul este prea lung.")
-    .optional()
-    .or(z.literal("")),
+  // Telefon opțional.
+  // Acceptă: lipsă, "", null sau string valid.
+  phone: z.preprocess(
+    emptyToUndefined,
+    z
+      .string()
+      .min(7, "Numărul este prea scurt.")
+      .max(30, "Numărul este prea lung.")
+      .optional()
+  ),
 
-  selectedPlan: z.string().trim().max(40).optional(),
+  selectedPlan: optionalTrimmedString(40),
 
   message: z
     .string()
@@ -31,22 +48,29 @@ export const contactSchema = z.object({
     .min(10, "Mesajul este prea scurt.")
     .max(3000, "Mesajul este prea lung."),
 
-  gdprAccepted: z.boolean(),
+  // Trebuie să fie true, nu doar boolean.
+  gdprAccepted: z.literal(true, {
+    error: "Trebuie să accepți prelucrarea datelor.",
+  }),
 
-  sourcePage: z.string().trim().max(300).optional(),
+  sourcePage: optionalTrimmedString(300),
 
   // Honeypot anti-spam.
-  // Câmpul acesta va fi ascuns în frontend.
-  // Utilizatorii reali nu îl completează, boții da.
-  website: z.string().optional().default(""),
+  website: z.preprocess(
+    (value) => {
+      if (value === null || value === undefined) return "";
+      return String(value);
+    },
+    z.string().optional().default("")
+  ),
 
-  sessionId: z.string().trim().max(120).optional(),
+  sessionId: optionalTrimmedString(120),
 
-  utmSource: z.string().trim().max(120).optional(),
-  utmMedium: z.string().trim().max(120).optional(),
-  utmCampaign: z.string().trim().max(160).optional(),
-  utmContent: z.string().trim().max(160).optional(),
-  utmTerm: z.string().trim().max(160).optional(),
+  utmSource: optionalTrimmedString(120),
+  utmMedium: optionalTrimmedString(120),
+  utmCampaign: optionalTrimmedString(160),
+  utmContent: optionalTrimmedString(160),
+  utmTerm: optionalTrimmedString(160),
 
-  consentAnalytics: z.boolean().optional(),
+  consentAnalytics: z.boolean().optional().default(false),
 });

@@ -11,11 +11,13 @@ const router = express.Router();
 
 // POST /api/contact
 // Primește formularul din ContactDrawer.
-// Face 4 lucruri:
+// Flux:
 // 1. validează datele;
-// 2. salvează cererea în PostgreSQL;
-// 3. marchează sesiunea de analytics ca fiind convertită;
-// 4. trimite email către firmă.
+// 2. blochează spamul prin honeypot;
+// 3. verifică acceptul GDPR;
+// 4. salvează cererea în PostgreSQL;
+// 5. dacă există consimțământ analytics, marchează conversia;
+// 6. trimite email către firmă.
 router.post(
   "/",
   contactLimiter,
@@ -26,7 +28,6 @@ router.post(
     // Honeypot anti-spam.
     // Câmpul "website" nu este vizibil pentru utilizator.
     // Dacă este completat, probabil este bot.
-    // Răspundem cu success ca să nu afle botul că a fost blocat.
     if (data.website) {
       return res.json({
         success: true,
@@ -42,9 +43,31 @@ router.post(
       });
     }
 
+    // Analytics/context se salvează doar dacă utilizatorul a acceptat analytics.
+    const hasAnalyticsConsent = Boolean(data.consentAnalytics);
+
+    const analyticsData = hasAnalyticsConsent
+      ? {
+          sessionId: data.sessionId || null,
+          utmSource: data.utmSource || null,
+          utmMedium: data.utmMedium || null,
+          utmCampaign: data.utmCampaign || null,
+          utmContent: data.utmContent || null,
+          utmTerm: data.utmTerm || null,
+        }
+      : {
+          sessionId: null,
+          utmSource: null,
+          utmMedium: null,
+          utmCampaign: null,
+          utmContent: null,
+          utmTerm: null,
+        };
+
     // Salvăm cererea în baza de date.
-    // Aici sunt date personale: nume, email, telefon, mesaj.
-    // Acestea rămân separate de analytics.
+    // Date personale: nume, email, telefon, mesaj.
+    // Nu salvăm IP/userAgent aici pentru minimizarea datelor.
+    // Dacă vrei să le salvezi pentru securitate/anti-spam, menționează clar în Privacy Policy.
     const submission = await prisma.contactSubmission.create({
       data: {
         name: data.name,
@@ -55,29 +78,27 @@ router.post(
         gdprAccepted: data.gdprAccepted,
 
         sourcePage: data.sourcePage || null,
+
         userAgent: req.headers["user-agent"] || null,
         ipAddress: req.ip || null,
 
-        // Legătură opțională cu sesiunea anonimă de analytics.
-        sessionId: data.sessionId || null,
+        sessionId: analyticsData.sessionId,
 
-        // UTM-uri pentru campanii.
-        utmSource: data.utmSource || null,
-        utmMedium: data.utmMedium || null,
-        utmCampaign: data.utmCampaign || null,
-        utmContent: data.utmContent || null,
-        utmTerm: data.utmTerm || null,
+        utmSource: analyticsData.utmSource,
+        utmMedium: analyticsData.utmMedium,
+        utmCampaign: analyticsData.utmCampaign,
+        utmContent: analyticsData.utmContent,
+        utmTerm: analyticsData.utmTerm,
 
-        consentAnalytics: Boolean(data.consentAnalytics),
+        consentAnalytics: hasAnalyticsConsent,
       },
     });
 
-    // Dacă există sessionId, marcăm sesiunea ca fiind convertită.
-    // Asta ne ajută să calculăm conversii în dashboard.
-    if (data.sessionId) {
+    // Marcăm sesiunea ca fiind convertită doar dacă există consimțământ analytics.
+    if (hasAnalyticsConsent && analyticsData.sessionId) {
       await prisma.analyticsSession.updateMany({
         where: {
-          sessionId: data.sessionId,
+          sessionId: analyticsData.sessionId,
         },
         data: {
           convertedAt: new Date(),
@@ -85,39 +106,31 @@ router.post(
           lastPath: data.sourcePage || undefined,
         },
       });
-    }
 
-    // Salvăm și un eveniment CONTACT_SUCCESS în analytics.
-    // Nu punem date personale aici.
-    if (data.sessionId) {
       await prisma.analyticsEvent.create({
         data: {
-          sessionId: data.sessionId,
+          sessionId: analyticsData.sessionId,
           type: "CONTACT_SUCCESS",
           path: data.sourcePage || null,
           label: data.selectedPlan || "Nespecificat",
           value: data.selectedPlan || "Nespecificat",
-          metadata: data.consentAnalytics
-            ? {
-                source: "contact_form",
-                hasUtm: Boolean(
-                  data.utmSource ||
-                    data.utmMedium ||
-                    data.utmCampaign ||
-                    data.utmContent ||
-                    data.utmTerm
-                ),
-              }
-            : undefined,
+          metadata: {
+            source: "contact_form",
+            hasUtm: Boolean(
+              analyticsData.utmSource ||
+                analyticsData.utmMedium ||
+                analyticsData.utmCampaign ||
+                analyticsData.utmContent ||
+                analyticsData.utmTerm
+            ),
+          },
         },
       });
     }
 
     try {
-      // Trimitem email către firmă.
       await sendContactEmail(submission);
 
-      // Marcăm în DB că emailul a fost trimis.
       await prisma.contactSubmission.update({
         where: {
           id: submission.id,
@@ -133,8 +146,6 @@ router.post(
         message: "Cererea a fost trimisă cu succes.",
       });
     } catch (error) {
-      // Dacă emailul pică, cererea rămâne salvată în DB.
-      // Utilizatorul poate vedea tot succes, pentru că leadul nu s-a pierdut.
       await prisma.contactSubmission.update({
         where: {
           id: submission.id,
