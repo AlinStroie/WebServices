@@ -1,3 +1,12 @@
+import {
+  beautyMiniSite,
+  kinetoMiniSite,
+  personalMiniSite,
+  restaurantMiniSite,
+  shopMiniSite,
+  transportMiniSite,
+} from "./minisites";
+
 const sharedCaseStudy = {
   goal: "Creșterea numărului de cereri printr-o prezentare clară a serviciilor.",
   solution:
@@ -66,6 +75,7 @@ export const portfolio = [
     caseStudy: sharedCaseStudy,
     deliverables: sharedDeliverables,
     hotspots: sharedHotspots,
+    miniSite: kinetoMiniSite,
   },
   {
     id: "beauty",
@@ -93,6 +103,7 @@ export const portfolio = [
     caseStudy: sharedCaseStudy,
     deliverables: sharedDeliverables,
     hotspots: sharedHotspots,
+    miniSite: beautyMiniSite,
   },
   {
     id: "transport",
@@ -120,6 +131,7 @@ export const portfolio = [
     caseStudy: sharedCaseStudy,
     deliverables: sharedDeliverables,
     hotspots: sharedHotspots,
+    miniSite: transportMiniSite,
   },
   {
     id: "restaurant",
@@ -147,6 +159,7 @@ export const portfolio = [
     caseStudy: sharedCaseStudy,
     deliverables: sharedDeliverables,
     hotspots: sharedHotspots,
+    miniSite: restaurantMiniSite,
   },
   {
     id: "personal",
@@ -174,6 +187,7 @@ export const portfolio = [
     caseStudy: sharedCaseStudy,
     deliverables: sharedDeliverables,
     hotspots: sharedHotspots,
+    miniSite: personalMiniSite,
   },
   {
     id: "shop",
@@ -201,5 +215,6 @@ export const portfolio = [
     caseStudy: sharedCaseStudy,
     deliverables: sharedDeliverables,
     hotspots: sharedHotspots,
+    miniSite: shopMiniSite,
   },
 ];

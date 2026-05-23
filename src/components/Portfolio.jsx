@@ -9,7 +9,6 @@ import {
   Monitor,
   MousePointer2,
   Smartphone,
-  Tablet,
   Target,
   X,
   Zap,
@@ -18,7 +17,6 @@ import {
 import AnimatedSection from "./AnimatedSection";
 import SectionHeader from "./SectionHeader";
 import PortfolioBrowserFrame from "./PortfolioBrowserFrame";
-import PortfolioMockupRenderer from "./mockups/PortfolioMockupRenderer";
 import { portfolio } from "../data/portfolio";
 import OverlayBackdrop from "./OverlayBackdrop";
 
@@ -28,13 +26,6 @@ const deviceOptions = [
     label: "Desktop",
     icon: Monitor,
     frameClass: "w-full max-w-4xl",
-    heightClass: "h-[34rem]",
-  },
-  {
-    id: "tablet",
-    label: "Tabletă",
-    icon: Tablet,
-    frameClass: "w-full max-w-2xl",
     heightClass: "h-[34rem]",
   },
   {
@@ -130,7 +121,7 @@ function PortfolioCardPreview({ project }) {
       />
 
       <div className="relative h-full transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.03]">
-        <PortfolioBrowserFrame project={project} size="card" />
+        <PortfolioBrowserFrame project={project} size="card" device="desktop" />
       </div>
 
       <div className="pointer-events-none absolute bottom-5 left-5 right-5 flex translate-y-4 items-center justify-between rounded-full border border-white/10 bg-black/65 px-4 py-2 opacity-0 backdrop-blur-xl transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
@@ -580,23 +571,20 @@ function PortfolioProjectModal({
                 transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
                 className={`relative ${selectedDevice.frameClass}`}
               >
-                <div
-  className={`relative overflow-hidden rounded-[1.7rem] border border-white/10 bg-white shadow-2xl ${selectedDevice.heightClass}`}
->
-  <div
-    className="pointer-events-none h-full select-none"
-    onContextMenu={(event) => event.preventDefault()}
-    onDragStart={(event) => event.preventDefault()}
-  >
-    <PortfolioMockupRenderer project={project} />
-  </div>
+                <div className={`relative overflow-hidden ${selectedDevice.heightClass}`}>
+                  <PortfolioBrowserFrame
+                    project={project}
+                    size="full"
+                    device={device}
+                    interactive
+                  />
 
-  <InteractiveHotspots
-    project={{ ...project, hotspots }}
-    activeHotspot={activeHotspot}
-    setActiveHotspot={setActiveHotspot}
-  />
-</div>
+                  <InteractiveHotspots
+                    project={{ ...project, hotspots }}
+                    activeHotspot={activeHotspot}
+                    setActiveHotspot={setActiveHotspot}
+                  />
+                </div>
               </motion.div>
             </div>
           </section>
