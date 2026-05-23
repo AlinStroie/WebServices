@@ -1,34 +1,66 @@
 export const beautyMiniSite = {
   layout: "beauty",
-  brand: "Luma Beauty",
-  subtitle: "Salon beauty premium",
-  eyebrow: "Beauty • Stilizare • Îngrijire",
-  headline: "Servicii beauty elegante, într-un spațiu creat pentru tine.",
+  brand: "Luna Beauty Studio",
+  subtitle: "Beauty & self care",
+  eyebrow: "Salon • Beauty • Programări",
+  headline: "Redefinește relaxarea prin frumusețe atent lucrată.",
+  accent: "Ritualuri beauty într-un spațiu elegant",
   description:
-    "Prezentare rafinată pentru programări, servicii, galerie și testimoniale, cu un traseu simplu de la descoperire la contact.",
-  primaryCta: "Fă o programare",
+    "Servicii de beauty prezentate într-un stil premium, cu accent pe atmosferă, încredere, rezultate naturale și programare rapidă.",
+  featureText:
+    "Un minisite creat pentru saloane care vor să transmită rafinament, calm și profesionalism încă din prima interacțiune.",
+  bottomTitle: "Experiență premium, programare simplă.",
+  bottomText:
+    "Secțiuni vizuale, pachete clare și CTA-uri poziționate natural pentru a transforma vizitatorii în programări reale.",
+  primaryCta: "Programează-te",
   secondaryCta: "Vezi serviciile",
 
   contact: {
-    address: "Str. Mureșenilor nr. 12, Brașov",
-    phone: "+40 722 123 456",
-    email: "hello@lumabeauty.ro",
+    address: "Brașov, România",
+    phone: "+40 700 111 222",
+    email: "hello@lunabeauty.ro",
   },
 
   nav: ["Acasă", "Servicii", "Galerie", "Programări", "Contact"],
 
   items: [
     {
-      title: "Stilizare gene",
-      text: "Servicii prezentate clar, cu accent pe rezultate naturale și programare rapidă.",
+      title: "Lash styling",
+      text: "Servicii pentru gene cu rezultat curat, elegant și natural, adaptate formei ochilor.",
     },
     {
-      title: "Brow design",
-      text: "Secțiuni vizuale pentru servicii, beneficii și diferențiere premium.",
+      title: "Brows design",
+      text: "Stilizare sprâncene adaptată fizionomiei, cu accent pe simetrie și expresivitate.",
     },
     {
-      title: "Make-up",
-      text: "Galerie și testimoniale pentru încredere înainte de programare.",
+      title: "Make-up premium",
+      text: "Machiaj pentru evenimente, ședințe foto și momente speciale, într-un stil rafinat.",
+    },
+  ],
+
+  highlights: [
+    {
+      title: "Ritual facial",
+      text: "O prezentare vizuală caldă, potrivită pentru servicii de îngrijire și relaxare.",
+    },
+    {
+      title: "Beauty session",
+      text: "Carduri scurte pentru servicii principale, ușor de parcurs și comparat.",
+    },
+  ],
+
+  packages: [
+    {
+      title: "Glow package",
+      text: "Servicii combinate pentru un rezultat natural, curat și luminos.",
+    },
+    {
+      title: "Brows & lashes",
+      text: "Pachet orientat spre expresivitate, simetrie și look îngrijit.",
+    },
+    {
+      title: "Event beauty",
+      text: "Pregătire completă pentru evenimente, ședințe foto sau momente speciale.",
     },
   ],
 
@@ -37,5 +69,29 @@ export const beautyMiniSite = {
     { value: "4.9", label: "rating" },
     { value: "24h", label: "confirmare" },
     { value: "6+", label: "servicii" },
+  ],
+
+  hotspots: [
+    {
+      id: "hero",
+      title: "Hero premium",
+      text: "Zona principală pune accent pe atmosferă, imagine și promisiunea brandului.",
+      x: "32%",
+      y: "30%",
+    },
+    {
+      id: "services",
+      title: "Servicii vizuale",
+      text: "Cardurile sunt poziționate imediat după hero pentru alegere rapidă.",
+      x: "32%",
+      y: "55%",
+    },
+    {
+      id: "packages",
+      title: "Pachete clare",
+      text: "Secțiunea de pachete ajută utilizatorul să compare rapid opțiunile.",
+      x: "73%",
+      y: "72%",
+    },
   ],
 };

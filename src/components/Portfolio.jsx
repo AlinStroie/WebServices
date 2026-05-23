@@ -7,7 +7,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Monitor,
-  MousePointer2,
   Smartphone,
   Target,
   X,
@@ -52,41 +51,6 @@ function getProjectCase(project) {
       project.benefit ||
       "Vizitatorul înțelege rapid ce oferă afacerea și are un traseu clar către cerere, programare sau contact.",
   };
-}
-
-function getProjectHotspots(project) {
-  if (project.hotspots?.length) return project.hotspots;
-
-  return [
-    {
-      id: "hero",
-      title: "Hero clar",
-      text: "Prima zonă explică rapid cine este afacerea, ce oferă și ce acțiune ar trebui să facă vizitatorul.",
-      x: "22%",
-      y: "25%",
-    },
-    {
-      id: "cta",
-      title: "CTA vizibil",
-      text: "Butoanele importante sunt plasate în zone ușor de observat, pentru contact rapid sau cerere de ofertă.",
-      x: "73%",
-      y: "33%",
-    },
-    {
-      id: "services",
-      title: "Servicii organizate",
-      text: "Serviciile sunt grupate logic, ca utilizatorul să nu caute informația prin pagină.",
-      x: "35%",
-      y: "58%",
-    },
-    {
-      id: "trust",
-      title: "Elemente de încredere",
-      text: "Secțiunile de beneficii, proces, rezultate sau întrebări ajută vizitatorul să ia o decizie mai ușor.",
-      x: "68%",
-      y: "70%",
-    },
-  ];
 }
 
 function getProjectDeliverables(project) {
@@ -220,141 +184,6 @@ function CaseRow({ icon: Icon, label, text }) {
   );
 }
 
-function InteractiveHotspots({ project, activeHotspot, setActiveHotspot }) {
-  const hotspots = getProjectHotspots(project);
-  const currentHotspot = hotspots.find((item) => item.id === activeHotspot);
-
-  return (
-    <>
-      <div className="pointer-events-none absolute inset-0 z-20">
-        {hotspots.map((hotspot, index) => {
-          const active = currentHotspot?.id === hotspot.id;
-
-          return (
-            <button
-              key={hotspot.id}
-              type="button"
-              onMouseEnter={() => setActiveHotspot(hotspot.id)}
-              onMouseLeave={() => setActiveHotspot(null)}
-              onFocus={() => setActiveHotspot(hotspot.id)}
-              onBlur={() => setActiveHotspot(null)}
-              className="pointer-events-auto absolute group/hotspot"
-              style={{ left: hotspot.x, top: hotspot.y }}
-            >
-              <span className="relative flex -translate-x-1/2 -translate-y-1/2 items-center gap-2">
-                <span
-                  className={`relative flex h-12 w-12 items-center justify-center rounded-full border backdrop-blur-xl transition duration-300 ${
-                    active
-                      ? "scale-110 border-white bg-white text-black shadow-[0_0_55px_rgba(255,255,255,0.55)]"
-                      : "border-white bg-black/85 text-white shadow-[0_0_45px_rgba(0,0,0,0.65),0_0_28px_rgba(255,255,255,0.35)] group-hover/hotspot:scale-110 group-hover/hotspot:bg-white group-hover/hotspot:text-black"
-                  }`}
-                >
-                  <span className="relative z-10 text-sm font-bold">
-                    {index + 1}
-                  </span>
-
-                  <span className="absolute inset-[-8px] rounded-full border border-white/25" />
-                  <span className="absolute inset-[-16px] rounded-full border border-white/10" />
-
-                  <span
-                    className={`absolute inset-0 rounded-full ${
-                      active ? "animate-ping bg-white/25" : "bg-white/10"
-                    }`}
-                  />
-                </span>
-
-                <span
-                  className={`hidden whitespace-nowrap rounded-full border border-white/10 bg-black/75 px-3 py-1.5 text-xs font-medium text-white/75 shadow-[0_12px_40px_rgba(0,0,0,0.35)] backdrop-blur-xl transition md:inline-flex ${
-                    active
-                      ? "translate-x-1 opacity-100"
-                      : "opacity-0 group-hover/hotspot:translate-x-1 group-hover/hotspot:opacity-100"
-                  }`}
-                >
-                  {hotspot.title}
-                </span>
-              </span>
-            </button>
-          );
-        })}
-      </div>
-
-      <AnimatePresence>
-        {currentHotspot && (
-          <motion.div
-            key={currentHotspot.id}
-            initial={{ opacity: 0, y: 12, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.98 }}
-            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            className="pointer-events-none absolute bottom-5 left-5 right-5 z-30 rounded-[1.5rem] border border-white/15 bg-black/82 p-5 shadow-[0_20px_80px_rgba(0,0,0,0.55)] backdrop-blur-2xl"
-          >
-            <div className="mb-3 flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full bg-white text-black">
-                <MousePointer2 size={17} />
-              </span>
-
-              <div>
-                <p className="text-sm font-semibold text-white">
-                  {currentHotspot.title}
-                </p>
-
-                <p className="mt-0.5 text-xs text-white/35">
-                  Zonă importantă în interfață
-                </p>
-              </div>
-            </div>
-
-            <p className="text-sm leading-6 text-white/58">
-              {currentHotspot.text}
-            </p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </>
-  );
-}
-
-function MobileHotspotTabs({ hotspots, activeHotspot, setActiveHotspot }) {
-  const selectedHotspot =
-    hotspots.find((item) => item.id === activeHotspot) || hotspots[0];
-
-  if (!hotspots.length) return null;
-
-  return (
-    <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 md:hidden">
-      <p className="text-xs uppercase tracking-[0.22em] text-white/35">
-        Zone importante
-      </p>
-
-      <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-        {hotspots.map((hotspot, index) => {
-          const active = selectedHotspot.id === hotspot.id;
-
-          return (
-            <button
-              key={hotspot.id}
-              type="button"
-              onClick={() => setActiveHotspot(hotspot.id)}
-              aria-label={`Vezi zona ${hotspot.title}`}
-              className={`shrink-0 rounded-full border px-3 py-2 text-xs font-medium transition ${
-                active
-                  ? "border-white bg-white text-black"
-                  : "border-white/10 bg-white/[0.04] text-white/60"
-              }`}
-            >
-              {index + 1}. {hotspot.title}
-            </button>
-          );
-        })}
-      </div>
-
-      <p className="mt-3 text-sm leading-6 text-white/65">
-        {selectedHotspot.text}
-      </p>
-    </div>
-  );
-}
-
 function DeviceSwitcher({ device, setDevice }) {
   return (
     <div className="flex flex-wrap gap-2">
@@ -388,7 +217,6 @@ function PortfolioProjectModal({
   onPrev,
   onOpenContact,
 }) {
-  const [activeHotspot, setActiveHotspot] = useState(null);
   const [device, setDevice] = useState("desktop");
 
   const selectedDevice = useMemo(
@@ -417,7 +245,6 @@ function PortfolioProjectModal({
   if (!project) return null;
 
   const deliverables = getProjectDeliverables(project);
-  const hotspots = getProjectHotspots(project);
 
   return (
     <motion.div
@@ -506,12 +333,6 @@ function PortfolioProjectModal({
               <CaseStudySummary project={project} />
             </div>
 
-            <MobileHotspotTabs
-              hotspots={hotspots}
-              activeHotspot={activeHotspot}
-              setActiveHotspot={setActiveHotspot}
-            />
-
             <div className="mt-5 rounded-[1.25rem] border border-white/10 bg-white/[0.035] p-4 md:mt-7 md:rounded-[1.5rem] md:p-5">
               <p className="text-xs uppercase tracking-[0.22em] text-white/35 md:text-sm md:tracking-[0.25em] md:text-white/30">
                 Ce primește clientul
@@ -553,10 +374,10 @@ function PortfolioProjectModal({
             <div className="mb-5 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
                 <p className="text-sm font-medium text-white/70">
-                  Preview interactiv
+                  Preview minisite
                 </p>
                 <p className="mt-1 text-sm text-white/40">
-                  Treci cu mouse-ul peste puncte pentru a vedea rolul fiecărei zone.
+                  Explorează structura vizuală a minisite-ului.
                 </p>
               </div>
 
@@ -577,12 +398,6 @@ function PortfolioProjectModal({
                     size="full"
                     device={device}
                     interactive
-                  />
-
-                  <InteractiveHotspots
-                    project={{ ...project, hotspots }}
-                    activeHotspot={activeHotspot}
-                    setActiveHotspot={setActiveHotspot}
                   />
                 </div>
               </motion.div>
@@ -643,7 +458,7 @@ function Portfolio({ onOverlayChange, onOpenContact }) {
           <SectionHeader
             eyebrow="Portofoliu"
             title="Nu arătăm doar cum arată un site. Arătăm de ce funcționează."
-            text="Explorează proiectele ca studii de caz interactive: obiectiv, soluție, beneficii și zone importante din interfață."
+            text="Explorează proiectele ca studii de caz: obiectiv, soluție, beneficii și preview vizual al interfeței."
           />
 
           <div className="md:hidden">
