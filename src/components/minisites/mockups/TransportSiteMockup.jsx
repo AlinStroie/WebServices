@@ -10,7 +10,6 @@ import {
   Route,
   Search,
   ShieldCheck,
-  ShipWheel,
   Truck,
 } from "lucide-react";
 import { MiniLogo, NavButton, navTarget, scrollToSection } from "./shared.jsx";
@@ -22,225 +21,266 @@ const iconMap = {
   route: Route,
 };
 
-function TransportIcon({ type = "road", className = "" }) {
-  const Icon = iconMap[type] || Truck;
-  return <Icon className={className} size={20} />;
+function targetForNav(item) {
+  if (item.includes("Flot")) return "fleet";
+  if (item.includes("Rute")) return "routes";
+  return navTarget(item);
 }
 
-function SoftTruckVisual() {
+function TransportIcon({ type = "road" }) {
+  const Icon = iconMap[type] || Truck;
+  return <Icon size={20} />;
+}
+
+function DispatchMap() {
   return (
-    <div className="relative h-[15rem] overflow-hidden rounded-bl-[5rem] rounded-br-[1.5rem] rounded-tl-[1.5rem] rounded-tr-[5rem] bg-gradient-to-br from-[#f58220] via-[#ffb45c] to-[#f6f7f8] shadow-2xl shadow-orange-950/30">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_74%_30%,rgba(255,255,255,.75),transparent_24%),linear-gradient(135deg,rgba(7,22,38,.1),rgba(7,22,38,.55))]" />
-      <div className="absolute bottom-10 left-8 h-20 w-56 rounded-2xl bg-[#e9eef2] shadow-xl">
-        <div className="absolute -right-14 top-6 h-14 w-20 rounded-r-2xl bg-[#0b253f]" />
-        <div className="absolute -right-6 top-1 h-9 w-10 rounded-lg bg-cyan-100/80" />
-        <div className="absolute left-5 top-5 h-3 w-28 rounded-full bg-slate-300" />
-        <div className="absolute bottom-[-1.1rem] left-7 h-9 w-9 rounded-full border-[7px] border-[#0b253f] bg-white" />
-        <div className="absolute bottom-[-1.1rem] right-[-2.6rem] h-9 w-9 rounded-full border-[7px] border-[#0b253f] bg-white" />
-      </div>
-      <div className="absolute right-7 top-6 rounded-full bg-white/85 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-[#0b253f] shadow-lg">
-        EU routes
-      </div>
-      <div className="absolute bottom-6 right-7 flex items-center gap-2 rounded-2xl bg-[#071626]/90 px-4 py-3 text-white shadow-xl">
-        <PackageCheck size={18} className="text-[#f58220]" />
-        <span className="text-xs font-black">Live dispatch</span>
+    <div className="relative min-h-[22rem] overflow-hidden bg-[#f1f5ef]">
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(44,62,50,.10)_1px,transparent_1px),linear-gradient(rgba(44,62,50,.10)_1px,transparent_1px)] [background-size:34px_34px]" />
+      <svg className="absolute inset-0 h-full w-full" viewBox="0 0 420 300" role="img" aria-label="Route map">
+        <path
+          d="M28 226 C92 124 148 164 196 92 C236 34 300 64 382 38"
+          fill="none"
+          stroke="#f97316"
+          strokeWidth="8"
+          strokeLinecap="round"
+        />
+        <path
+          d="M56 262 C114 226 156 250 218 202 C272 160 320 186 392 142"
+          fill="none"
+          stroke="#1f766f"
+          strokeWidth="5"
+          strokeLinecap="round"
+        />
+      </svg>
+      <span className="absolute left-[12%] top-[66%] grid h-9 w-9 place-items-center bg-[#1f766f] text-white">
+        <Truck size={17} />
+      </span>
+      <span className="absolute right-[18%] top-[20%] grid h-9 w-9 place-items-center bg-[#f97316] text-white">
+        <Container size={17} />
+      </span>
+      <div className="absolute bottom-6 right-6 border border-[#2c3e32]/15 bg-white p-4 shadow-[0_18px_45px_rgba(44,62,50,0.14)]">
+        <p className="text-[0.65rem] font-bold text-[#64748b]">ETA update</p>
+        <p className="mt-1 text-2xl font-black text-[#243226]">14:20</p>
       </div>
     </div>
   );
 }
 
-function QuoteBox({ mini, contentRef }) {
+function QuotePanel({ mini, contentRef }) {
   return (
-    <div className="rounded-[1.6rem] border border-white/20 bg-white/95 p-4 text-[#071626] shadow-2xl shadow-slate-950/25 backdrop-blur">
-      <div className="mb-3 flex items-center justify-between">
+    <div className="border border-[#d9e0d5] bg-white p-4 shadow-[0_18px_45px_rgba(44,62,50,0.14)]">
+      <div className="mb-4 flex items-center justify-between">
         <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.18em] text-[#f58220]">Quick quote</p>
-          <h4 className="text-sm font-black">Planifică transportul</h4>
+          <p className="text-[0.65rem] font-black uppercase text-[#f97316]">Quick quote</p>
+          <h4 className="text-lg font-black text-[#243226]">Planifica transportul</h4>
         </div>
-        <CalendarClock size={19} className="text-[#f58220]" />
+        <CalendarClock size={20} className="text-[#1f766f]" />
       </div>
       <div className="grid gap-2 md:grid-cols-3">
         {mini.quoteFields?.map((field) => (
-          <div key={field} className="rounded-xl border border-slate-200 bg-slate-50 px-3 py-2">
-            <p className="text-[10px] font-bold text-slate-400">{field}</p>
-            <p className="mt-1 text-xs font-black text-slate-700">Selectează</p>
-          </div>
+          <button key={field} type="button" className="border border-[#d9e0d5] bg-[#f7faf6] px-3 py-3 text-left">
+            <p className="text-[0.65rem] font-bold text-[#64748b]">{field}</p>
+            <p className="mt-1 text-xs font-black text-[#243226]">Selecteaza</p>
+          </button>
         ))}
         <button
           type="button"
           onClick={() => scrollToSection(contentRef, "contact")}
-          className="rounded-xl bg-[#f58220] px-4 py-3 text-xs font-black text-white shadow-lg shadow-orange-500/25"
+          className="inline-flex items-center justify-center gap-2 bg-[#f97316] px-4 py-3 text-xs font-black text-white"
         >
           {mini.primaryCta}
+          <ArrowRight size={15} />
         </button>
       </div>
     </div>
   );
 }
 
-export default function TransportSiteMockup({ mini, projectId, contentRef, isMobile }) {
+function ServiceCard({ item }) {
+  return (
+    <article className="border border-[#d9e0d5] bg-white p-5">
+      <div className="mb-5 flex items-center justify-between">
+        <span className="grid h-11 w-11 place-items-center bg-[#243226] text-[#b7eadf]">
+          <TransportIcon type={item.icon} />
+        </span>
+        <span className="bg-[#fff0df] px-2 py-1 text-[0.65rem] font-black text-[#b45309]">
+          {item.tag || "Service"}
+        </span>
+      </div>
+      <h4 className="text-lg font-black text-[#243226]">{item.title}</h4>
+      <p className="mt-2 text-xs leading-5 text-[#64748b]">{item.text}</p>
+      <button type="button" className="mt-5 inline-flex items-center gap-2 text-xs font-black text-[#1f766f]">
+        Detalii <ArrowRight size={14} />
+      </button>
+    </article>
+  );
+}
+
+function ProcessStep({ step, index }) {
+  return (
+    <article className="border-l-4 border-[#f97316] bg-white p-5">
+      <div className="mb-4 flex items-center justify-between">
+        <span className="text-xs font-black text-[#f97316]">0{index + 1}</span>
+        <CheckCircle2 size={18} className="text-[#1f766f]" />
+      </div>
+      <h4 className="font-black text-[#243226]">{step.title}</h4>
+      <p className="mt-2 text-xs leading-5 text-[#64748b]">{step.text}</p>
+    </article>
+  );
+}
+
+export default function TransportSiteMockup({ mini, contentRef }) {
   const services = mini.services || mini.items || [];
 
   return (
-    <div ref={contentRef} className="h-full overflow-y-auto bg-[#f4f6f8] text-[#071626]">
-      <section data-mini-section="home" className="relative min-h-[32rem] overflow-hidden bg-[#071626] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_28%,rgba(245,130,32,.5),transparent_28%),linear-gradient(120deg,rgba(7,22,38,.96),rgba(7,22,38,.72)),linear-gradient(135deg,#0b253f,#071626)]" />
-        <div className="absolute -right-20 bottom-0 h-52 w-[60%] rounded-tl-[7rem] bg-white" />
-        <div className="absolute left-0 top-0 h-full w-full opacity-[0.08] [background-image:linear-gradient(90deg,#fff_1px,transparent_1px),linear-gradient(#fff_1px,transparent_1px)] [background-size:36px_36px]" />
-
-        <header className="relative z-10 flex items-center justify-between px-6 py-5">
-          <MiniLogo mini={mini} dark />
-          <nav className="hidden items-center gap-6 md:flex">
+    <div ref={contentRef} className="h-full overflow-y-auto bg-[#eef2ea] text-[#243226]">
+      <header className="sticky top-0 z-30 border-b border-[#d9e0d5] bg-[#fbfcf8]/95 px-5 py-3 backdrop-blur md:px-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+          <MiniLogo mini={mini} />
+          <nav className="hidden items-center gap-5 md:flex">
             {mini.nav.map((item) => (
-              <NavButton dark key={item} onClick={() => scrollToSection(contentRef, navTarget(item))}>
+              <NavButton key={item} onClick={() => scrollToSection(contentRef, targetForNav(item))}>
                 {item}
               </NavButton>
             ))}
           </nav>
           <div className="flex items-center gap-2">
-            <button type="button" aria-label="Search" className="hidden rounded-full bg-white/10 p-2 text-white md:grid md:place-items-center">
+            <button type="button" aria-label="Search" className="hidden border border-[#d9e0d5] bg-white p-2 text-[#243226] md:grid">
               <Search size={15} />
             </button>
             <button
               type="button"
               onClick={() => scrollToSection(contentRef, "contact")}
-              className="rounded-lg bg-[#f58220] px-4 py-2 text-xs font-black text-white shadow-lg shadow-orange-950/20"
+              className="bg-[#243226] px-4 py-2 text-xs font-black text-white"
             >
-              {mini.primaryCta} <ArrowRight className="ml-1 inline" size={13} />
+              {mini.primaryCta}
             </button>
           </div>
-        </header>
+        </div>
+      </header>
 
-        <div className="relative z-10 grid gap-8 px-6 pb-8 pt-9 md:grid-cols-[0.95fr_1.05fr] md:items-center md:pb-16 md:pt-14">
-          <div>
-            <span className="inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-[10px] font-black uppercase tracking-[0.18em] text-white/80">
-              {mini.eyebrow}
-            </span>
-            <h3 className="mt-5 max-w-xl text-4xl font-black leading-[0.95] tracking-[-0.06em] md:text-6xl">
-              {mini.headline}
-            </h3>
-            <p className="mt-4 max-w-md text-sm leading-6 text-white/68">{mini.description}</p>
+      <main>
+        <section data-mini-section="home" className="grid bg-[#fbfcf8] md:grid-cols-[0.95fr_1.05fr]">
+          <div className="border-b border-[#d9e0d5] p-6 md:border-b-0 md:border-r md:p-10">
+            <p className="text-xs font-black uppercase text-[#f97316]">{mini.eyebrow}</p>
+            <h1 className="mt-5 max-w-2xl text-4xl font-black leading-tight md:text-6xl">{mini.headline}</h1>
+            <p className="mt-5 max-w-xl text-sm leading-7 text-[#64748b]">{mini.description}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               <button
                 type="button"
                 onClick={() => scrollToSection(contentRef, "contact")}
-                className="rounded-lg bg-[#f58220] px-5 py-3 text-xs font-black text-white shadow-xl shadow-orange-950/25"
+                className="inline-flex items-center gap-2 bg-[#f97316] px-5 py-3 text-xs font-black text-white"
               >
-                {mini.primaryCta} <ArrowRight className="ml-2 inline" size={14} />
+                {mini.primaryCta}
+                <ArrowRight size={15} />
               </button>
               <button
                 type="button"
                 onClick={() => scrollToSection(contentRef, "fleet")}
-                className="rounded-lg border border-white/25 bg-white/5 px-5 py-3 text-xs font-black text-white"
+                className="border border-[#243226]/20 bg-white px-5 py-3 text-xs font-black text-[#243226]"
               >
                 {mini.secondaryCta}
               </button>
             </div>
           </div>
-
           <div className="relative">
-            <SoftTruckVisual />
-            <div className="absolute -bottom-8 left-2 right-2 md:-left-12 md:right-6">
-              <QuoteBox mini={mini} contentRef={contentRef} />
+            <DispatchMap />
+            <div className="p-5 md:absolute md:bottom-6 md:left-6 md:right-6 md:p-0">
+              <QuotePanel mini={mini} contentRef={contentRef} />
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section data-mini-section="services" className="grid gap-6 px-6 py-10 md:grid-cols-[0.85fr_1.15fr] md:px-10 md:py-12">
-        <div>
-          <p className="text-[10px] font-black uppercase tracking-[0.24em] text-[#f58220]">Capacitate operațională</p>
-          <h3 className="mt-3 text-3xl font-black leading-tight tracking-[-0.04em]">{mini.sectionTitle}</h3>
-        </div>
-        <div className="space-y-4">
-          <p className="text-sm leading-6 text-slate-500">{mini.sectionText}</p>
-          <div className="flex flex-wrap gap-2">
-            {mini.badges?.map((badge) => (
-              <span key={badge} className="rounded-full bg-white px-3 py-2 text-[10px] font-black uppercase tracking-[0.12em] text-slate-500 shadow-sm">
-                {badge}
-              </span>
+        <section data-mini-section="services" className="px-6 py-10 md:px-10">
+          <div className="mb-7 grid gap-5 md:grid-cols-[0.85fr_1.15fr]">
+            <div>
+              <p className="text-xs font-black uppercase text-[#f97316]">Capacitate operationala</p>
+              <h2 className="mt-3 text-3xl font-black leading-tight">{mini.sectionTitle}</h2>
+            </div>
+            <div>
+              <p className="text-sm leading-6 text-[#64748b]">{mini.sectionText}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {mini.badges?.map((badge) => (
+                  <span key={badge} className="border border-[#d9e0d5] bg-white px-3 py-2 text-xs font-black text-[#64748b]">
+                    {badge}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            {services.slice(0, 3).map((item) => (
+              <ServiceCard key={item.title} item={item} />
             ))}
           </div>
-        </div>
+        </section>
 
-        <div className="grid gap-4 md:col-span-2 md:grid-cols-3">
-          {services.map((item) => (
-            <article key={item.title} className="group overflow-hidden rounded-[1.4rem] border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-              <div className="flex h-28 items-end justify-between rounded-[1rem] bg-gradient-to-br from-[#0b253f] via-[#183b5b] to-[#f58220] p-4 text-white">
-                <TransportIcon type={item.icon} className="text-[#f8b66b]" />
-                <span className="rounded-full bg-white/15 px-3 py-1 text-[10px] font-black">{item.tag || "Service"}</span>
-              </div>
-              <h4 className="mt-4 text-base font-black tracking-[-0.03em]">{item.title}</h4>
-              <p className="mt-2 text-xs leading-5 text-slate-500">{item.text}</p>
-              <button type="button" className="mt-4 text-[11px] font-black text-[#f58220]">
-                Read more <ArrowRight className="inline" size={12} />
-              </button>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <section data-mini-section="fleet" className="relative overflow-hidden bg-[#071626] px-6 py-10 text-white md:px-10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_35%,rgba(245,130,32,.28),transparent_25%),linear-gradient(120deg,rgba(7,22,38,.96),rgba(7,22,38,.78))]" />
-        <div className="relative grid gap-7 md:grid-cols-[1fr_0.8fr] md:items-center">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#f8b66b]">Fleet & tracking</p>
-            <h3 className="mt-3 text-3xl font-black tracking-[-0.04em]">{mini.fleetTitle}</h3>
-            <p className="mt-3 max-w-md text-sm leading-6 text-white/62">{mini.fleetText}</p>
-            <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-              {mini.stats.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/8 p-4">
-                  <p className="text-xl font-black text-[#f8b66b]">{stat.value}</p>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.12em] text-white/55">{stat.label}</p>
+        <section data-mini-section="fleet" className="grid bg-[#243226] text-white md:grid-cols-[1.1fr_0.9fr]">
+          <div className="p-6 md:p-10">
+            <p className="text-xs font-black uppercase text-[#fbbf24]">Fleet & tracking</p>
+            <h2 className="mt-3 max-w-xl text-3xl font-black leading-tight">{mini.fleetTitle}</h2>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/65">{mini.fleetText}</p>
+            <div className="mt-7 grid grid-cols-2 gap-3 md:grid-cols-4">
+              {mini.stats.slice(0, 4).map((stat) => (
+                <div key={stat.label} className="border border-white/12 bg-white/[0.06] p-4">
+                  <p className="text-2xl font-black text-[#fbbf24]">{stat.value}</p>
+                  <p className="mt-1 text-xs text-white/55">{stat.label}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="rounded-[1.6rem] bg-white p-4 text-[#071626] shadow-2xl">
-            <div className="mb-3 flex items-center justify-between">
-              <h4 className="text-base font-black">Track shipment</h4>
-              <ShipWheel size={18} className="text-[#f58220]" />
-            </div>
-            <div className="space-y-3">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-400">Enter your shipment code</div>
-              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-400">Choose service</div>
-              <button type="button" className="w-full rounded-xl bg-[#f58220] px-4 py-3 text-xs font-black text-white">
-                Track now
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section data-mini-section="routes" className="px-6 py-10 md:px-10">
-        <div className="grid gap-4 md:grid-cols-3">
-          {mini.process?.map((step, index) => (
-            <div key={step.title} className="rounded-[1.4rem] bg-white p-5 shadow-sm">
-              <div className="mb-5 flex items-center justify-between">
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-[#f58220] text-xs font-black text-white">0{index + 1}</span>
-                <CheckCircle2 size={18} className="text-[#f58220]" />
+          <div className="border-t border-white/10 p-6 md:border-l md:border-t-0 md:p-10">
+            <div className="bg-white p-5 text-[#243226]">
+              <div className="mb-4 flex items-center justify-between">
+                <h4 className="text-lg font-black">Track shipment</h4>
+                <PackageCheck size={20} className="text-[#f97316]" />
               </div>
-              <h4 className="font-black">{step.title}</h4>
-              <p className="mt-2 text-xs leading-5 text-slate-500">{step.text}</p>
+              <div className="grid gap-2">
+                <div className="border border-[#d9e0d5] bg-[#f7faf6] px-4 py-3 text-xs text-[#64748b]">
+                  Shipment code
+                </div>
+                <div className="border border-[#d9e0d5] bg-[#f7faf6] px-4 py-3 text-xs text-[#64748b]">
+                  Service type
+                </div>
+                <button type="button" className="bg-[#1f766f] px-4 py-3 text-xs font-black text-white">
+                  Track now
+                </button>
+              </div>
             </div>
-          ))}
-        </div>
-      </section>
+          </div>
+        </section>
 
-      <section data-mini-section="contact" className="px-6 pb-10 md:px-10">
-        <div className="grid gap-5 rounded-[2rem] bg-white p-6 shadow-sm md:grid-cols-[1fr_0.85fr] md:items-center">
-          <div>
-            <p className="text-[10px] font-black uppercase tracking-[0.22em] text-[#f58220]">Contact rapid</p>
-            <h3 className="mt-2 text-2xl font-black tracking-[-0.04em]">{mini.contactTitle}</h3>
-            <p className="mt-2 text-sm leading-6 text-slate-500">{mini.contactText}</p>
+        <section data-mini-section="routes" className="px-6 py-10 md:px-10">
+          <div className="mb-6 flex items-center gap-3">
+            <Route size={22} className="text-[#1f766f]" />
+            <h2 className="text-3xl font-black">Proces de transport</h2>
           </div>
-          <div className="space-y-3 rounded-[1.4rem] bg-slate-50 p-4 text-sm text-slate-600">
-            <p className="flex items-center gap-2"><MapPin size={15} className="text-[#f58220]" /> {mini.contact.address}</p>
-            <p className="flex items-center gap-2"><Truck size={15} className="text-[#f58220]" /> {mini.contact.phone}</p>
-            <p className="flex items-center gap-2"><Container size={15} className="text-[#f58220]" /> {mini.contact.email}</p>
+          <div className="grid gap-3 md:grid-cols-3">
+            {mini.process?.slice(0, 3).map((step, index) => (
+              <ProcessStep key={step.title} step={step} index={index} />
+            ))}
           </div>
-        </div>
-      </section>
+        </section>
+
+        <section data-mini-section="contact" className="grid border-t border-[#d9e0d5] bg-white md:grid-cols-[1fr_0.9fr]">
+          <div className="p-6 md:p-10">
+            <p className="text-xs font-black uppercase text-[#f97316]">Contact rapid</p>
+            <h2 className="mt-3 text-3xl font-black leading-tight">{mini.contactTitle}</h2>
+            <p className="mt-3 max-w-xl text-sm leading-6 text-[#64748b]">{mini.contactText}</p>
+          </div>
+          <div className="grid gap-3 border-t border-[#d9e0d5] p-6 md:border-l md:border-t-0 md:p-10">
+            <p className="flex items-center gap-3 border border-[#d9e0d5] bg-[#f7faf6] p-4 text-sm text-[#64748b]">
+              <MapPin size={16} className="text-[#f97316]" /> {mini.contact.address}
+            </p>
+            <p className="flex items-center gap-3 border border-[#d9e0d5] bg-[#f7faf6] p-4 text-sm text-[#64748b]">
+              <Truck size={16} className="text-[#f97316]" /> {mini.contact.phone}
+            </p>
+            <p className="flex items-center gap-3 border border-[#d9e0d5] bg-[#f7faf6] p-4 text-sm text-[#64748b]">
+              <Boxes size={16} className="text-[#f97316]" /> {mini.contact.email}
+            </p>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

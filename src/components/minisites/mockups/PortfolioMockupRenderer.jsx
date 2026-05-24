@@ -36,42 +36,58 @@ export function MiniSiteRenderer({ project, size, device }) {
 
 export function MiniSiteCardPreview({ project }) {
   const mini = getMiniSite(project);
-  const darkLayouts = ["beauty", "transport", "restaurant", "personal"];
-  const isDark = darkLayouts.includes(mini.layout);
-  const isBeauty = mini.layout === "beauty";
-  const isTransport = mini.layout === "transport";
-  const isRestaurant = mini.layout === "restaurant";
-  const isPersonal = mini.layout === "personal";
-  const isShop = mini.layout === "shop";
-  const isKineto = mini.layout === "kineto" || mini.layout === "medical";
-
-  const accentClass = isKineto
-    ? "bg-emerald-100 text-emerald-700"
-    : isShop
-    ? "bg-emerald-100 text-emerald-700"
-    : isBeauty
-    ? "bg-pink-400/15 text-pink-100"
-    : isTransport
-    ? "bg-amber-400/15 text-amber-100"
-    : isRestaurant
-    ? "bg-orange-500/20 text-orange-200"
-    : isPersonal
-    ? "bg-[#d9c8a6]/15 text-[#d9c8a6]"
-    : "bg-white/10 text-white";
-
-  const heroBackground = isKineto
-    ? "bg-[radial-gradient(circle_at_82%_38%,rgba(20,184,166,.28),transparent_24%),linear-gradient(135deg,#ffffff,#f1fbf7)]"
-    : isShop
-    ? "bg-[radial-gradient(circle_at_78%_34%,rgba(132,204,22,.20),transparent_25%),linear-gradient(135deg,#ffffff,#f7f7f3)]"
-    : isBeauty
-    ? "bg-[radial-gradient(circle_at_74%_34%,rgba(244,114,182,.28),transparent_28%),linear-gradient(135deg,#050505,#21160f)]"
-    : isTransport
-    ? "bg-[radial-gradient(circle_at_80%_35%,rgba(245,158,11,.24),transparent_28%),linear-gradient(135deg,#020617,#12100c)]"
-    : isRestaurant
-    ? "bg-[radial-gradient(circle_at_84%_40%,rgba(249,115,22,.32),transparent_26%),linear-gradient(135deg,#041b17,#052e25)]"
-    : isPersonal
-    ? "bg-[radial-gradient(circle_at_72%_25%,rgba(217,200,166,.18),transparent_28%),linear-gradient(135deg,#080705,#0f0d09)]"
-    : "bg-black";
+  const layout = mini.layout === "medical" ? "kineto" : mini.layout;
+  const themes = {
+    kineto: {
+      root: "bg-[#fbfaf4] text-[#10211f]",
+      mark: "bg-[#134e4a] text-white",
+      badge: "bg-[#eaf7f2] text-[#0f766e]",
+      muted: "text-[#64748b]",
+      accent: "bg-[#f97316]",
+      title: "",
+    },
+    beauty: {
+      root: "bg-[#241515] text-[#f7e5d5]",
+      mark: "bg-[#f7e5d5] text-[#241515]",
+      badge: "bg-[#8e4f53] text-white",
+      muted: "text-white/65",
+      accent: "bg-[#d6a064]",
+      title: "font-serif",
+    },
+    transport: {
+      root: "bg-[#243226] text-white",
+      mark: "bg-[#f97316] text-white",
+      badge: "bg-white/[0.10] text-[#fbbf24]",
+      muted: "text-white/65",
+      accent: "bg-[#1f766f]",
+      title: "",
+    },
+    restaurant: {
+      root: "bg-[#fffaf1] text-[#17382e]",
+      mark: "bg-[#dc2626] text-white",
+      badge: "bg-[#e8f8e4] text-[#16a34a]",
+      muted: "text-[#64748b]",
+      accent: "bg-[#f97316]",
+      title: "font-serif italic text-[#dc2626]",
+    },
+    personal: {
+      root: "bg-[#ece8dd] text-[#111111]",
+      mark: "bg-[#111111] text-[#f4c430]",
+      badge: "bg-[#f4c430] text-[#111111]",
+      muted: "text-[#4b5563]",
+      accent: "bg-[#2563eb]",
+      title: "uppercase",
+    },
+    shop: {
+      root: "bg-[#f4f4ef] text-[#111111]",
+      mark: "bg-[#111111] text-[#a3e635]",
+      badge: "bg-[#a3e635] text-[#111111]",
+      muted: "text-[#4b5563]",
+      accent: "bg-[#f97316]",
+      title: "uppercase",
+    },
+  };
+  const theme = themes[layout] || themes.kineto;
 
   const initials = mini.brand
     .split(" ")
@@ -80,29 +96,72 @@ export function MiniSiteCardPreview({ project }) {
     .slice(0, 2)
     .toUpperCase();
 
+  const visual = {
+    kineto: (
+      <div className="absolute bottom-5 right-5 h-32 w-32 border border-[#134e4a]/20 bg-[#eaf7f2]">
+        <span className="absolute left-5 top-5 h-14 w-14 rounded-full border-[10px] border-[#9be7d0]" />
+        <span className="absolute bottom-5 right-5 h-12 w-12 rounded-full border-[10px] border-[#ffd9a8]" />
+        <span className="absolute left-12 top-14 h-3 w-20 rotate-12 bg-[#134e4a]" />
+      </div>
+    ),
+    beauty: (
+      <div className="absolute bottom-5 right-5 h-36 w-28 border border-[#f7e5d5]/25 bg-[#c98979]">
+        <span className="absolute inset-5 bg-[#f7e5d5]" />
+        <span className="absolute left-9 top-10 h-12 w-10 rounded-full bg-[#8e4f53]" />
+        <span className="absolute bottom-4 left-4 h-10 w-10 border-[8px] border-[#d6a064]" />
+      </div>
+    ),
+    transport: (
+      <div className="absolute bottom-5 right-5 h-32 w-40 border border-white/15 bg-white/[0.08]">
+        <svg className="h-full w-full" viewBox="0 0 160 120" aria-hidden="true">
+          <path d="M14 92 C46 34 72 72 104 28 C124 4 140 18 152 12" fill="none" stroke="#f97316" strokeWidth="6" strokeLinecap="round" />
+          <path d="M16 104 C52 84 70 102 106 76 C128 60 138 66 152 48" fill="none" stroke="#1f766f" strokeWidth="4" strokeLinecap="round" />
+        </svg>
+      </div>
+    ),
+    restaurant: (
+      <div className="absolute bottom-4 right-4 h-36 w-36 rounded-full bg-[#f97316]">
+        <span className="absolute inset-3 rounded-full bg-white" />
+        <span className="absolute left-9 top-10 h-8 w-12 rotate-[-20deg] rounded-full bg-[#16a34a]" />
+        <span className="absolute right-8 top-11 h-9 w-9 rounded-full bg-[#fb923c]" />
+        <span className="absolute bottom-9 left-9 h-9 w-9 rounded-full bg-[#ef4444]" />
+      </div>
+    ),
+    personal: (
+      <div className="absolute bottom-5 right-5 grid h-32 w-32 place-items-center border border-[#111111] bg-[#111111] text-[#f4c430] shadow-[6px_6px_0_#f4c430]">
+        <span className="text-5xl font-black">{initials}</span>
+      </div>
+    ),
+    shop: (
+      <div className="absolute bottom-5 right-5 h-36 w-28 border border-[#111111] bg-[#111111]">
+        <span className="absolute left-1/2 top-6 h-16 w-12 -translate-x-1/2 rounded-t-[2rem] bg-white" />
+        <span className="absolute left-1/2 top-12 h-16 w-20 -translate-x-1/2 bg-[#f4f4ef]" />
+        <span className="absolute bottom-0 left-1/2 h-14 w-9 -translate-x-[98%] bg-[#94a3b8]" />
+        <span className="absolute bottom-0 left-1/2 h-14 w-9 -translate-x-[2%] bg-[#64748b]" />
+      </div>
+    ),
+  };
+
   return (
-    <div className={`relative h-full w-full overflow-hidden ${heroBackground} ${isDark ? "text-white" : "text-slate-950"}`}>
-      <div className={isDark ? "absolute inset-0 bg-black/20" : "absolute inset-0 bg-white/5"} />
+    <div className={`relative h-full w-full overflow-hidden ${theme.root}`}>
+      <div className={`absolute right-0 top-0 h-24 w-24 ${theme.accent} opacity-80`} />
+      {visual[layout] || visual.kineto}
 
       <div className="relative z-10 flex h-full flex-col p-5 sm:p-6">
         <header className="flex items-start justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
-            <span
-              className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[0.62rem] font-black ${
-                isDark ? "bg-white/10 text-white ring-1 ring-white/15" : "bg-black text-white"
-              }`}
-            >
+            <span className={`flex h-8 w-8 shrink-0 items-center justify-center text-[0.62rem] font-black ${theme.mark}`}>
               {initials}
             </span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-black leading-none">{mini.brand}</span>
-              <span className={`mt-1 block max-w-[7rem] truncate text-[0.52rem] uppercase tracking-[0.22em] ${isDark ? "text-white/45" : "text-black/45"}`}>
+              <span className={`mt-1 block max-w-[7rem] truncate text-[0.55rem] uppercase ${theme.muted}`}>
                 {mini.subtitle}
               </span>
             </span>
           </div>
 
-          <nav className={`hidden shrink-0 items-center gap-4 pt-1 text-[0.6rem] font-semibold sm:flex ${isDark ? "text-white/65" : "text-black/60"}`}>
+          <nav className={`hidden shrink-0 items-center gap-4 pt-1 text-[0.6rem] font-semibold sm:flex ${theme.muted}`}>
             {mini.nav.slice(0, 3).map((item) => (
               <span key={item}>{item}</span>
             ))}
@@ -110,17 +169,13 @@ export function MiniSiteCardPreview({ project }) {
         </header>
 
         <main className="mt-auto max-w-[78%] pb-1">
-          <p className={`mb-3 inline-flex max-w-full truncate rounded-full px-3 py-1 text-[0.5rem] font-black uppercase tracking-[0.13em] ${accentClass}`}>
+          <p className={`mb-3 inline-flex max-w-full truncate px-3 py-1 text-[0.55rem] font-black uppercase ${theme.badge}`}>
             {mini.eyebrow}
           </p>
-          <h3
-            className={`line-clamp-3 text-[1.75rem] font-black leading-[0.92] tracking-[-0.06em] sm:text-[2rem] ${
-              isBeauty || isRestaurant ? "font-serif" : ""
-            } ${isPersonal ? "font-light text-[#d9c8a6]" : ""}`}
-          >
+          <h3 className={`line-clamp-3 text-[1.75rem] font-black leading-none sm:text-[2rem] ${theme.title}`}>
             {mini.headline}
           </h3>
-          <p className={`mt-3 line-clamp-2 text-xs leading-5 ${isDark ? "text-white/58" : "text-black/55"}`}>
+          <p className={`mt-3 line-clamp-2 text-xs leading-5 ${theme.muted}`}>
             {mini.description}
           </p>
         </main>

@@ -1,6 +1,6 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   Calendar,
-  CheckCircle,
   Clock,
   HeartPulse,
   Home,
@@ -74,14 +74,14 @@ export function navTarget(item) {
   return "home";
 }
 
-export function NavButton({ children, onClick, dark = false }) {
+export function NavButton({ children, onClick, dark = false, className = "" }) {
   return (
     <button
       type="button"
       onClick={onClick}
       className={`text-[0.62rem] font-semibold transition hover:opacity-100 md:text-xs ${
         dark ? "text-white/70 hover:text-white" : "text-black/65 hover:text-black"
-      }`}
+      } ${className}`}
     >
       {children}
     </button>
@@ -99,7 +99,7 @@ export function MiniLogo({ mini, dark = false }) {
   return (
     <div className="flex items-center gap-2">
       <span
-        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-xl border text-[0.7rem] font-black ${
+        className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-md border text-[0.7rem] font-black ${
           dark
             ? "border-white/15 bg-white/[0.08] text-white"
             : "border-black/10 bg-black text-white"
@@ -116,7 +116,7 @@ export function MiniLogo({ mini, dark = false }) {
           {mini.brand}
         </span>
         <span
-          className={`mt-1 block text-[0.55rem] uppercase tracking-[0.22em] ${
+          className={`mt-1 block text-[0.55rem] uppercase ${
             dark ? "text-white/45" : "text-black/45"
           }`}
         >
@@ -138,14 +138,14 @@ export function ServiceCards({ mini, projectId, dark = false, compact = false })
         return (
           <article
             key={item.title}
-            className={`rounded-2xl border p-4 ${
+            className={`rounded-lg border p-4 ${
               dark
                 ? "border-white/10 bg-white/[0.055] text-white"
                 : "border-black/5 bg-white text-black shadow-sm"
             }`}
           >
             <span
-              className={`mb-4 flex h-10 w-10 items-center justify-center rounded-full ${
+              className={`mb-4 flex h-10 w-10 items-center justify-center rounded-md ${
                 dark ? "bg-white/10 text-white" : "bg-black text-white"
               }`}
             >
@@ -165,7 +165,7 @@ export function ServiceCards({ mini, projectId, dark = false, compact = false })
 export function StatsRow({ mini, dark = false }) {
   return (
     <div
-      className={`grid grid-cols-2 gap-3 rounded-3xl border p-4 md:grid-cols-4 ${
+      className={`grid grid-cols-2 gap-3 rounded-lg border p-4 md:grid-cols-4 ${
         dark ? "border-white/10 bg-white/[0.045]" : "border-black/5 bg-white shadow-sm"
       }`}
     >

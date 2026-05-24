@@ -1,225 +1,194 @@
+import { CalendarDays, Gem, MapPin, Phone, Scissors, Sparkles, Wand2 } from "lucide-react";
 import { MiniLogo, NavButton, navTarget, scrollToSection } from "./shared.jsx";
 
-function VisualCard({ className = "", children }) {
+const serviceIcons = [Scissors, Wand2, Sparkles];
+
+function targetForNav(item) {
+  if (item.includes("Galer")) return "gallery";
+  return navTarget(item);
+}
+
+function SalonVisual() {
   return (
-    <div
-      className={`overflow-hidden rounded-[1.6rem] border border-white/45 bg-white/55 shadow-[0_18px_45px_rgba(58,38,24,0.14)] backdrop-blur ${className}`}
-    >
-      {children}
+    <div className="relative min-h-[22rem] overflow-hidden bg-[#241515]">
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,236,214,.18),transparent_42%),linear-gradient(90deg,rgba(36,21,21,.15),rgba(36,21,21,.86))]" />
+      <div className="absolute right-8 top-8 h-56 w-44 border border-[#f2d6bd]/35 bg-[#c98979]" />
+      <div className="absolute right-14 top-14 h-44 w-32 bg-[#f7e5d5]" />
+      <div className="absolute right-20 top-20 h-24 w-20 rounded-full bg-[#8e4f53]" />
+      <div className="absolute right-24 top-28 h-16 w-12 rounded-full bg-[#f0c5a5]" />
+      <div className="absolute bottom-10 left-10 h-28 w-28 border-[20px] border-[#d6a064]" />
+      <div className="absolute bottom-8 right-8 border border-[#f2d6bd]/25 bg-[#1b1010]/80 p-4 text-[#f7e5d5]">
+        <p className="text-[0.65rem] font-bold">Next slot</p>
+        <p className="mt-1 text-2xl font-black">18:30</p>
+      </div>
     </div>
   );
 }
 
-function SpaVisual({ variant = "default" }) {
-  const variants = {
-    hero: "from-[#21170f] via-[#7b4f37] to-[#e9cfaa]",
-    facial: "from-[#2a1c14] via-[#9f6c52] to-[#f1ddc0]",
-    massage: "from-[#f6e5cb] via-[#ba8b63] to-[#1b120d]",
-    brows: "from-[#17100c] via-[#5e3f2e] to-[#d8b283]",
-    soft: "from-[#f3dfc3] via-[#c69b70] to-[#3a251a]",
-  };
+function ServiceTile({ item, index }) {
+  const Icon = serviceIcons[index % serviceIcons.length];
 
   return (
-    <div className={`relative h-full min-h-[8rem] bg-gradient-to-br ${variants[variant] || variants.default}`}>
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_28%_24%,rgba(255,255,255,0.55),transparent_24%),radial-gradient(circle_at_74%_18%,rgba(255,225,170,0.34),transparent_22%),linear-gradient(135deg,rgba(0,0,0,0.2),transparent_48%,rgba(255,255,255,0.18))]" />
-      <div className="absolute bottom-4 right-4 h-20 w-20 rounded-full border border-white/30 bg-white/10 blur-[1px]" />
-    </div>
-  );
-}
-
-function ServiceMiniCard({ item, index }) {
-  const visualTypes = ["facial", "massage", "brows"];
-
-  return (
-    <VisualCard className="bg-[#f8ead3]">
-      <div className="h-28">
-        <SpaVisual variant={visualTypes[index % visualTypes.length]} />
+    <article className="grid gap-4 border-b border-[#e8cbb5] py-5 last:border-b-0 md:grid-cols-[auto_1fr_auto] md:items-center">
+      <span className="grid h-11 w-11 place-items-center bg-[#241515] text-[#f6d8ba]">
+        <Icon size={19} />
+      </span>
+      <div>
+        <h4 className="font-serif text-xl font-semibold text-[#241515]">{item.title}</h4>
+        <p className="mt-1 text-xs leading-5 text-[#7c6259]">{item.text}</p>
       </div>
-      <div className="p-4">
-        <h4 className="font-serif text-lg font-semibold tracking-[-0.03em] text-[#1a130d]">
-          {item.title}
-        </h4>
-        <p className="mt-2 line-clamp-3 text-[0.68rem] leading-5 text-[#5f4938]">
-          {item.text}
-        </p>
-      </div>
-    </VisualCard>
+      <span className="text-xs font-black text-[#b66d5f]">0{index + 1}</span>
+    </article>
   );
 }
 
 function PackageCard({ item, index }) {
-  const visualTypes = ["hero", "facial", "soft"];
+  const colors = ["bg-[#f7e5d5]", "bg-[#e9c5bb]", "bg-[#d6a064]"];
 
   return (
-    <div className="min-w-[10rem] flex-1">
-      <div className="h-28 overflow-hidden rounded-[1.3rem] shadow-[0_18px_35px_rgba(58,38,24,0.14)]">
-        <SpaVisual variant={visualTypes[index % visualTypes.length]} />
+    <article className={`border border-[#241515]/15 p-5 ${colors[index % colors.length]}`}>
+      <div className="mb-5 flex items-center justify-between">
+        <Gem size={18} className="text-[#241515]" />
+        <span className="text-xs font-black text-[#8e4f53]">Ritual 0{index + 1}</span>
       </div>
-      <h4 className="mt-3 text-center font-serif text-lg font-semibold text-[#1a130d]">
-        {item.title}
-      </h4>
-      <p className="mx-auto mt-1 max-w-[13rem] text-center text-[0.65rem] leading-4 text-[#6c5646]">
-        {item.text}
-      </p>
-    </div>
+      <h4 className="font-serif text-2xl font-semibold leading-tight text-[#241515]">{item.title}</h4>
+      <p className="mt-3 text-xs leading-5 text-[#6f4f48]">{item.text}</p>
+    </article>
   );
 }
 
-export default function BeautySiteMockup({ mini, projectId, contentRef, isMobile }) {
+export default function BeautySiteMockup({ mini, projectId, contentRef }) {
   const services = mini.items || [];
   const packages = mini.packages || services;
   const highlights = mini.highlights || services.slice(0, 2);
 
   return (
-    <div
-      ref={contentRef}
-      className="h-full overflow-y-auto bg-[#f6ead7] text-[#1a130d] [scrollbar-color:#2a1b12_#f4e2c5]"
-    >
-      <section
-        data-mini-section="home"
-        className="relative mx-auto min-h-[31rem] overflow-hidden bg-[#17100c] text-white"
-      >
-        <div className="absolute inset-0">
-          <SpaVisual variant="hero" />
-        </div>
-        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(17,10,7,0.96)_0%,rgba(17,10,7,0.82)_38%,rgba(17,10,7,0.32)_68%,rgba(17,10,7,0.12)_100%)]" />
-
-        <header className="relative z-10 mx-5 mt-5 flex items-center justify-between rounded-full border border-white/12 bg-black/25 px-5 py-3 shadow-[0_18px_50px_rgba(0,0,0,0.2)] backdrop-blur-md">
-          <MiniLogo mini={mini} dark />
-
+    <div ref={contentRef} className="h-full overflow-y-auto bg-[#f9efe3] text-[#241515]">
+      <header className="sticky top-0 z-30 border-b border-[#e8cbb5] bg-[#f9efe3]/95 px-5 py-3 backdrop-blur md:px-8">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
+          <MiniLogo mini={mini} />
           <nav className="hidden items-center gap-5 md:flex">
             {mini.nav?.map((item) => (
-              <NavButton dark key={item} onClick={() => scrollToSection(contentRef, navTarget(item))}>
+              <NavButton key={item} onClick={() => scrollToSection(contentRef, targetForNav(item))}>
                 {item}
               </NavButton>
             ))}
           </nav>
-
           <button
             type="button"
             onClick={() => scrollToSection(contentRef, "contact")}
-            className="rounded-full bg-[#f1dfc4] px-4 py-2 text-[0.68rem] font-black text-[#21150e] shadow-[0_10px_24px_rgba(0,0,0,0.18)] transition hover:scale-[1.02]"
+            className="bg-[#241515] px-4 py-2 text-xs font-black text-[#f7e5d5]"
           >
             {mini.primaryCta}
           </button>
-        </header>
+        </div>
+      </header>
 
-        <div className="relative z-10 max-w-[26rem] px-8 pb-20 pt-20 md:px-10 md:pt-24">
-          <p className="text-[0.68rem] font-semibold uppercase tracking-[0.34em] text-[#d8b283]">
-            {mini.eyebrow}
-          </p>
-          <h3 className="mt-5 font-serif text-5xl font-semibold leading-[0.92] tracking-[-0.06em] text-[#fff6e8] md:text-6xl">
-            {mini.headline}
-          </h3>
-          <p className="mt-5 max-w-[21rem] text-xs leading-6 text-white/72">
-            {mini.description}
-          </p>
-          <div className="mt-7 flex flex-wrap gap-3">
-            <button
-              type="button"
-              onClick={() => scrollToSection(contentRef, "contact")}
-              className="rounded-full bg-[#f1dfc4] px-5 py-3 text-[0.68rem] font-black text-[#21150e]"
-            >
-              {mini.primaryCta}
-            </button>
-            <button
-              type="button"
-              onClick={() => scrollToSection(contentRef, "services")}
-              className="rounded-full border border-white/35 px-5 py-3 text-[0.68rem] font-black text-white"
-            >
-              {mini.secondaryCta}
-            </button>
+      <main>
+        <section data-mini-section="home" className="grid bg-[#f9efe3] md:grid-cols-[0.9fr_1.1fr]">
+          <div className="flex flex-col justify-between border-b border-[#e8cbb5] p-6 md:border-b-0 md:border-r md:p-10">
+            <div>
+              <p className="text-xs font-black uppercase text-[#b66d5f]">{mini.eyebrow}</p>
+              <h1 className="mt-5 max-w-xl font-serif text-5xl font-semibold leading-none text-[#241515] md:text-7xl">
+                {mini.headline}
+              </h1>
+              <p className="mt-5 max-w-md text-sm leading-7 text-[#7c6259]">{mini.description}</p>
+            </div>
+            <div className="mt-8 grid gap-3 sm:grid-cols-2">
+              <button
+                type="button"
+                onClick={() => scrollToSection(contentRef, "contact")}
+                className="inline-flex items-center justify-center gap-2 bg-[#8e4f53] px-5 py-3 text-xs font-black text-white"
+              >
+                {mini.primaryCta}
+                <CalendarDays size={15} />
+              </button>
+              <button
+                type="button"
+                onClick={() => scrollToSection(contentRef, "services")}
+                className="border border-[#8e4f53]/30 bg-white px-5 py-3 text-xs font-black text-[#8e4f53]"
+              >
+                {mini.secondaryCta}
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
+          <SalonVisual />
+        </section>
 
-      <section data-mini-section="services" className="grid gap-6 bg-[#dfc39c] px-6 py-8 md:grid-cols-[0.95fr_1.05fr] md:px-10">
-        <div className="grid grid-cols-2 gap-4">
-          {highlights.map((item, index) => (
-            <ServiceMiniCard key={`${projectId}-highlight-${item.title}`} item={item} index={index} />
-          ))}
-        </div>
-
-        <div className="flex flex-col justify-center rounded-[2rem] bg-[#ecd5b1]/70 p-6 shadow-inner">
-          <p className="text-[0.68rem] font-bold uppercase tracking-[0.28em] text-[#7a573a]">
-            {mini.subtitle}
-          </p>
-          <h3 className="mt-2 font-serif text-4xl font-semibold leading-none tracking-[-0.05em] text-[#1a130d]">
-            {mini.accent || "Relaxare premium"}
-          </h3>
-          <p className="mt-4 max-w-[25rem] text-xs leading-6 text-[#5f4938]">
-            {mini.featureText || mini.description}
-          </p>
-          <button
-            type="button"
-            onClick={() => scrollToSection(contentRef, "contact")}
-            className="mt-6 w-max rounded-full bg-[#17100c] px-5 py-3 text-[0.68rem] font-black text-[#f6ead7]"
-          >
-            Book now
-          </button>
-        </div>
-      </section>
-
-      <section data-mini-section="gallery" className="px-6 py-10 md:px-10">
-        <h3 className="text-center font-serif text-4xl font-semibold tracking-[-0.05em] text-[#1a130d]">
-          Packages
-        </h3>
-        <div className={`mt-7 ${isMobile ? "flex gap-4 overflow-x-auto pb-2" : "grid grid-cols-3 gap-5"}`}>
-          {packages.slice(0, 3).map((item, index) => (
-            <PackageCard key={`${projectId}-package-${item.title}`} item={item} index={index} />
-          ))}
-        </div>
-      </section>
-
-      <section className="px-6 pb-10 md:px-10">
-        <div className="relative overflow-hidden rounded-[1.8rem] bg-[#17100c] text-white shadow-[0_25px_60px_rgba(58,38,24,0.22)]">
-          <div className="absolute inset-y-0 right-0 hidden w-1/2 md:block">
-            <SpaVisual variant="massage" />
-          </div>
-          <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(23,16,12,0.98),rgba(23,16,12,0.84),rgba(23,16,12,0.18))]" />
-          <div className="relative z-10 max-w-[28rem] p-7 md:p-8">
-            <p className="text-[0.68rem] font-semibold uppercase tracking-[0.3em] text-[#d8b283]">
-              Experience
-            </p>
-            <h3 className="mt-3 font-serif text-4xl font-semibold leading-none tracking-[-0.05em] text-[#fff6e8]">
-              {mini.bottomTitle || "Un moment de grijă, construit în jurul tău."}
-            </h3>
-            <p className="mt-4 text-xs leading-6 text-white/70">
-              {mini.bottomText || "Un layout elegant pentru servicii beauty, cu accent pe imagine, pachete clare și programare rapidă."}
-            </p>
-            <div className="mt-6 grid grid-cols-4 gap-3">
-              {mini.stats?.map((stat) => (
-                <div key={stat.label} className="rounded-2xl border border-white/10 bg-white/8 p-3 text-center backdrop-blur">
-                  <p className="font-serif text-xl font-semibold text-[#f1dfc4]">{stat.value}</p>
-                  <p className="mt-1 text-[0.55rem] uppercase tracking-[0.16em] text-white/50">{stat.label}</p>
+        <section data-mini-section="services" className="grid border-y border-[#e8cbb5] bg-[#fff8ef] md:grid-cols-[0.85fr_1.15fr]">
+          <div className="border-b border-[#e8cbb5] p-6 md:border-b-0 md:border-r md:p-10">
+            <p className="text-xs font-black uppercase text-[#b66d5f]">{mini.subtitle}</p>
+            <h2 className="mt-3 font-serif text-4xl font-semibold leading-tight">{mini.accent}</h2>
+            <p className="mt-4 text-sm leading-6 text-[#7c6259]">{mini.featureText || mini.description}</p>
+            <div className="mt-6 grid grid-cols-2 gap-3">
+              {highlights.slice(0, 2).map((item) => (
+                <div key={`${projectId}-highlight-${item.title}`} className="border border-[#e8cbb5] bg-[#f9efe3] p-4">
+                  <p className="font-serif text-lg font-semibold">{item.title}</p>
+                  <p className="mt-2 text-xs leading-5 text-[#7c6259]">{item.text}</p>
                 </div>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+          <div className="px-6 py-5 md:px-8">
+            {services.slice(0, 3).map((item, index) => (
+              <ServiceTile key={item.title} item={item} index={index} />
+            ))}
+          </div>
+        </section>
 
-      <section data-mini-section="contact" className="px-6 pb-10 md:px-10">
-        <div className="flex flex-col gap-4 rounded-[2rem] border border-[#d7bb91] bg-[#fff4e2] p-6 shadow-[0_18px_45px_rgba(58,38,24,0.12)] md:flex-row md:items-center md:justify-between">
-          <div>
-            <p className="text-[0.68rem] font-bold uppercase tracking-[0.28em] text-[#9d7048]">
-              Programări
-            </p>
-            <h3 className="mt-2 font-serif text-3xl font-semibold tracking-[-0.04em]">
-              {mini.primaryCta}
-            </h3>
-            <p className="mt-2 text-xs text-[#6c5646]">
-              {mini.contact?.phone} · {mini.contact?.address}
+        <section data-mini-section="gallery" className="px-6 py-10 md:px-10">
+          <div className="mb-6 flex items-end justify-between gap-5">
+            <div>
+              <p className="text-xs font-black uppercase text-[#b66d5f]">Pachete</p>
+              <h2 className="mt-2 font-serif text-4xl font-semibold">Ritualuri usor de ales</h2>
+            </div>
+            <Sparkles size={26} className="hidden text-[#d6a064] md:block" />
+          </div>
+          <div className="grid gap-3 md:grid-cols-3">
+            {packages.slice(0, 3).map((item, index) => (
+              <PackageCard key={item.title} item={item} index={index} />
+            ))}
+          </div>
+        </section>
+
+        <section className="grid border-y border-[#e8cbb5] bg-[#241515] text-[#f7e5d5] md:grid-cols-[1.1fr_0.9fr]">
+          <div className="p-6 md:p-10">
+            <p className="text-xs font-black uppercase text-[#d6a064]">Experience</p>
+            <h2 className="mt-3 max-w-xl font-serif text-4xl font-semibold leading-tight">
+              {mini.bottomTitle || "Beauty experience, simple booking."}
+            </h2>
+            <p className="mt-4 max-w-xl text-sm leading-6 text-white/65">
+              {mini.bottomText || "Clear packages, warm visuals and conversion-focused booking actions."}
             </p>
           </div>
-          <button
-            type="button"
-            className="rounded-full bg-[#17100c] px-6 py-3 text-[0.68rem] font-black text-[#f6ead7]"
-          >
-            Contactează salonul
-          </button>
-        </div>
-      </section>
+          <div className="grid grid-cols-2 border-t border-white/10 md:border-l md:border-t-0">
+            {mini.stats?.slice(0, 4).map((stat) => (
+              <div key={stat.label} className="border-b border-r border-white/10 p-5">
+                <p className="font-serif text-2xl font-semibold text-[#d6a064]">{stat.value}</p>
+                <p className="mt-1 text-xs text-white/50">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section data-mini-section="contact" className="grid bg-[#fff8ef] md:grid-cols-[0.95fr_1.05fr]">
+          <div className="p-6 md:p-10">
+            <p className="text-xs font-black uppercase text-[#b66d5f]">Programari</p>
+            <h2 className="mt-3 font-serif text-4xl font-semibold">{mini.primaryCta}</h2>
+          </div>
+          <div className="grid gap-3 border-t border-[#e8cbb5] p-6 md:border-l md:border-t-0 md:p-10">
+            <p className="flex items-center gap-3 border border-[#e8cbb5] bg-white p-4 text-sm text-[#7c6259]">
+              <Phone size={16} className="text-[#8e4f53]" /> {mini.contact?.phone}
+            </p>
+            <p className="flex items-center gap-3 border border-[#e8cbb5] bg-white p-4 text-sm text-[#7c6259]">
+              <MapPin size={16} className="text-[#8e4f53]" /> {mini.contact?.address}
+            </p>
+            <button type="button" className="bg-[#241515] px-5 py-3 text-xs font-black text-[#f7e5d5]">
+              Contacteaza salonul
+            </button>
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
