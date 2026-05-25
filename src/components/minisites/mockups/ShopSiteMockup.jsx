@@ -1,6 +1,17 @@
 import { ArrowUpRight, CheckCircle2, Menu, Search, Shirt, ShoppingBag, Sparkles, Tag } from "lucide-react";
 import { MiniLogo, NavButton, navTarget, scrollToSection } from "./shared.jsx";
 
+function VlomCustLogo() {
+  return (
+    <img
+      src="/images/minisite/vlom-cust-logo.png"
+      alt="VLØM.CUST"
+      className="h-12 w-auto object-contain md:h-14"
+      draggable={false}
+    />
+  );
+}
+
 function targetForNav(item) {
   if (item.includes("Categor")) return "categories";
   if (item.includes("Benef")) return "benefits";
@@ -70,7 +81,7 @@ export default function ShopSiteMockup({ mini, contentRef }) {
     <div ref={contentRef} className="h-full overflow-y-auto bg-[#f4f4ef] text-[#111111]">
       <header className="sticky top-0 z-30 border-b border-[#111111] bg-[#f4f4ef]/95 px-5 py-3 backdrop-blur md:px-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <MiniLogo mini={mini} />
+          <VlomCustLogo />
           <nav className="hidden items-center gap-5 md:flex">
             {mini.nav.map((item) => (
               <NavButton key={item} onClick={() => scrollToSection(contentRef, targetForNav(item))}>
@@ -95,7 +106,19 @@ export default function ShopSiteMockup({ mini, contentRef }) {
       <main>
         <section data-mini-section="home" className="grid border-b border-[#111111] bg-[#f4f4ef] md:grid-cols-[1fr_1fr]">
           <div className="p-6 md:p-10">
-            <p className="inline-flex bg-[#a3e635] px-3 py-2 text-xs font-black uppercase">{mini.eyebrow}</p>
+            
+            <div className="mb-6 flex items-center gap-4">
+            <VlomCustLogo />
+            <div>
+               <p className="text-xs font-black uppercase text-white/60">
+                {mini.eyebrow}
+                </p>
+               <p className="text-[11px] text-white/45">
+                  Custom Clothing • Streetwear • Online Shop
+               </p>
+             </div>
+            </div>
+
             <h1 className="mt-6 max-w-xl text-5xl font-black uppercase leading-none md:text-7xl">
               {mini.heroWord || mini.brand}
             </h1>

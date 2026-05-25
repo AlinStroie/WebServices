@@ -14,6 +14,17 @@ import {
 } from "lucide-react";
 import { MiniLogo, NavButton, navTarget, scrollToSection } from "./shared.jsx";
 
+function AtlasLogo() {
+  return (
+    <img
+      src="/images/minisite/atlas-freight-logo.png"
+      alt="Atlas Freight"
+      className="h-12 w-auto object-contain md:h-14"
+      draggable={false}
+    />
+  );
+}
+
 const iconMap = {
   road: Truck,
   fleet: ShieldCheck,
@@ -136,7 +147,7 @@ export default function TransportSiteMockup({ mini, contentRef }) {
     <div ref={contentRef} className="h-full overflow-y-auto bg-[#eef2ea] text-[#243226]">
       <header className="sticky top-0 z-30 border-b border-[#d9e0d5] bg-[#fbfcf8]/95 px-5 py-3 backdrop-blur md:px-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <MiniLogo mini={mini} />
+          <AtlasLogo />
           <nav className="hidden items-center gap-5 md:flex">
             {mini.nav.map((item) => (
               <NavButton key={item} onClick={() => scrollToSection(contentRef, targetForNav(item))}>
@@ -162,7 +173,21 @@ export default function TransportSiteMockup({ mini, contentRef }) {
       <main>
         <section data-mini-section="home" className="grid bg-[#fbfcf8] md:grid-cols-[0.95fr_1.05fr]">
           <div className="border-b border-[#d9e0d5] p-6 md:border-b-0 md:border-r md:p-10">
-            <p className="text-xs font-black uppercase text-[#f97316]">{mini.eyebrow}</p>
+           
+            <div className="mb-6 flex items-center gap-4">
+             <AtlasLogo />
+
+             <div>
+             <p className="text-xs font-black uppercase text-slate-500">
+               {mini.eyebrow}
+             </p>
+
+             <p className="text-[11px] text-slate-500">
+              Transport • Logistică • Freight Solutions
+             </p>
+           </div>
+          </div>
+
             <h1 className="mt-5 max-w-2xl text-4xl font-black leading-tight md:text-6xl">{mini.headline}</h1>
             <p className="mt-5 max-w-xl text-sm leading-7 text-[#64748b]">{mini.description}</p>
             <div className="mt-7 flex flex-wrap gap-3">

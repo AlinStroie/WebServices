@@ -1,103 +1,106 @@
 export const kinetoMiniSite = {
   layout: "kineto",
   brand: "Movea Clinic",
-  subtitle: "Kinetoterapie & recuperare",
+  subtitle: "Fiziokinetoterapie & Recuperare Medicală",
   eyebrow: "Kinetoterapie • Recuperare • Terapie manuală",
   headline: "Sănătatea mișcării, prioritatea noastră.",
   accent: "Mișcare naturală",
   description:
-    "Programe personalizate pentru mobilitate, postură, dureri musculare și refacere după accidentări, într-un spațiu calm și profesionist.",
+    "Programe personalizate de recuperare și kinetoterapie, adaptate nevoilor tale pentru o viață activă și fără durere.",
   primaryCta: "Programează-te",
   secondaryCta: "Vezi serviciile",
 
   appointment: {
-    department: "Recuperare medicală",
-    doctor: "Specialist kineto",
+    department: "Kinetoterapie",
+    doctor: "Terapeut",
     date: "Alege data",
-    button: "Programează",
+    button: "Programează-te",
   },
 
   contact: {
     address: "Str. Verdi nr. 18, Brașov",
-    phone: "+40 731 456 890",
+    phone: "0721 234 567",
+    secondaryPhone: "031 987 6543",
     email: "contact@moveaclinic.ro",
+    schedule: "Luni – Vineri: 08:00 – 20:00",
+    weekendSchedule: "Sâmbătă: 09:00 – 14:00",
   },
 
   nav: ["Acasă", "Servicii", "Despre noi", "Prețuri", "Contact"],
 
   departments: [
     {
-      title: "Evaluare posturală",
-      text: "Analiză inițială pentru identificarea dezechilibrelor și stabilirea planului de recuperare.",
+      title: "Evaluare & Diagnostic",
+      text: "Evaluare completă și plan personalizat pentru recuperare eficientă.",
     },
     {
       title: "Kinetoterapie",
-      text: "Exerciții ghidate pentru mobilitate, forță și control al mișcării.",
+      text: "Exerciții terapeutice bazate pe nevoile și obiectivele fiecărui pacient.",
     },
     {
-      title: "Terapie manuală",
-      text: "Tehnici aplicate atent pentru relaxare musculară și reducerea disconfortului.",
+      title: "Terapie Manuală",
+      text: "Tehnici manuale avansate pentru reducerea durerii și mobilitate.",
     },
   ],
 
   items: [
     {
+      title: "Evaluare & Diagnostic",
+      text: "Analizăm postura, mobilitatea și obiectivele pentru a crea un plan clar de recuperare.",
+    },
+    {
       title: "Kinetoterapie",
-      text: "Planuri de exerciții adaptate pentru refacerea mobilității și reducerea durerii.",
+      text: "Exerciții ghidate pentru mobilitate, forță, echilibru și control al mișcării.",
     },
     {
-      title: "Terapie manuală",
-      text: "Tehnici aplicate atent pentru relaxare musculară, mobilizare și echilibru corporal.",
-    },
-    {
-      title: "Recuperare medicală",
-      text: "Programe pentru refacere după accidentări, intervenții sau suprasolicitare.",
+      title: "Terapie Manuală",
+      text: "Tehnici aplicate atent pentru relaxare musculară, mobilizare și reducerea disconfortului.",
     },
   ],
 
   featuredServices: [
     {
-      title: "Recuperare posturală",
-      text: "Corectarea poziției corpului prin exerciții progresive și educație pentru mișcare.",
+      title: "Recuperare post-traumatică",
+      text: "Programe personalizate pentru refacerea după accidentări, intervenții chirurgicale sau traumatisme.",
     },
     {
-      title: "Recuperare după accidentări",
-      text: "Planuri structurate pentru revenire treptată la activitățile zilnice.",
+      title: "Corecție posturală",
+      text: "Evaluare și exerciții specifice pentru îmbunătățirea posturii și prevenirea durerilor.",
     },
     {
-      title: "Mobilitate & durere",
-      text: "Sesiuni dedicate reducerii tensiunilor și îmbunătățirii mobilității articulare.",
+      title: "Terapie pentru dureri cronice",
+      text: "Tehnici și exerciții pentru reducerea durerilor lombare, cervicale și articulare.",
     },
   ],
 
   stats: [
-    { value: "500+", label: "Pacienți ajutați" },
-    { value: "8+", label: "Ani experiență" },
-    { value: "48h", label: "Programări rapide" },
-    { value: "4.9", label: "Rating mediu" },
+    { value: "12+", label: "Ani experiență" },
+    { value: "2500+", label: "Pacienți mulțumiți" },
+    { value: "8+", label: "Specialiști" },
+    { value: "98%", label: "Rata de succes" },
   ],
 
   hotspots: [
     {
       id: "hero",
       title: "Hero medical premium",
-      text: "Zona principală combină mesajul de încredere cu vizualul medical și formularul de programare.",
-      x: "26%",
-      y: "30%",
+      text: "Zona principală combină mesajul puternic, fotografia medicală și formularul de programare.",
+      x: "32%",
+      y: "28%",
     },
     {
       id: "appointment",
       title: "Formular de programare",
-      text: "Utilizatorul poate înțelege rapid pașii pentru alegerea serviciului, specialistului și datei.",
-      x: "48%",
-      y: "55%",
+      text: "Cardul de intake rapid este poziționat peste imagine pentru a crește conversia.",
+      x: "74%",
+      y: "48%",
     },
     {
       id: "services",
       title: "Departamente și servicii",
-      text: "Cardurile sunt poziționate sub hero pentru a prezenta rapid opțiunile principale.",
-      x: "50%",
-      y: "77%",
+      text: "Cardurile prezintă rapid principalele servicii medicale disponibile.",
+      x: "55%",
+      y: "68%",
     },
   ],
 };

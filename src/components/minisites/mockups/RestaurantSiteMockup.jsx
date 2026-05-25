@@ -1,6 +1,17 @@
 import { ArrowRight, ChevronDown, Leaf, Mail, Star, Utensils } from "lucide-react";
 import { MiniLogo, NavButton, navTarget, scrollToSection } from "./shared.jsx";
 
+function HieuBowlLogo() {
+  return (
+    <img
+      src="/images/minisite/hieu-bowl-logo.png"
+      alt="Hieu Bowl"
+      className="h-14 w-auto object-contain md:h-16"
+      draggable={false}
+    />
+  );
+}
+
 function targetForNav(item) {
   if (item.includes("Despre")) return "about";
   if (item.includes("Rezerv")) return "contact";
@@ -59,7 +70,7 @@ export default function RestaurantSiteMockup({ mini, contentRef, isMobile }) {
     <div ref={contentRef} className="h-full overflow-y-auto bg-[#fffaf1] text-[#17382e]">
       <header className="sticky top-0 z-30 border-b border-[#17382e]/12 bg-[#fffaf1]/95 px-5 py-3 backdrop-blur md:px-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <MiniLogo mini={mini} />
+          <HieuBowlLogo />
           <nav className="hidden items-center gap-5 md:flex">
             {mini.nav.map((item) => (
               <NavButton key={item} onClick={() => scrollToSection(contentRef, targetForNav(item))}>
@@ -81,7 +92,21 @@ export default function RestaurantSiteMockup({ mini, contentRef, isMobile }) {
         <section data-mini-section="home" className="relative grid overflow-hidden bg-[#fffaf1] md:grid-cols-[0.9fr_1.1fr]">
           <Leaf className="absolute left-5 top-8 text-[#16a34a]/45" size={34} />
           <div className="border-b border-[#17382e]/12 p-6 md:border-b-0 md:border-r md:p-10">
-            <p className="text-xs font-black uppercase text-[#f97316]">{mini.eyebrow}</p>
+            
+              <div className="mb-6 flex items-center gap-4">
+               <HieuBowlLogo />
+
+               <div>
+                <p className="text-xs font-black uppercase text-red-700">
+                {mini.eyebrow}
+               </p>
+
+               <p className="text-[11px] text-neutral-500">
+               Asian Bowls • Fresh Food • Restaurant
+               </p>
+               </div>
+          </div>
+
             <h1 className="mt-5 max-w-xl font-serif text-5xl font-black italic leading-none text-[#dc2626] md:text-7xl">
               {mini.accent}
             </h1>

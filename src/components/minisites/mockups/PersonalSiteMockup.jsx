@@ -1,5 +1,16 @@
 import { ArrowRight, BriefcaseBusiness, Code2, Layers3, Mail, PenTool, Send, Sparkles } from "lucide-react";
 
+function AndreiCrisanLogo() {
+  return (
+    <img
+      src="/images/minisite/andrei-crisan-logo.png"
+      alt="Andrei Crisan"
+      className="h-12 w-auto object-contain md:h-14"
+      draggable={false}
+    />
+  );
+}
+
 const DEFAULT_ITEMS = [
   { title: "Graphic Design", text: "Visual identity and creative presentation systems.", icon: "design" },
   { title: "Web Design", text: "Responsive interfaces with clear product structure.", icon: "web" },
@@ -89,9 +100,7 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
       <header className="sticky top-0 z-30 border-b border-[#111111] bg-[#ece8dd]/95 px-5 py-3 backdrop-blur md:px-8">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
           <button type="button" onClick={() => scrollTo(contentRef, "home")} className="flex items-center gap-3">
-            <span className="grid h-9 w-9 place-items-center bg-[#111111] text-xs font-black text-[#f4c430]">
-              {initials}
-            </span>
+            <AndreiCrisanLogo />
             <span className="text-left">
               <span className="block text-sm font-black uppercase">{mini.brand}</span>
               <span className="block text-xs font-bold text-[#6b7280]">{mini.subtitle}</span>
@@ -117,9 +126,21 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
       <main>
         <section data-mini-section="home" className="grid border-b border-[#111111] bg-[#ece8dd] md:grid-cols-[1.05fr_0.95fr]">
           <div className="p-6 md:p-10">
-            <p className="inline-flex bg-[#f4c430] px-3 py-2 text-xs font-black uppercase text-[#111111]">
-              {mini.eyebrow}
+            
+            <div className="mb-6 flex items-center gap-4">
+            <AndreiCrisanLogo />
+
+            <div>
+            <p className="text-xs font-black uppercase text-white/60">
+            {mini.eyebrow}
+             </p>
+
+             <p className="text-[11px] text-white/45">
+             Personal Portfolio • Creative Professional
             </p>
+          </div>
+         </div>
+
             <h1 className="mt-6 max-w-2xl text-5xl font-black uppercase leading-none md:text-7xl">
               {mini.brand}
             </h1>
