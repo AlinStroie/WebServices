@@ -1,22 +1,29 @@
 export const shopMiniSite = {
   layout: "shop",
   brand: "VLØM.CUST",
-  subtitle: "Streetwear customization",
-  eyebrow: "Shop • Custom • Limited drop",
-  headline: "Customization pentru piese care ies în evidență.",
-  heroWord: "Customization",
-  accent: "Custom essentials",
+  subtitle: "streetwear customization",
+  eyebrow: "online shop • custom wear • limited drops",
+  headline: "Piese pentru outfituri care ies în evidență.",
+  heroWord: "streetwear premium",
+
+  heroImage: "/images/minisite/vlom-hero-tshirt-banner.png",
+  lookbookImage: "/images/minisite/vlom-lookbook-outfit.png",
+
+  accent: "drop 01 / live now",
   description:
-    "Magazin online pentru produse custom, colecții limitate, beneficii clare și un proces simplu de comandă.",
-  primaryCta: "Shop now",
-  secondaryCta: "About the brand",
-  collectionLabel: "Drop 01 / custom streetwear / 2026",
+    "Magazin online pentru tricouri, hanorace, sneakers și accesorii custom, construite în drop-uri limitate, cu identitate vizuală puternică și comandă rapidă.",
+  primaryCta: "shop now",
+  secondaryCta: "vezi produsele",
+  collectionLabel: "drop 01 / streetwear / 2026",
+
   brandStoryTitle: "About the brand",
   brandStory:
-    "Un shop vizual, construit pentru produse cu personalitate: tricouri, hanorace, accesorii și piese custom prezentate clar, direct și memorabil.",
-  productsTitle: "Bestseller",
-  benefitsTitle: "Custom - what is it?",
-  contactTitle: "Creează-ți propriul look unic.",
+    "VLØM.CUST creează piese streetwear pentru persoane care vor un look diferit, fără să piardă simplitatea unui outfit curat. Fiecare produs este prezentat clar, cu accent pe material, grafică, croială și disponibilitate.",
+
+  productsTitle: "new arrivals",
+  benefitsTitle:
+    "Produse premium, drop-uri limitate, plată securizată și proces simplu de comandă.",
+  contactTitle: "Creează-ți propriul look streetwear.",
 
   contact: {
     address: "Online, România",
@@ -24,95 +31,55 @@ export const shopMiniSite = {
     email: "support@vlomcust.ro",
   },
 
-  nav: ["Acasă", "Shop", "Categorii", "Beneficii", "Contact"],
+  nav: ["Acasă", "Shop", "Lookbook", "Beneficii", "Contact"],
 
-  marquee: ["About the brand", "Bestseller", "Custom pieces", "Limited drop", "Streetwear"],
-
-  items: [
-    {
-      title: "Tricouri custom",
-      text: "Piese grafice pentru outfituri simple, dar puternice vizual.",
-    },
-    {
-      title: "Hanorace",
-      text: "Produse statement pentru colecții sezoniere și drop-uri limitate.",
-    },
-    {
-      title: "Accesorii",
-      text: "Genți, cardholdere și detalii care completează look-ul.",
-    },
-    {
-      title: "Sneakers",
-      text: "Mockup-uri și produse evidențiate într-un grid clar de shop.",
-    },
-  ],
-
-  categories: [
-    {
-      title: "T-shirts",
-      text: "Printuri custom, grafică bold și prezentare rapidă.",
-    },
-    {
-      title: "Hoodies",
-      text: "Drop-uri vizuale pentru produse premium streetwear.",
-    },
-    {
-      title: "Accessories",
-      text: "Produse mici prezentate curat, ideal pentru upsell.",
-    },
-    {
-      title: "Sneakers",
-      text: "Carduri de produs clare pentru colecții speciale.",
-    },
+  marquee: [
+    "limited drop",
+    "premium streetwear",
+    "oversized essentials",
+    "secure checkout",
+    "fast processing",
   ],
 
   products: [
     {
-      title: "T-shirt VLØM.CUST",
-      category: "Oversized fit",
-      price: "$59",
-      tag: "25% off",
-    },
-    {
-      title: "Cardholder VLØM.CUST",
-      category: "Black leather",
-      price: "$39",
+      title: "oversized signature tee",
+      category: "tricou premium / oversized fit",
+      price: "249 lei",
       tag: "new",
+      image: "/images/minisite/vlom-oversized-tee.png",
     },
     {
-      title: "Calligraphy backpack",
-      category: "Daily bag",
-      price: "$78",
-      tag: "best",
-    },
-    {
-      title: "Leather jacket VLØM.CUST",
-      category: "Custom graphic",
-      price: "$139",
-      tag: "limited",
-    },
-    {
-      title: "Custom sneakers",
-      category: "Black/white drop",
-      price: "$95",
-      tag: "25% off",
-    },
-    {
-      title: "Graphic hoodie",
-      category: "Heavy cotton",
-      price: "$89",
+      title: "heavy cotton hoodie",
+      category: "hanorac premium / relaxed fit",
+      price: "389 lei",
       tag: "drop",
+      image: "/images/minisite/vlom-hoodie.png",
+    },
+    {
+      title: "utility crossbody bag",
+      category: "geantă crossbody / daily carry",
+      price: "219 lei",
+      tag: "best",
+      image: "/images/minisite/vlom-crossbody-bag.png",
+    },
+    {
+      title: "black low sneakers",
+      category: "sneakers low-top / all black",
+      price: "449 lei",
+      tag: "limited",
+      image: "/images/minisite/vlom-low-sneakers.png",
     },
   ],
 
   benefits: [
     {
       value: "24h",
-      label: "procesare",
+      label: "procesare comandă",
     },
     {
       value: "14 zile",
-      label: "retur",
+      label: "retur simplu",
     },
     {
       value: "100%",
@@ -124,46 +91,45 @@ export const shopMiniSite = {
     },
   ],
 
-  stats: [
+  reviews: [
     {
-      value: "24h",
-      label: "livrare",
+      name: "Alex M.",
+      stars: 5,
+      text: "Material bun, print curat și livrare rapidă. Tricoul arată exact ca în prezentare.",
     },
     {
-      value: "14 zile",
-      label: "retur",
+      name: "Daria S.",
+      stars: 5,
+      text: "Mi-a plăcut că shop-ul este simplu de urmărit și produsele sunt ușor de ales.",
     },
     {
-      value: "100%",
-      label: "secure",
-    },
-    {
-      value: "4.8",
-      label: "rating",
+      name: "Radu C.",
+      stars: 5,
+      text: "Hanoracul are croială bună, iar grafica se simte premium.",
     },
   ],
 
   hotspots: [
     {
       id: "hero",
-      title: "Hero de produs",
-      text: "Zona principală evidențiază colecția și direcția de cumpărare.",
+      title: "Hero vizual",
+      text: "Imaginea principală prezintă direcția brandului și vibe-ul colecției.",
       x: "50%",
-      y: "36%",
+      y: "35%",
     },
     {
       id: "products",
-      title: "Grid bestseller",
-      text: "Produsele sunt ușor de scanat, comparat și accesat.",
-      x: "38%",
-      y: "69%",
+      title: "Produse reale",
+      text: "Fiecare card folosește imaginea produsului corespunzător.",
+      x: "55%",
+      y: "66%",
     },
     {
-      id: "cart",
-      title: "Shop action",
-      text: "Butonul de shop și coșul rămân vizibile în zonele importante.",
-      x: "82%",
-      y: "20%",
+      id: "lookbook",
+      title: "Lookbook",
+      text: "Zona de lookbook arată produsele purtate într-un outfit complet.",
+      x: "45%",
+      y: "78%",
     },
   ],
 };

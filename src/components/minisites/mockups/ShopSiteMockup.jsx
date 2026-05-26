@@ -1,230 +1,639 @@
-import { ArrowUpRight, CheckCircle2, Menu, Search, Shirt, ShoppingBag, Sparkles, Tag } from "lucide-react";
-import { MiniLogo, NavButton, navTarget, scrollToSection } from "./shared.jsx";
+import { useState } from "react";
+import {
+  ArrowUpRight,
+  CheckCircle2,
+  Heart,
+  Menu,
+  Search,
+  ShieldCheck,
+  ShoppingBag,
+  Star,
+  Truck,
+  X,
+} from "lucide-react";
+import { NavButton, navTarget, scrollToSection } from "./shared.jsx";
 
-function VlomCustLogo() {
+const defaultProducts = [
+  {
+    title: "oversized signature tee",
+    category: "tricou premium / oversized fit",
+    price: "249 lei",
+    tag: "new",
+    image: "/images/minisite/vlom-oversized-tee.png",
+  },
+  {
+    title: "heavy cotton hoodie",
+    category: "hanorac premium / relaxed fit",
+    price: "389 lei",
+    tag: "drop",
+    image: "/images/minisite/vlom-hoodie.png",
+  },
+  {
+    title: "utility crossbody bag",
+    category: "geantă crossbody / daily carry",
+    price: "219 lei",
+    tag: "best",
+    image: "/images/minisite/vlom-crossbody-bag.png",
+  },
+  {
+    title: "black low sneakers",
+    category: "sneakers low-top / all black",
+    price: "449 lei",
+    tag: "limited",
+    image: "/images/minisite/vlom-low-sneakers.png",
+  },
+];
+
+const defaultBenefits = [
+  { value: "24h", label: "procesare comandă" },
+  { value: "14 zile", label: "retur simplu" },
+  { value: "100%", label: "plată securizată" },
+  { value: "4.8", label: "rating clienți" },
+];
+
+function VlomCustLogo({ compact = false }) {
   return (
     <img
       src="/images/minisite/vlom-cust-logo.png"
       alt="VLØM.CUST"
-      className="h-12 w-auto object-contain md:h-14"
+      className={
+        compact
+          ? "h-9 w-auto object-contain"
+          : "h-12 w-auto object-contain"
+      }
       draggable={false}
     />
   );
 }
 
-function targetForNav(item) {
-  if (item.includes("Categor")) return "categories";
-  if (item.includes("Benef")) return "benefits";
-  if (item.includes("Shop")) return "shop";
+function targetForNav(item = "") {
+  const label = item.toLowerCase();
+
+  if (label.includes("acasă") || label.includes("home")) return "home";
+  if (label.includes("shop") || label.includes("nout")) return "shop";
+  if (label.includes("lookbook") || label.includes("brand")) return "lookbook";
+  if (label.includes("benef")) return "benefits";
+  if (label.includes("contact")) return "contact";
+
   return navTarget(item);
 }
 
-function ProductVisual({ tone = "dark", className = "" }) {
-  const isDark = tone === "dark";
+function SectionLabel({ children, light = false }) {
+  return (
+    <p
+      className={
+        light
+          ? "text-xs font-black uppercase tracking-[0.12em] text-[#a3e635]"
+          : "text-xs font-black uppercase tracking-[0.12em] text-[#f97316]"
+      }
+    >
+      {children}
+    </p>
+  );
+}
+
+function SectionTitle({ children, mobile = false, light = false }) {
+  return (
+    <h2
+      className={`mt-3 max-w-4xl font-black uppercase leading-[0.92] tracking-[-0.065em] ${
+        light ? "text-white" : "text-[#111111]"
+      }`}
+      style={{
+        fontSize: mobile
+          ? "clamp(2.35rem, 11cqw, 3.5rem)"
+          : "clamp(3rem, 5.8cqw, 5.4rem)",
+        wordBreak: "normal",
+        overflowWrap: "normal",
+        hyphens: "none",
+      }}
+    >
+      {children}
+    </h2>
+  );
+}
+
+function AnnouncementBar({ items = [] }) {
+  const list = items.length
+    ? items
+    : ["limited drop", "premium streetwear", "secure checkout", "fast delivery"];
 
   return (
-    <div className={`relative overflow-hidden border border-[#111111] ${isDark ? "bg-[#111111]" : "bg-[#f4f4ef]"} ${className}`}>
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,transparent_0_42%,rgba(132,204,22,.28)_42%_47%,transparent_47%_100%)]" />
-      <div className={`absolute left-1/2 top-8 h-32 w-20 -translate-x-1/2 rounded-t-[2rem] ${isDark ? "bg-[#f4f4ef]" : "bg-[#111111]"}`} />
-      <div className={`absolute left-1/2 top-16 h-24 w-36 -translate-x-1/2 ${isDark ? "bg-white" : "bg-[#262626]"}`} />
-      <div className={`absolute left-1/2 top-24 -translate-x-1/2 -rotate-6 text-lg font-black uppercase ${isDark ? "text-[#111111]" : "text-white"}`}>
-        CUSTOM
-      </div>
-      <div className={`absolute bottom-0 left-1/2 h-24 w-16 -translate-x-[96%] ${isDark ? "bg-[#cbd5e1]" : "bg-[#4b5563]"}`} />
-      <div className={`absolute bottom-0 left-1/2 h-24 w-16 -translate-x-[4%] ${isDark ? "bg-[#94a3b8]" : "bg-[#111111]"}`} />
-      <div className="absolute right-4 top-4 bg-[#a3e635] px-3 py-1 text-xs font-black text-[#111111]">DROP</div>
+    <div className="flex gap-5 overflow-hidden border-b border-[#111111] bg-[#111111] px-5 py-3 text-white">
+      {[...list, ...list].map((item, index) => (
+        <span
+          key={`${item}-${index}`}
+          className="shrink-0 text-[0.68rem] font-black uppercase tracking-[0.12em] text-white/80"
+        >
+          / {item}
+        </span>
+      ))}
     </div>
   );
 }
 
-function MiniProduct({ product, index }) {
+function HeroImageSection({ mini, mobile }) {
+  const heroImage =
+    mini.heroImage || "/images/minisite/vlom-hero-tshirt-banner.png";
+
+  const heroTitle = (mini.headline || mini.heroWord || "streetwear premium")
+    .replace(/\bcustom\b/gi, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
   return (
-    <article className="border border-[#111111] bg-white">
-      <ProductVisual tone={index % 2 ? "light" : "dark"} className="h-40 border-x-0 border-t-0" />
-      <div className="grid grid-cols-[1fr_auto] items-end gap-3 p-4">
-        <div>
-          <p className="mb-2 inline-flex bg-[#a3e635] px-2 py-1 text-[0.65rem] font-black uppercase text-[#111111]">
-            {product.tag}
+    <section
+      data-mini-section="home"
+      className="relative min-h-[34rem] overflow-hidden border-b border-[#111111] bg-[#111111] md:min-h-[43rem]"
+      style={{ containerType: "inline-size" }}
+    >
+      <img
+        src={heroImage}
+        alt={mini.brand || "VLØM.CUST"}
+        className="absolute inset-0 h-full w-full object-cover"
+        draggable={false}
+      />
+
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(0,0,0,.82)_0%,rgba(0,0,0,.52)_42%,rgba(0,0,0,.10)_100%)]" />
+
+      <div className="relative z-10 flex min-h-[34rem] items-end px-5 py-10 md:min-h-[43rem] md:px-10 md:py-14">
+        <div className="max-w-4xl">
+          <p className="inline-flex bg-[#a3e635] px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.12em] text-[#111111]">
+            {mini.accent || "drop 01 / live now"}
           </p>
-          <h4 className="text-sm font-black uppercase leading-tight">{product.title}</h4>
-          <p className="mt-1 text-xs font-bold text-[#6b7280]">{product.category}</p>
-          <p className="mt-3 text-lg font-black">{product.price}</p>
+
+          <h1
+            className="mt-5 max-w-4xl font-black uppercase leading-[0.86] tracking-[-0.075em] text-white"
+            style={{
+              fontSize: mobile
+                ? "clamp(2.8rem, 13cqw, 4.7rem)"
+                : "clamp(5rem, 9cqw, 8.5rem)",
+              wordBreak: "normal",
+              overflowWrap: "normal",
+              hyphens: "none",
+            }}
+          >
+            {heroTitle}
+          </h1>
+
+          <p className="mt-6 max-w-xl text-sm font-semibold leading-7 text-white/78">
+            {mini.description}
+          </p>
         </div>
-        <button type="button" className="grid h-9 w-9 place-items-center bg-[#111111] text-white">
-          <ArrowUpRight size={16} />
-        </button>
+      </div>
+    </section>
+  );
+}
+
+function getProductImage(product = {}) {
+  const title = String(product.title || "").toLowerCase();
+  const category = String(product.category || "").toLowerCase();
+
+  if (
+    title.includes("tee") ||
+    title.includes("tricou") ||
+    title.includes("oversized")
+  ) {
+    return "/images/minisite/vlom-oversized-tee.png";
+  }
+
+  if (title.includes("hoodie") || title.includes("hanorac")) {
+    return "/images/minisite/vlom-hoodie.png";
+  }
+
+  if (
+    title.includes("bag") ||
+    title.includes("crossbody") ||
+    category.includes("geantă") ||
+    category.includes("geanta")
+  ) {
+    return "/images/minisite/vlom-crossbody-bag.png";
+  }
+
+  if (title.includes("sneaker") || category.includes("sneaker")) {
+    return "/images/minisite/vlom-low-sneakers.png";
+  }
+
+  return product.image || "/images/minisite/vlom-oversized-tee.png";
+}
+
+function ProductVisual({ product = {} }) {
+  const image = getProductImage(product);
+
+  return (
+    <div className="relative aspect-square min-w-0 overflow-hidden border-b border-[#111111] bg-[#f4f4ef]">
+      <img
+        src={image}
+        alt={product.title || "VLØM.CUST product"}
+        className="h-full w-full object-cover"
+        draggable={false}
+      />
+
+      <div className="absolute left-4 top-4 bg-[#a3e635] px-3 py-1 text-[0.62rem] font-black uppercase text-[#111111]">
+        {product.tag || "drop"}
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ product }) {
+  return (
+    <article className="group min-w-0 overflow-hidden border border-[#111111] bg-white">
+      <ProductVisual product={product} />
+
+      <div className="p-4">
+        <div className="mb-4 flex items-center justify-between gap-3">
+          <span className="bg-[#a3e635] px-2.5 py-1 text-[0.62rem] font-black uppercase text-[#111111]">
+            {product.tag}
+          </span>
+
+          <button
+            type="button"
+            aria-label="Adaugă la favorite"
+            className="grid h-9 w-9 shrink-0 place-items-center border border-[#111111] bg-white transition group-hover:bg-[#111111] group-hover:text-white"
+          >
+            <Heart size={15} />
+          </button>
+        </div>
+
+        <h3 className="text-lg font-black uppercase leading-tight tracking-[-0.035em] text-[#111111]">
+          {product.title}
+        </h3>
+
+        <p className="mt-1 text-sm font-bold text-[#6b7280]">
+          {product.category}
+        </p>
+
+        <div className="mt-5 flex items-end justify-between gap-4">
+          <p className="text-xl font-black text-[#111111]">{product.price}</p>
+
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 bg-[#111111] px-4 py-3 text-[0.68rem] font-black uppercase text-white"
+          >
+            add
+            <ArrowUpRight size={14} />
+          </button>
+        </div>
       </div>
     </article>
   );
 }
 
-function CategoryCard({ item, index }) {
-  const colors = ["bg-[#a3e635]", "bg-[#f97316]", "bg-[#e5e7eb]", "bg-[#d8b4fe]"];
+function BenefitCard({ benefit, index }) {
+  const icons = [Truck, ShieldCheck, CheckCircle2, Star];
+  const Icon = icons[index % icons.length];
 
   return (
-    <article className={`border border-[#111111] p-4 shadow-[5px_5px_0_#111111] ${colors[index % colors.length]}`}>
-      <div className="mb-5 grid h-11 w-11 place-items-center bg-[#111111] text-white">
-        {index % 2 ? <Sparkles size={19} /> : <Shirt size={19} />}
-      </div>
-      <h4 className="text-base font-black uppercase">{item.title}</h4>
-      <p className="mt-2 text-xs font-semibold leading-5 text-black/65">{item.text}</p>
+    <article className="min-w-0 border border-white/15 bg-white/[0.06] p-5">
+      <Icon size={20} className="text-[#a3e635]" />
+
+      <p className="mt-4 text-2xl font-black uppercase text-white">
+        {benefit.value}
+      </p>
+
+      <p className="mt-1 text-sm font-semibold text-white/55">
+        {benefit.label}
+      </p>
     </article>
   );
 }
 
-export default function ShopSiteMockup({ mini, contentRef }) {
-  const products = mini.products || mini.items || [];
-  const categories = mini.categories || mini.items || [];
-  const benefits = mini.benefits || mini.stats || [];
+function ReviewCard({ review }) {
+  return (
+    <article className="min-w-0 border border-[#111111] bg-[#f4f4ef] p-5">
+      <div className="flex items-center gap-1 text-[#f97316]">
+        {Array.from({ length: review.stars || 5 }).map((_, index) => (
+          <Star key={`${review.name}-${index}`} size={14} fill="currentColor" />
+        ))}
+      </div>
+
+      <p className="mt-4 text-sm font-semibold leading-7 text-[#374151]">
+        “{review.text}”
+      </p>
+
+      <p className="mt-5 text-sm font-black uppercase text-[#111111]">
+        {review.name}
+      </p>
+    </article>
+  );
+}
+
+export default function ShopSiteMockup({ mini, contentRef, isMobile }) {
+  const mobile = Boolean(isMobile);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const nav = (
+    mini.nav || ["Acasă", "Shop", "Lookbook", "Beneficii", "Contact"]
+  ).filter((item) => {
+    const label = String(item || "").toLowerCase();
+
+    return !label.includes("categor") && !label.includes("colec");
+  });
+
+  const products = mini.products?.length ? mini.products : defaultProducts;
+  const benefits = mini.benefits?.length ? mini.benefits : defaultBenefits;
+  const reviews = mini.reviews || [];
+
+  function handleNavClick(item) {
+    scrollToSection(contentRef, targetForNav(item));
+    setMenuOpen(false);
+  }
 
   return (
-    <div ref={contentRef} className="h-full overflow-y-auto bg-[#f4f4ef] text-[#111111]">
-      <header className="sticky top-0 z-30 border-b border-[#111111] bg-[#f4f4ef]/95 px-5 py-3 backdrop-blur md:px-8">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4">
-          <VlomCustLogo />
-          <nav className="hidden items-center gap-5 md:flex">
-            {mini.nav.map((item) => (
-              <NavButton key={item} onClick={() => scrollToSection(contentRef, targetForNav(item))}>
-                {item}
-              </NavButton>
-            ))}
-          </nav>
+    <div
+      ref={contentRef}
+      className="h-full overflow-y-auto overflow-x-hidden bg-[#f4f4ef] text-[#111111]"
+    >
+      <header className="sticky top-0 z-40 border-b border-[#111111] bg-[#f4f4ef]/95 px-5 py-3 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4">
+          <VlomCustLogo compact={mobile} />
+
+          {!mobile ? (
+            <nav className="flex items-center gap-5">
+              {nav.map((item) => (
+                <NavButton key={item} onClick={() => handleNavClick(item)}>
+                  {item}
+                </NavButton>
+              ))}
+            </nav>
+          ) : null}
+
           <div className="flex items-center gap-2">
-            <button type="button" aria-label="Search" className="grid h-9 w-9 place-items-center border border-[#111111] bg-white">
-              <Search size={15} />
-            </button>
-            <button type="button" aria-label="Cart" className="grid h-9 w-9 place-items-center bg-[#111111] text-white">
-              <ShoppingBag size={16} />
-            </button>
-            <button type="button" aria-label="Menu" className="grid h-9 w-9 place-items-center border border-[#111111] bg-white md:hidden">
-              <Menu size={16} />
-            </button>
-          </div>
-        </div>
-      </header>
-
-      <main>
-        <section data-mini-section="home" className="grid border-b border-[#111111] bg-[#f4f4ef] md:grid-cols-[1fr_1fr]">
-          <div className="p-6 md:p-10">
-            
-            <div className="mb-6 flex items-center gap-4">
-            <VlomCustLogo />
-            <div>
-               <p className="text-xs font-black uppercase text-white/60">
-                {mini.eyebrow}
-                </p>
-               <p className="text-[11px] text-white/45">
-                  Custom Clothing • Streetwear • Online Shop
-               </p>
-             </div>
-            </div>
-
-            <h1 className="mt-6 max-w-xl text-5xl font-black uppercase leading-none md:text-7xl">
-              {mini.heroWord || mini.brand}
-            </h1>
-            <p className="mt-5 max-w-md text-sm leading-7 text-[#4b5563]">{mini.description}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <button
-                type="button"
-                onClick={() => scrollToSection(contentRef, "shop")}
-                className="inline-flex items-center gap-2 bg-[#111111] px-5 py-3 text-xs font-black uppercase text-white"
-              >
-                {mini.primaryCta}
-                <ArrowUpRight size={15} />
-              </button>
-              <button
-                type="button"
-                onClick={() => scrollToSection(contentRef, "categories")}
-                className="border border-[#111111] bg-white px-5 py-3 text-xs font-black uppercase"
-              >
-                {mini.secondaryCta}
-              </button>
-            </div>
-          </div>
-          <div className="relative border-t border-[#111111] bg-[#111111] p-6 md:border-l md:border-t-0 md:p-10">
-            <ProductVisual className="h-[24rem]" />
-            <div className="absolute bottom-10 left-10 bg-white px-4 py-3">
-              <p className="text-xs font-black uppercase text-[#6b7280]">{mini.collectionLabel}</p>
-              <p className="mt-1 text-xl font-black">{mini.accent}</p>
-            </div>
-          </div>
-        </section>
-
-        <div className="flex gap-4 overflow-hidden border-b border-[#111111] bg-[#111111] py-3 text-white">
-          {[...(mini.marquee || []), ...(mini.marquee || [])].map((item, index) => (
-            <span key={`${item}-${index}`} className="shrink-0 text-xs font-black uppercase">
-              / {item}
-            </span>
-          ))}
-        </div>
-
-        <section data-mini-section="categories" className="grid gap-6 px-6 py-10 md:grid-cols-[0.95fr_1.05fr] md:px-10">
-          <div className="border border-[#111111] bg-[#111111] p-6 text-white">
-            <p className="text-xs font-black uppercase text-[#a3e635]">Story</p>
-            <h2 className="mt-3 text-4xl font-black uppercase leading-none">{mini.brandStoryTitle}</h2>
-            <p className="mt-4 max-w-md text-sm leading-6 text-white/65">{mini.brandStory}</p>
-            <button type="button" className="mt-6 inline-flex items-center gap-2 bg-[#a3e635] px-5 py-3 text-xs font-black uppercase text-[#111111]">
-              {mini.secondaryCta}
-              <ArrowUpRight size={14} />
-            </button>
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            {categories.slice(0, 4).map((item, index) => (
-              <CategoryCard key={item.title} item={item} index={index} />
-            ))}
-          </div>
-        </section>
-
-        <section data-mini-section="shop" className="border-y border-[#111111] bg-white px-6 py-10 md:px-10">
-          <div className="mb-7 flex items-end justify-between gap-5">
-            <div>
-              <p className="text-xs font-black uppercase text-[#f97316]">Bestseller</p>
-              <h2 className="mt-2 text-5xl font-black uppercase leading-none">{mini.productsTitle || "Bestseller"}</h2>
-            </div>
             <button
               type="button"
-              onClick={() => scrollToSection(contentRef, "contact")}
-              className="hidden bg-[#111111] px-5 py-3 text-xs font-black uppercase text-white md:inline-flex"
+              aria-label="Caută produse"
+              className="grid h-10 w-10 place-items-center border border-[#111111] bg-white"
             >
-              View looks
+              <Search size={16} />
             </button>
-          </div>
-          <div className="grid gap-3 md:grid-cols-3">
-            {products.slice(0, 6).map((product, index) => (
-              <MiniProduct key={product.title} product={product} index={index} />
-            ))}
-          </div>
-        </section>
 
-        <section data-mini-section="benefits" className="grid bg-[#111111] text-white md:grid-cols-[0.8fr_1.2fr]">
-          <div className="border-b border-white/15 p-6 md:border-b-0 md:border-r md:p-10">
-            <Tag size={24} className="text-[#a3e635]" />
-            <h2 className="mt-4 text-4xl font-black uppercase leading-none">{mini.benefitsTitle || "Custom pieces"}</h2>
-            <p className="mt-4 text-sm leading-6 text-white/65">{mini.description}</p>
+            <button
+              type="button"
+              aria-label="Coș cumpărături"
+              className="relative grid h-10 w-10 place-items-center bg-[#111111] text-white"
+            >
+              <ShoppingBag size={16} />
+
+              <span className="absolute -right-1 -top-1 grid h-5 w-5 place-items-center bg-[#a3e635] text-[0.62rem] font-black text-[#111111]">
+                2
+              </span>
+            </button>
+
+            {mobile ? (
+              <button
+                type="button"
+                aria-label={menuOpen ? "Închide meniul" : "Deschide meniul"}
+                onClick={() => setMenuOpen((value) => !value)}
+                className="grid h-10 w-10 place-items-center border border-[#111111] bg-white"
+              >
+                {menuOpen ? <X size={17} /> : <Menu size={17} />}
+              </button>
+            ) : null}
           </div>
-          <div className="grid gap-3 p-6 md:grid-cols-4 md:p-10">
-            {benefits.slice(0, 4).map((benefit) => (
-              <div key={benefit.label} className="border border-white/15 bg-white/[0.06] p-4">
-                <CheckCircle2 size={18} className="text-[#a3e635]" />
-                <p className="mt-3 text-xl font-black">{benefit.value}</p>
-                <p className="mt-1 text-xs text-white/55">{benefit.label}</p>
+        </div>
+
+        {mobile && menuOpen ? (
+          <nav className="mt-4 grid gap-2 border-t border-[#111111]/10 pt-4">
+            {nav.map((item) => (
+              <button
+                key={item}
+                type="button"
+                onClick={() => handleNavClick(item)}
+                className="border border-[#111111] bg-white px-4 py-3 text-left text-xs font-black uppercase tracking-[0.08em]"
+              >
+                {item}
+              </button>
+            ))}
+          </nav>
+        ) : null}
+      </header>
+
+      <HeroImageSection mini={mini} mobile={mobile} />
+
+      <AnnouncementBar items={mini.marquee} />
+
+      <main>
+        <section
+          data-mini-section="shop"
+          className="border-b border-[#111111] bg-white px-6 py-12 md:px-10"
+          style={{ containerType: "inline-size" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-5">
+              <div>
+                <SectionLabel>new arrivals</SectionLabel>
+
+                <SectionTitle mobile={mobile}>
+                  Produse din drop-ul curent.
+                </SectionTitle>
               </div>
-            ))}
+
+              <button
+                type="button"
+                onClick={() => scrollToSection(contentRef, "contact")}
+                className="inline-flex items-center gap-2 bg-[#111111] px-5 py-4 text-xs font-black uppercase tracking-[0.08em] text-white"
+              >
+                custom order
+                <ArrowUpRight size={15} />
+              </button>
+            </div>
+
+            <div
+              className="grid gap-4"
+              style={{
+                gridTemplateColumns: mobile
+                  ? "1fr"
+                  : "repeat(auto-fit, minmax(14rem, 1fr))",
+              }}
+            >
+              {products.slice(0, 4).map((product) => (
+                <ProductCard key={product.title} product={product} />
+              ))}
+            </div>
           </div>
         </section>
 
-        <section data-mini-section="contact" className="grid bg-[#a3e635] md:grid-cols-[1fr_0.9fr]">
-          <div className="p-6 md:p-10">
-            <p className="text-xs font-black uppercase">{mini.contact.email}</p>
-            <h2 className="mt-4 max-w-xl text-4xl font-black uppercase leading-tight">
-              {mini.contactTitle || "Ready for your custom look?"}
+        <section
+          data-mini-section="lookbook"
+          className="border-t border-[#111111] bg-[#f4f4ef] px-6 py-12 md:px-10"
+          style={{ containerType: "inline-size" }}
+        >
+          <div
+            className="mx-auto grid max-w-7xl gap-6"
+            style={{
+              gridTemplateColumns: mobile
+                ? "1fr"
+                : "minmax(18rem, 1.05fr) minmax(0, 0.95fr)",
+            }}
+          >
+            <div className="relative min-h-[34rem] overflow-hidden border border-[#111111] bg-[#111111]">
+              <img
+                src={
+                  mini.lookbookImage ||
+                  "/images/minisite/vlom-lookbook-outfit.png"
+                }
+                alt="VLØM.CUST lookbook outfit"
+                className="absolute inset-0 h-full w-full object-cover"
+                draggable={false}
+              />
+
+              <div className="absolute inset-0 bg-[linear-gradient(0deg,rgba(0,0,0,.68)_0%,rgba(0,0,0,.08)_58%)]" />
+
+              <div className="absolute left-6 top-6 bg-[#a3e635] px-4 py-2 text-xs font-black uppercase tracking-[0.1em] text-[#111111]">
+                lookbook
+              </div>
+
+              <div className="absolute bottom-6 left-6 right-6 border border-white/15 bg-white/10 p-5 text-white backdrop-blur">
+                <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-[#a3e635]">
+                  styling guide
+                </p>
+
+                <h3 className="mt-3 text-4xl font-black uppercase leading-[0.9] tracking-[-0.05em]">
+                  hoodie, crossbody bag, loose denim și sneakers all black.
+                </h3>
+              </div>
+            </div>
+
+            <div className="min-w-0 border border-[#111111] bg-white p-6">
+              <SectionLabel>brand story</SectionLabel>
+
+              <h2 className="mt-4 text-4xl font-black uppercase leading-none tracking-[-0.05em]">
+                {mini.brandStoryTitle}
+              </h2>
+
+              <p className="mt-5 text-sm font-semibold leading-7 text-[#4b5563]">
+                {mini.brandStory}
+              </p>
+
+              <div className="mt-7 grid gap-3">
+                {[
+                  "drop-uri scurte, ușor de urmărit",
+                  "produse premium cu identitate vizuală clară",
+                  "experiență de cumpărare rapidă și coerentă",
+                ].map((item) => (
+                  <div
+                    key={item}
+                    className="flex items-center gap-3 border border-[#111111] bg-[#f4f4ef] p-4"
+                  >
+                    <CheckCircle2
+                      size={18}
+                      className="shrink-0 text-[#f97316]"
+                    />
+
+                    <p className="text-sm font-black uppercase leading-5">
+                      {item}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {reviews.length ? (
+          <section className="border-y border-[#111111] bg-white px-6 py-12 md:px-10">
+            <div className="mx-auto max-w-7xl">
+              <SectionLabel>reviews</SectionLabel>
+
+              <h2 className="mt-3 text-4xl font-black uppercase leading-none tracking-[-0.05em]">
+                Feedback de la clienți.
+              </h2>
+
+              <div
+                className="mt-8 grid gap-4"
+                style={{
+                  gridTemplateColumns: mobile
+                    ? "1fr"
+                    : "repeat(auto-fit, minmax(14rem, 1fr))",
+                }}
+              >
+                {reviews.slice(0, 3).map((review) => (
+                  <ReviewCard key={review.name} review={review} />
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
+        <section
+          data-mini-section="benefits"
+          className="bg-[#111111] px-6 py-12 text-white md:px-10"
+          style={{ containerType: "inline-size" }}
+        >
+          <div className="mx-auto max-w-7xl">
+            <div
+              className="grid gap-8"
+              style={{
+                gridTemplateColumns: mobile
+                  ? "1fr"
+                  : "minmax(0, 0.8fr) minmax(18rem, 1.2fr)",
+              }}
+            >
+              <div className="min-w-0">
+                <SectionLabel light>shop benefits</SectionLabel>
+
+                <SectionTitle mobile={mobile} light>
+                  Comandă simplă, livrare clară, checkout sigur.
+                </SectionTitle>
+
+                <p className="mt-5 max-w-lg text-sm font-semibold leading-7 text-white/62">
+                  {mini.benefitsTitle ||
+                    "Un shop construit pentru cumpărare rapidă, produse clare și încredere înainte de checkout."}
+                </p>
+              </div>
+
+              <div
+                className="grid gap-4"
+                style={{
+                  gridTemplateColumns: mobile
+                    ? "1fr"
+                    : "repeat(2, minmax(0, 1fr))",
+                }}
+              >
+                {benefits.slice(0, 4).map((benefit, index) => (
+                  <BenefitCard
+                    key={benefit.label}
+                    benefit={benefit}
+                    index={index}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          data-mini-section="contact"
+          className="grid bg-[#a3e635]"
+          style={{
+            gridTemplateColumns: mobile
+              ? "1fr"
+              : "minmax(0, 1fr) minmax(18rem, 0.75fr)",
+          }}
+        >
+          <div className="min-w-0 p-6 md:p-10">
+            <p className="text-xs font-black uppercase tracking-[0.12em] text-[#111111]/70">
+              {mini.contact?.email}
+            </p>
+
+            <h2 className="mt-4 max-w-3xl text-5xl font-black uppercase leading-[0.92] tracking-[-0.06em] text-[#111111]">
+              {mini.contactTitle || "Creează-ți propriul look unic."}
             </h2>
           </div>
+
           <div className="border-t border-[#111111] p-6 md:border-l md:border-t-0 md:p-10">
-            <button type="button" className="inline-flex w-full items-center justify-center gap-2 bg-[#111111] px-6 py-4 text-xs font-black uppercase text-white">
-              {mini.primaryCta}
+            <button
+              type="button"
+              className="inline-flex w-full items-center justify-center gap-2 bg-[#111111] px-6 py-5 text-xs font-black uppercase tracking-[0.08em] text-white"
+            >
+              începe comanda
               <ArrowUpRight size={15} />
             </button>
+
+            <div className="mt-5 grid gap-2 text-sm font-bold text-[#111111]/70">
+              <p>{mini.contact?.phone}</p>
+              <p>{mini.contact?.address}</p>
+            </div>
           </div>
         </section>
       </main>

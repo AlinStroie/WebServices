@@ -1,15 +1,16 @@
 export const restaurantMiniSite = {
   layout: "restaurant",
   brand: "Hieu Bowl",
-  subtitle: "Fresh bowls & restaurant",
-  eyebrow: "Rice bowls • Fresh menu • Rezervări",
-  headline: "preparate fresh pentru fiecare zi.",
-  accent: "Rice Bowl",
+  subtitle: "Asian bowls & fresh food",
+  eyebrow: "Restaurant • Asian Bowls • Takeaway",
+  headline: "Boluri asiatice pentru fiecare zi.",
+  accent: "Fresh taste",
   description:
-    "Un minisite HoReCa luminos, vizual și ușor de parcurs, construit pentru meniu, atmosferă, comenzi rapide și rezervări.",
+    "Boluri asiatice fresh, pregătite rapid cu ingrediente colorate, sosuri aromate și combinații echilibrate pentru prânz, cină sau takeaway.",
+
   primaryCta: "Vezi meniul",
   secondaryCta: "Comandă acum",
-  filterLabel: "Ce ar trebui să mănânc?",
+  filterLabel: "Ce aleg astăzi?",
 
   contact: {
     address: "Centrul vechi, Brașov",
@@ -17,85 +18,138 @@ export const restaurantMiniSite = {
     email: "rezervari@hieubowl.ro",
   },
 
-  nav: ["Acasă", "Meniu", "Despre", "Rezervări", "Contact"],
+  nav: ["Acasă", "Despre noi", "Meniu", "Rezervări", "Contact"],
 
   items: [
     {
+      title: "Ingrediente fresh",
+      text: "Legume crocante, orez cald, proteine marinate și toppinguri colorate, combinate pentru un gust echilibrat.",
+    },
+    {
+      title: "Comenzi rapide",
+      text: "Alegi bowl-ul, proteina, sosul și modul de ridicare, iar noi pregătim comanda rapid și atent.",
+    },
+    {
+      title: "Meniu urban",
+      text: "Preparate asiatice moderne, potrivite pentru prânz, cină sau o masă fresh luată la pachet.",
+    },
+  ],
+
+  highlights: [
+    {
       title: "Boluri fresh",
-      text: "Combinații echilibrate cu orez, legume, sosuri și toppinguri colorate.",
+      text: "Combinații cu orez, legume, proteine fragede, sosuri aromate și toppinguri pline de culoare.",
     },
     {
-      title: "Meniu sezonier",
-      text: "Preparate ușor de ales, prezentate clar pe categorii și preferințe.",
+      title: "Gusturi asiatice",
+      text: "Rețete inspirate din bucătăria asiatică, adaptate pentru mese rapide, gustoase și ușor de ales.",
     },
     {
-      title: "Rezervări rapide",
-      text: "Flux simplu pentru alegerea unei mese sau comandă directă.",
+      title: "Takeaway simplu",
+      text: "Comanzi ușor, ridici rapid și te bucuri de un bowl proaspăt oriunde ai nevoie.",
     },
   ],
 
   menu: [
     {
-      tag: "Fresh bowl",
-      title: "Garden Rice Bowl",
+      title: "chicken teriyaki bowl",
+      text: "orez jasmine, pui teriyaki, edamame, morcov, castravete și sos dulce-sărat.",
       price: "34 lei",
+      tag: "hot",
+      category: "teriyaki bowl",
+      image: "/images/minisite/hieu-chicken-teriyaki-bowl.png",
     },
     {
-      tag: "Signature",
-      title: "Teriyaki Bowl",
-      price: "39 lei",
-    },
-    {
-      tag: "Vegan",
-      title: "Avocado Green Bowl",
+      title: "bibimbap cu orez",
+      text: "orez cald, vită marinată, spanac, kimchi, morcov și mix de legume asiatice.",
       price: "36 lei",
+      tag: "new",
+      category: "korean rice",
+      image: "/images/minisite/hieu-bibimbap-cu-orez.png",
     },
+    {
+      title: "thai basil beef rice",
+      text: "orez cu vită aromată, busuioc thailandez, ardei, ceapă verde și sos fresh.",
+      price: "38 lei",
+      tag: "hot",
+      category: "thai rice",
+      image: "/images/minisite/hieu-thai-basil-beef-rice.png",
+    },
+    {
+      title: "salmon poke rice",
+      text: "orez sushi, somon, avocado, mango, castravete și topping crocant.",
+      price: "39 lei",
+      tag: "fresh",
+      category: "poke bowl",
+      image: "/images/minisite/hieu-salmon-poke-rice.png",
+    },
+  ],
+
+  stats: [
+    { value: "1k+", label: "comenzi" },
+    { value: "4.8", label: "rating" },
+    { value: "15min", label: "preparare" },
+    { value: "4+", label: "bowl-uri" },
   ],
 
   aboutText:
-    "Hieu Bowl pune accent pe ingrediente proaspete, porții echilibrate și o experiență vizuală memorabilă. Layout-ul este gândit pentru restaurante moderne care vor să prezinte meniul rapid și apetisant.",
+    "Hieu Bowl este locul în care aromele asiatice se întâlnesc cu ingrediente proaspete și combinații ușor de personalizat. Fiecare bowl este pregătit pentru o masă rapidă, sățioasă și plină de gust.",
+
   menuText:
-    "Cele mai populare preparate sunt evidențiate vizual, cu preț, categorie și acțiune rapidă pentru comandă sau rezervare.",
+    "Alege dintre boluri cu orez, proteine marinate, legume fresh și sosuri aromate. Fiecare preparat este gândit pentru gust echilibrat, prospețime și servire rapidă.",
+
+  customersTitle: "Clienți care revin pentru gust, prospețime și servire rapidă.",
+  customersText:
+    "Oamenii aleg Hieu Bowl pentru preparate fresh, combinații clare și o experiență relaxată, perfectă pentru pauza de prânz, cină sau takeaway.",
+
+  reviews: [
+    {
+      name: "Ana M.",
+      stars: 5,
+      text: "Boluri foarte fresh, servire rapidă și combinații echilibrate.",
+    },
+    {
+      name: "Radu C.",
+      stars: 4,
+      text: "Loc plăcut și meniu clar, ideal pentru prânz sau cină rapidă.",
+    },
+    {
+      name: "Bianca T.",
+      stars: 5,
+      text: "Ingrediente bune, plating curat și preparate pe care le reiei ușor.",
+    },
+  ],
 
   testimonial: {
-    name: "Mara Ionescu",
-    text: "Meniul este foarte ușor de parcurs, iar prezentarea preparatelor transmite imediat prospețime și atenție la detalii.",
+    name: "Ana M.",
+    text: "Boluri foarte fresh, servire rapidă și combinații echilibrate. Un loc potrivit pentru prânz rapid sau cină lejeră.",
   },
 
-  customersTitle: "Clienți fericiți",
-  customersText:
-    "O secțiune scurtă de încredere pentru review-uri, recomandări și motive clare de vizitare.",
-  contactTitle: "Gata să rezervi?",
-  contactText: "Trimite o cerere rapidă sau contactează restaurantul pentru detalii.",
-
-  stats: [
-    { value: "12+", label: "ani" },
-    { value: "4.8", label: "rating" },
-    { value: "80", label: "locuri" },
-    { value: "7/7", label: "deschis" },
-  ],
+  contactTitle: "Comandă, rezervă sau treci pe la noi.",
+  contactText:
+    "Suntem aici pentru comenzi rapide, rezervări sau întrebări despre meniu. Scrie-ne și îți răspundem cât mai curând.",
 
   hotspots: [
     {
       id: "hero",
-      title: "Hero fresh și vizual",
-      text: "Prima zonă pune accent pe preparatul principal și direcționează rapid spre meniu.",
-      x: "63%",
-      y: "30%",
+      title: "Fresh de la prima vedere",
+      text: "Preparatele colorate, ingredientele proaspete și atmosfera urbană transmit imediat energia Hieu Bowl.",
+      x: "28%",
+      y: "35%",
     },
     {
       id: "menu",
-      title: "Meniu ușor de comparat",
-      text: "Preparatele principale sunt afișate vizual, cu preț și acțiune de comandă.",
-      x: "50%",
+      title: "Boluri pentru orice poftă",
+      text: "De la teriyaki și bibimbap până la poke cu somon, meniul este construit pentru alegeri rapide și gustoase.",
+      x: "58%",
       y: "66%",
     },
     {
-      id: "booking",
-      title: "Rezervare / contact rapid",
-      text: "CTA-ul final susține conversia printr-un formular simplu și vizibil.",
-      x: "76%",
-      y: "86%",
+      id: "reviews",
+      title: "Apreciat de clienți",
+      text: "Feedback-ul pune accent pe prospețime, servire rapidă și preparate pe care clienții le comandă din nou.",
+      x: "42%",
+      y: "78%",
     },
   ],
 };
