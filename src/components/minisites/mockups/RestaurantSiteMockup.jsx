@@ -2,508 +2,454 @@ import { useState } from "react";
 import {
   ArrowRight,
   Award,
-  BriefcaseBusiness,
-  CheckCircle2,
-  Code2,
-  ExternalLink,
-  Layers3,
+  ChevronDown,
+  Clock3,
   Mail,
   MapPin,
   Menu,
-  MessageCircle,
-  Palette,
   Phone,
+  ShoppingBag,
   Sparkles,
   Star,
-  UserRound,
+  Utensils,
   X,
 } from "lucide-react";
 import { NavButton, navTarget, scrollToSection } from "./shared.jsx";
 
-const defaultServices = [
-  {
-    title: "Graphic Design",
-    text: "Identitate vizuală, materiale de prezentare și direcție grafică pentru branduri coerente.",
-    icon: "✎",
-  },
-  {
-    title: "Web Design",
-    text: "Landing page-uri, portofolii și interfețe responsive cu structură clară și impact vizual.",
-    icon: "◈",
-  },
-  {
-    title: "Frontend",
-    text: "Implementări rapide, curate și ușor de extins, pregătite pentru proiecte reale.",
-    icon: "</>",
-  },
-  {
-    title: "Brand Assets",
-    text: "Elemente vizuale pentru social media, campanii, lansări și comunicare digitală.",
-    icon: "▣",
-  },
+const productCardTones = [
+  "bg-[#fff7ed]",
+  "bg-[#ecfdf5]",
+  "bg-[#fefce8]",
+  "bg-[#f5f3ff]",
 ];
 
-const defaultProjects = [
-  {
-    title: "Brand Refresh",
-    category: "Visual Identity",
-    year: "2026",
-    text: "Repoziționare vizuală pentru un brand digital: sistem de culori, direcție grafică și asset-uri pentru lansare.",
-    role: "Design lead",
-    result: "identitate coerentă",
-    tags: ["Branding", "Art Direction", "Social Assets"],
-  },
-  {
-    title: "Portfolio Website",
-    category: "Web Design",
-    year: "2026",
-    text: "Website personal cu structură clară, secțiuni de proiecte, servicii și contact rapid pentru colaborări.",
-    role: "UI / Frontend",
-    result: "experiență responsive",
-    tags: ["React", "Tailwind", "UI/UX"],
-  },
-  {
-    title: "Launch Campaign",
-    category: "Creative Direction",
-    year: "2025",
-    text: "Direcție vizuală pentru campanie de lansare, cu mesaje clare și materiale adaptate canalelor digitale.",
-    role: "Creative direction",
-    result: "lansare memorabilă",
-    tags: ["Campaign", "Visuals", "Copy"],
-  },
-];
+// Imaginea principală din hero.
+// Fișierul trebuie să fie în: public/images/minisite/hieu-bowl-hero.png
+const HERO_BOWL_IMAGE = "/images/minisite/hieu-bowl-hero.png";
 
-const defaultTimeline = [
-  {
-    role: "Frontend & UI designer",
-    period: "2024 — prezent",
-  },
-  {
-    role: "Graphic designer freelance",
-    period: "2022 — prezent",
-  },
-  {
-    role: "Content design specialist",
-    period: "2021 — 2023",
-  },
-];
+// Logo-ul folosit în navbar și în secțiunea About.
+// Fișierul trebuie să fie în: public/images/minisite/hieu-bowl-logo.png
+const HIEU_BOWL_LOGO = "/images/minisite/hieu-bowl-logo.png";
 
-const defaultStats = [
-  { value: "30+", label: "proiecte" },
-  { value: "5+", label: "ani" },
-  { value: "100%", label: "custom" },
-  { value: "24h", label: "răspuns" },
+const defaultDishes = [
+  {
+    title: "chicken teriyaki bowl",
+    text: "orez jasmine, pui teriyaki, edamame, morcov, castravete și sos dulce-sărat.",
+    price: "34 lei",
+    tag: "hot",
+    category: "teriyaki bowl",
+    image: "/images/minisite/hieu-chicken-teriyaki-bowl.png",
+  },
+  {
+    title: "bibimbap cu orez",
+    text: "orez cald, vită marinată, spanac, kimchi, morcov și mix de legume asiatice.",
+    price: "36 lei",
+    tag: "new",
+    category: "korean rice",
+    image: "/images/minisite/hieu-bibimbap-cu-orez.png",
+  },
+  {
+    title: "thai basil beef rice",
+    text: "orez cu vită aromată, busuioc thailandez, ardei, ceapă verde și sos fresh.",
+    price: "38 lei",
+    tag: "hot",
+    category: "thai rice",
+    image: "/images/minisite/hieu-thai-basil-beef-rice.png",
+  },
+  {
+    title: "salmon poke rice",
+    text: "orez sushi, somon, avocado, mango, castravete și topping crocant.",
+    price: "39 lei",
+    tag: "fresh",
+    category: "poke bowl",
+    image: "/images/minisite/hieu-salmon-poke-rice.png",
+  },
 ];
 
 const defaultReviews = [
   {
-    name: "Mara I.",
-    role: "Fondator brand local",
+    name: "Ana M.",
     stars: 5,
-    text: "Alex a transformat o idee vagă într-o identitate vizuală clară, ușor de folosit și memorabilă.",
+    text: "Boluri foarte fresh, servire rapidă și combinații echilibrate.",
   },
   {
-    name: "Vlad P.",
-    role: "Consultant digital",
+    name: "Radu C.",
+    stars: 4,
+    text: "Loc plăcut și meniu clar, ideal pentru prânz sau cină rapidă.",
+  },
+  {
+    name: "Bianca T.",
     stars: 5,
-    text: "Proces rapid, comunicare bună și un website care arată profesionist pe desktop și mobil.",
+    text: "Ingrediente bune, plating curat și preparate pe care le reiei ușor.",
   },
 ];
 
 function targetForNav(item) {
-  if (item.includes("Acasă")) return "home";
   if (item.includes("Despre")) return "about";
-  if (item.includes("Servicii")) return "services";
-  if (item.includes("Proiecte") || item.includes("Work")) return "projects";
-  if (item.includes("Contact")) return "contact";
+  if (item.includes("Meniu") || item.includes("Servicii")) return "services";
+  if (item.includes("Rezerv") || item.includes("Contact")) return "contact";
 
   return navTarget(item);
 }
 
-function getInitials(name = "") {
-  return name
-    .split(" ")
-    .filter(Boolean)
-    .map((word) => word[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
-
-function PortfolioMark({ brand, compact = false }) {
-  const initials = getInitials(brand);
-
+function HieuBowlLogo({ compact = false }) {
   return (
-    <div className="flex min-w-0 items-center gap-3">
-      <span
-        className={
-          compact
-            ? "grid h-10 w-10 shrink-0 place-items-center bg-[#111111] text-sm font-black text-[#f4c430] shadow-[4px_4px_0_#2563eb]"
-            : "grid h-12 w-12 shrink-0 place-items-center bg-[#111111] text-base font-black text-[#f4c430] shadow-[5px_5px_0_#2563eb]"
-        }
-      >
-        {initials}
-      </span>
-
-      <span className="min-w-0">
-        <span className="block truncate text-sm font-black leading-none text-[#111111]">
-          {brand}
-        </span>
-        <span className="mt-1 block truncate text-[0.62rem] font-bold uppercase tracking-[0.08em] text-[#64748b]">
-          Portfolio
-        </span>
-      </span>
-    </div>
-  );
-}
-
-function SectionEyebrow({ children, light = false }) {
-  return (
-    <p
+    <img
+      src={HIEU_BOWL_LOGO}
+      alt="Hieu Bowl"
       className={
-        light
-          ? "text-xs font-black uppercase tracking-[0.10em] text-[#f4c430]"
-          : "text-xs font-black uppercase tracking-[0.10em] text-[#2563eb]"
+        compact
+          ? "h-10 w-auto max-w-[5.5rem] object-contain"
+          : "h-14 w-auto max-w-[7rem] object-contain"
       }
-    >
-      {children}
-    </p>
+      draggable={false}
+    />
   );
 }
 
-function SectionTitle({ children, mobile, light = false, className = "" }) {
-  return (
-    <h2
-      className={`mt-4 font-black leading-tight tracking-[-0.055em] ${
-        light ? "text-white" : "text-[#111111]"
-      } ${className}`}
-      style={{
-        fontSize: mobile
-          ? "clamp(2.15rem, 10.5cqw, 3.05rem)"
-          : "clamp(2.85rem, 5cqw, 4.6rem)",
-        wordBreak: "normal",
-        overflowWrap: "normal",
-        hyphens: "none",
-      }}
-    >
-      {children}
-    </h2>
-  );
-}
-
-function HeroVisual({ mini, mobile = false }) {
-  const initials = getInitials(mini.brand);
-  const skills = mini.skills?.slice(0, 4) || [];
-
+function HeroVisual({ mobile = false }) {
   return (
     <div
       className={
         mobile
-          ? "relative min-h-[31rem] overflow-hidden bg-[#111111]"
-          : "relative min-h-[42rem] overflow-hidden bg-[#111111]"
+          ? "relative min-h-[32rem] overflow-hidden bg-[#17382e]"
+          : "relative min-h-[40rem] overflow-hidden bg-[#17382e]"
       }
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_18%,rgba(244,196,48,.35),transparent_28%),radial-gradient(circle_at_76%_70%,rgba(37,99,235,.42),transparent_35%),linear-gradient(135deg,#111111_0%,#18181b_48%,#f4c430_100%)]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,.07)_1px,transparent_1px),linear-gradient(rgba(255,255,255,.07)_1px,transparent_1px)] [background-size:36px_36px]" />
+      <img
+        src={HERO_BOWL_IMAGE}
+        alt="asian bowl"
+        className="absolute inset-0 h-full w-full object-cover object-center"
+        draggable={false}
+      />
+    </div>
+  );
+}
 
-      <div
-        className={
-          mobile
-            ? "absolute left-5 right-5 top-6 border border-white/15 bg-white/10 p-4 text-white backdrop-blur-md"
-            : "absolute left-8 right-8 top-8 border border-white/15 bg-white/10 p-5 text-white backdrop-blur-md"
-        }
-      >
-        <div className="flex items-center justify-between gap-4">
-          <span className="inline-flex items-center gap-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-[#f4c430]">
-            <Sparkles size={14} />
-            {mini.availability || "Available for selected projects"}
-          </span>
-
-          <span className="shrink-0 rounded-full bg-[#22c55e] px-2.5 py-1 text-[0.62rem] font-black uppercase text-[#052e16]">
-            Open
-          </span>
-        </div>
-      </div>
-
-      <div
-        className={
-          mobile
-            ? "absolute left-1/2 top-[8.5rem] h-52 w-52 -translate-x-1/2 border border-white/15 bg-[#f4c430] shadow-[12px_12px_0_#2563eb]"
-            : "absolute left-1/2 top-1/2 h-80 w-80 -translate-x-1/2 -translate-y-1/2 border border-white/15 bg-[#f4c430] shadow-[18px_18px_0_#2563eb]"
-        }
-      >
-        <div className="absolute inset-5 grid place-items-center bg-[#111111] text-[#f4c430]">
-          <span
-            className={
-              mobile
-                ? "text-7xl font-black tracking-[-0.08em]"
-                : "text-9xl font-black tracking-[-0.08em]"
-            }
-          >
-            {initials}
-          </span>
-        </div>
-
-        <div className="absolute -bottom-5 -left-5 bg-white px-4 py-3 text-[#111111] shadow-[0_18px_45px_rgba(0,0,0,.25)]">
-          <p className="text-[0.62rem] font-black uppercase tracking-[0.08em] text-[#2563eb]">
-            Role
+function OrderPanel({ mini, contentRef }) {
+  return (
+    <div className="border border-[#17382e]/12 bg-white p-5 shadow-[0_24px_60px_rgba(23,56,46,.14)]">
+      <div className="mb-5 flex items-start justify-between gap-4">
+        <div>
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-[#dc2626]">
+            Comandă rapidă
           </p>
-          <p className="mt-1 text-sm font-black">{mini.subtitle}</p>
+
+          <h4 className="mt-1 text-xl font-black leading-tight text-[#17382e]">
+            Alege bowl-ul preferat
+          </h4>
         </div>
+
+        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-[#fff7ed] text-[#dc2626]">
+          <ShoppingBag size={19} />
+        </span>
       </div>
 
-      <div
-        className={
-          mobile
-            ? "absolute bottom-6 left-5 right-5 grid grid-cols-2 gap-2"
-            : "absolute bottom-8 left-8 right-8 grid grid-cols-4 gap-3"
-        }
-      >
-        {skills.map((skill) => (
-          <span
-            key={skill}
-            className="border border-white/15 bg-white/10 px-3 py-3 text-center text-[0.68rem] font-black uppercase tracking-[0.06em] text-white backdrop-blur-md"
+      <div className="grid gap-2.5">
+        {["Tip bowl", "Proteină", "Sos", "Ridicare"].map((field, index) => (
+          <button
+            key={field}
+            type="button"
+            className="grid min-w-0 grid-cols-[0.9fr_1.1fr] border border-[#17382e]/12 bg-[#fffaf1] text-left"
           >
-            {skill}
-          </span>
+            <span className="border-r border-[#17382e]/12 px-4 py-3 text-xs font-bold text-[#64748b]">
+              {field}
+            </span>
+
+            <span className="flex min-w-0 items-center justify-between gap-2 px-4 py-3 text-xs font-black text-[#17382e]">
+              <span className="truncate">
+                {index === 0 ? "Signature" : "Alege"}
+              </span>
+              <ChevronDown size={14} className="shrink-0 text-[#16a34a]" />
+            </span>
+          </button>
         ))}
       </div>
+
+      <button
+        type="button"
+        onClick={() => scrollToSection(contentRef, "services")}
+        className="mt-4 inline-flex w-full items-center justify-center gap-2 bg-[#dc2626] px-5 py-4 text-xs font-black uppercase tracking-[0.04em] text-white transition hover:bg-[#b91c1c]"
+      >
+        {mini.primaryCta}
+        <ArrowRight size={16} />
+      </button>
     </div>
+  );
+}
+
+function FeaturePill({ item }) {
+  return (
+    <article className="border border-[#17382e]/12 bg-white p-4">
+      <h4 className="text-sm font-black text-[#17382e]">{item.title}</h4>
+      <p className="mt-2 text-xs leading-5 text-[#64748b]">{item.text}</p>
+    </article>
+  );
+}
+
+function ProductImageSlot({ src, alt }) {
+  if (src) {
+    return (
+      <div className="mb-5 h-44 overflow-hidden border border-[#17382e]/10 bg-white">
+        <img
+          src={src}
+          alt={alt}
+          className="h-full w-full object-cover object-center"
+          draggable={false}
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-5 grid h-44 place-items-center border border-dashed border-[#17382e]/20 bg-white/65 text-center">
+      <div>
+        <p className="text-sm font-black tracking-[0.05em] text-[#17382e]">
+          imagine preparat
+        </p>
+        <p className="mt-2 text-xs text-[#64748b]">
+          poți adăuga aici fotografia produsului.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function MenuCard({ item, index }) {
+  return (
+    <article
+      className={`min-w-0 border border-white/10 p-5 text-[#17382e] ${
+        productCardTones[index % productCardTones.length]
+      }`}
+    >
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <span className="rounded-full bg-white px-3 py-1 text-[0.65rem] font-black tracking-[0.04em] text-[#dc2626]">
+          {item.tag}
+        </span>
+
+        <span className="text-xs font-black tracking-[0.05em] text-[#16a34a]">
+          {item.category}
+        </span>
+      </div>
+
+      <ProductImageSlot src={item.image} alt={item.title} />
+
+      <h4 className="text-2xl font-black leading-tight text-[#17382e]">
+        {item.title}
+      </h4>
+
+      <p className="mt-3 text-sm leading-7 text-[#64748b]">{item.text}</p>
+
+      <div className="mt-5 flex items-center justify-between gap-4">
+        <p className="text-2xl font-black text-[#dc2626]">{item.price}</p>
+
+        <button
+          type="button"
+          className="inline-flex items-center gap-2 bg-[#17382e] px-4 py-3 text-xs font-black uppercase text-white"
+        >
+          Comandă
+          <ArrowRight size={14} />
+        </button>
+      </div>
+    </article>
   );
 }
 
 function StatCard({ stat }) {
   return (
-    <article className="min-w-0 border border-[#111111]/10 bg-white p-5 shadow-[0_18px_45px_rgba(17,17,17,.06)]">
-      <p className="text-3xl font-black leading-none tracking-[-0.05em] text-[#111111]">
-        {stat.value}
-      </p>
-      <p className="mt-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-[#64748b]">
-        {stat.label}
-      </p>
-    </article>
-  );
-}
+    <div className="flex min-w-0 items-center gap-4 border border-[#17382e]/12 bg-white p-4">
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#ecfdf5] text-[#16a34a]">
+        <Award size={18} />
+      </span>
 
-function ServiceCard({ item, index }) {
-  const icons = [Palette, Layers3, Code2, BriefcaseBusiness];
-  const Icon = icons[index % icons.length];
-
-  return (
-    <article className="group min-w-0 border border-[#111111]/10 bg-white p-5 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_70px_rgba(17,17,17,.10)]">
-      <div className="mb-6 flex items-start justify-between gap-4">
-        <span className="grid h-12 w-12 shrink-0 place-items-center bg-[#111111] text-[#f4c430] shadow-[5px_5px_0_#2563eb]">
-          <Icon size={19} />
-        </span>
-
-        <span className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-[#2563eb]">
-          0{index + 1}
-        </span>
-      </div>
-
-      <h3 className="text-xl font-black leading-tight tracking-[-0.03em] text-[#111111]">
-        {item.title}
-      </h3>
-      <p className="mt-3 text-sm leading-7 text-[#64748b]">{item.text}</p>
-    </article>
-  );
-}
-
-function ProjectVisual({ project, index }) {
-  return (
-    <div className="relative mb-5 h-56 overflow-hidden bg-[#111111]">
-      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(244,196,48,.90),rgba(37,99,235,.85))]" />
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,.18)_1px,transparent_1px),linear-gradient(rgba(255,255,255,.18)_1px,transparent_1px)] [background-size:30px_30px]" />
-
-      <div className="absolute left-5 top-5 rounded-full bg-white px-3 py-1 text-[0.62rem] font-black uppercase tracking-[0.08em] text-[#111111]">
-        {project.category}
-      </div>
-
-      <div className="absolute bottom-5 left-5 right-5 border border-white/20 bg-white/15 p-4 text-white backdrop-blur-md">
-        <p className="text-[0.65rem] font-black uppercase tracking-[0.10em] text-[#f4c430]">
-          Case study 0{index + 1}
+      <div className="min-w-0">
+        <p className="whitespace-nowrap text-2xl font-black leading-none text-[#17382e]">
+          {stat.value}
         </p>
-        <p className="mt-2 text-2xl font-black leading-none tracking-[-0.04em]">
-          {project.title}
+
+        <p className="mt-1 text-[0.65rem] font-black uppercase tracking-[0.05em] text-[#64748b]">
+          {stat.label}
         </p>
       </div>
     </div>
-  );
-}
-
-function ProjectCard({ project, index }) {
-  const tags = project.tags || [];
-
-  return (
-    <article className="min-w-0 border border-white/10 bg-[#18181b] p-5 text-white">
-      <ProjectVisual project={project} index={index} />
-
-      <div className="mb-4 flex items-center justify-between gap-4">
-        <span className="text-xs font-black uppercase tracking-[0.08em] text-[#f4c430]">
-          {project.year}
-        </span>
-        <span className="truncate text-xs font-bold text-white/55">
-          {project.role || "Creative role"}
-        </span>
-      </div>
-
-      <h3 className="text-2xl font-black leading-tight tracking-[-0.04em]">
-        {project.title}
-      </h3>
-      <p className="mt-3 text-sm leading-7 text-white/68">{project.text}</p>
-
-      <div className="mt-5 flex flex-wrap gap-2">
-        {tags.slice(0, 3).map((tag) => (
-          <span
-            key={tag}
-            className="border border-white/10 bg-white/10 px-3 py-1.5 text-[0.62rem] font-black uppercase tracking-[0.06em] text-white/80"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
-
-      <div className="mt-5 flex items-center justify-between gap-4 border-t border-white/10 pt-5">
-        <span className="text-xs font-black uppercase tracking-[0.08em] text-white/55">
-          {project.result || "rezultat clar"}
-        </span>
-        <ExternalLink size={16} className="text-[#f4c430]" />
-      </div>
-    </article>
-  );
-}
-
-function TimelineItem({ item, index }) {
-  return (
-    <div className="relative min-w-0 border border-[#111111]/10 bg-[#f7f3e8] p-5">
-      <span className="absolute -left-2 top-6 h-4 w-4 bg-[#2563eb] shadow-[4px_4px_0_#f4c430]" />
-      <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-[#2563eb]">
-        0{index + 1} / {item.period}
-      </p>
-      <p className="mt-2 text-lg font-black leading-tight text-[#111111]">
-        {item.role}
-      </p>
-    </div>
-  );
-}
-
-function ProcessCard({ item, index }) {
-  return (
-    <article className="min-w-0 border border-[#111111]/10 bg-white p-5">
-      <div className="mb-5 flex items-center justify-between gap-4">
-        <span className="text-3xl font-black tracking-[-0.08em] text-[#111111]">
-          0{index + 1}
-        </span>
-        <CheckCircle2 size={18} className="text-[#2563eb]" />
-      </div>
-      <h3 className="text-lg font-black text-[#111111]">{item.title}</h3>
-      <p className="mt-3 text-sm leading-7 text-[#64748b]">{item.text}</p>
-    </article>
   );
 }
 
 function ReviewCard({ review }) {
   return (
-    <article className="min-w-0 border border-[#111111]/10 bg-white p-5">
-      <div className="flex items-center gap-1 text-[#f4c430]">
-        {Array.from({ length: review.stars || 5 }).map((_, index) => (
+    <article className="border border-[#17382e]/12 bg-[#fffaf1] p-4">
+      <div className="flex items-center gap-1 text-[#fbbf24]">
+        {Array.from({ length: review.stars }).map((_, index) => (
           <Star key={`${review.name}-${index}`} size={14} fill="currentColor" />
         ))}
       </div>
-      <p className="mt-4 text-sm leading-7 text-[#374151]">“{review.text}”</p>
-      <p className="mt-5 text-sm font-black text-[#111111]">{review.name}</p>
-      <p className="mt-1 text-xs font-bold uppercase tracking-[0.08em] text-[#64748b]">
-        {review.role}
+
+      <p className="mt-3 text-sm leading-6 text-[#64748b]">“{review.text}”</p>
+
+      <p className="mt-4 text-xs font-black uppercase tracking-[0.05em] text-[#16a34a]">
+        {review.name}
       </p>
     </article>
   );
 }
 
-function ContactLine({ icon: Icon, label, value, href, mobile = false }) {
-  const content = (
-    <div className="flex min-w-0 items-center gap-4 border border-white/12 bg-white/10 p-4 text-white">
-      <span className="grid h-11 w-11 shrink-0 place-items-center bg-[#f4c430] text-[#111111]">
+function CommunitySection({ mini, reviews, mobile }) {
+  return (
+    <section
+      className="bg-white px-6 py-12"
+      style={{ containerType: "inline-size" }}
+    >
+      <div className="mx-auto max-w-7xl">
+        <p className="text-xs font-black uppercase tracking-[0.08em] text-[#16a34a]">
+          Comunitate
+        </p>
+
+        <div
+          className="mt-6 grid gap-4"
+          style={{
+            gridTemplateColumns: mobile
+              ? "1fr"
+              : "repeat(3, minmax(0, 1fr))",
+          }}
+        >
+          {reviews.map((review) => (
+            <ReviewCard key={review.name} review={review} />
+          ))}
+        </div>
+
+        <div className="mt-8 max-w-3xl">
+          <h2
+            className="font-black leading-tight tracking-[-0.04em] text-[#17382e]"
+            style={{
+              fontSize: mobile
+                ? "clamp(2.1rem, 10cqw, 2.9rem)"
+                : "clamp(2.7rem, 5cqw, 4rem)",
+              wordBreak: "normal",
+              overflowWrap: "normal",
+              hyphens: "none",
+            }}
+          >
+            {mini.customersTitle}
+          </h2>
+
+          <p className="mt-5 max-w-2xl text-sm leading-7 text-[#64748b]">
+            {mini.customersText}
+          </p>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function ContactItem({ icon: Icon, label, value, mobile = false }) {
+  return (
+    <div
+      className={
+        mobile
+          ? "flex w-full min-w-0 items-center gap-4 border border-white/20 bg-white/10 p-5"
+          : "flex min-h-[6.25rem] min-w-0 items-center gap-4 border border-white/20 bg-white/10 p-5"
+      }
+    >
+      <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-white text-[#dc2626]">
         <Icon size={17} />
       </span>
-      <span className="min-w-0 flex-1">
-        <span className="block text-[0.65rem] font-black uppercase tracking-[0.08em] text-white/55">
+
+      <div className="min-w-0 flex-1">
+        <p className="text-[0.68rem] font-black uppercase tracking-[0.06em] text-white/75">
           {label}
+        </p>
+
+        <p className="mt-1 max-w-full text-sm leading-6 text-white [overflow-wrap:anywhere]">
+          {value}
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function ContactScheduleBlock({ mini, mobile = false }) {
+  return (
+    <div
+      className={mobile ? "grid w-full gap-3" : "grid gap-3 lg:pt-[3.05rem]"}
+    >
+      <div
+        className={
+          mobile
+            ? "flex w-full items-center gap-4 bg-[#fffaf1] p-5 text-[#17382e]"
+            : "flex min-h-[6.25rem] items-center gap-4 bg-[#fffaf1] p-5 text-[#17382e]"
+        }
+      >
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#ecfdf5] text-[#16a34a]">
+          <Clock3 size={18} />
         </span>
-        <span
+
+        <div className="min-w-0 flex-1">
+          <p className="text-[0.68rem] font-black uppercase tracking-[0.08em] text-[#dc2626]">
+            Program
+          </p>
+
+          <p className="mt-1 text-sm font-black leading-7">
+            Luni – Duminică / 10:00 – 22:00
+          </p>
+        </div>
+      </div>
+
+      <div className="w-full border border-white/20 bg-white p-2 text-[#17382e]">
+        <div
           className={
-            mobile
-              ? "mt-1 block max-w-full text-sm font-bold leading-6 text-white [overflow-wrap:anywhere]"
-              : "mt-1 block truncate text-sm font-bold leading-6 text-white"
+            mobile ? "grid gap-2" : "flex min-h-[3.5rem] items-center gap-2"
           }
         >
-          {value}
-        </span>
-      </span>
-    </div>
-  );
+          <input
+            readOnly
+            value={mini.contact?.email || "rezervari@hieubowl.ro"}
+            className={
+              mobile
+                ? "w-full min-w-0 bg-transparent px-4 py-3 text-xs text-[#64748b] outline-none"
+                : "min-w-0 flex-1 bg-transparent px-4 text-xs text-[#64748b] outline-none"
+            }
+          />
 
-  if (!href) return content;
-
-  return (
-    <a href={href} className="block transition hover:-translate-y-0.5">
-      {content}
-    </a>
-  );
-}
-
-function ContactPanel({ mini, mobile = false }) {
-  const email = mini.contact?.email || "hello@alexnova.ro";
-  const phone = mini.contact?.phone || "+40 700 777 888";
-  const location = mini.contact?.address || "Remote / România";
-  const social = mini.contact?.social || "@alexnova.design";
-
-  return (
-    <div className="grid gap-3">
-      <ContactLine
-        mobile={mobile}
-        icon={Mail}
-        label="Email"
-        value={email}
-        href={`mailto:${email}`}
-      />
-      <ContactLine
-        mobile={mobile}
-        icon={Phone}
-        label="Telefon"
-        value={phone}
-        href={`tel:${phone.replace(/\s/g, "")}`}
-      />
-      <ContactLine mobile={mobile} icon={MapPin} label="Locație" value={location} />
-      <ContactLine mobile={mobile} icon={MessageCircle} label="Social" value={social} />
+          <button
+            type="button"
+            className={
+              mobile
+                ? "inline-flex h-11 w-full items-center justify-center gap-2 bg-[#17382e] px-4 text-xs font-black uppercase text-white"
+                : "inline-flex h-11 shrink-0 items-center gap-2 bg-[#17382e] px-4 text-xs font-black uppercase text-white"
+            }
+          >
+            Trimite
+            <Mail size={13} />
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
 
-export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
+export default function RestaurantSiteMockup({ mini, contentRef, isMobile }) {
   const mobile = Boolean(isMobile);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const services = mini.items?.length ? mini.items : defaultServices;
-  const projects = mini.projects?.length ? mini.projects : defaultProjects;
-  const timeline = mini.timeline?.length ? mini.timeline : defaultTimeline;
-  const stats = mini.stats?.length ? mini.stats : defaultStats;
-  const reviews = mini.reviews?.length ? mini.reviews : defaultReviews;
-  const process = mini.process?.length
-    ? mini.process
-    : [
-        {
-          title: "Clarificare",
-          text: "Stabilim obiectivul, publicul și direcția vizuală potrivită proiectului.",
-        },
-        {
-          title: "Design",
-          text: "Construim o direcție coerentă, cu accent pe ierarhie, ritm și detalii vizuale.",
-        },
-        {
-          title: "Livrare",
-          text: "Pregătim materialele finale pentru implementare, lansare sau comunicare digitală.",
-        },
-      ];
+  const featureSource =
+    mini.highlights?.length ? mini.highlights : mini.items || [];
+
+  const menuSource = mini.menu?.length ? mini.menu : [];
+
+  const menuItems = defaultDishes.map((dish, index) => ({
+    ...dish,
+    title: menuSource[index]?.title || dish.title,
+    text: menuSource[index]?.text || dish.text,
+    image: menuSource[index]?.image || dish.image,
+    price: menuSource[index]?.price || dish.price,
+    category: menuSource[index]?.category || dish.category,
+    tag: menuSource[index]?.tag || dish.tag,
+  }));
+
+  const reviews =
+    mini.reviews?.length && mini.reviews.length >= 3
+      ? mini.reviews.slice(0, 3)
+      : defaultReviews;
 
   function handleNavClick(item) {
     scrollToSection(contentRef, targetForNav(item));
@@ -513,27 +459,27 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
   return (
     <div
       ref={contentRef}
-      className="h-full overflow-y-auto overflow-x-hidden bg-[#ece8dd] text-[#111111]"
+      className="h-full overflow-y-auto overflow-x-hidden bg-[#fffaf1] text-[#17382e]"
     >
-      <header className="sticky top-0 z-40 border-b border-[#111111]/10 bg-[#ece8dd]/95 px-5 py-3 backdrop-blur-xl">
+      <header className="sticky top-0 z-40 border-b border-[#17382e]/12 bg-[#fffaf1]/95 px-5 py-3 backdrop-blur-xl">
         {mobile ? (
           <div>
             <div className="flex items-center justify-between gap-3">
-              <PortfolioMark brand={mini.brand} compact />
+              <HieuBowlLogo compact />
 
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => scrollToSection(contentRef, "projects")}
-                  className="shrink-0 bg-[#111111] px-3 py-3 text-[0.62rem] font-black uppercase tracking-[0.06em] text-[#f4c430]"
+                  onClick={() => scrollToSection(contentRef, "services")}
+                  className="shrink-0 bg-[#dc2626] px-3 py-3 text-[0.62rem] font-black uppercase tracking-[0.04em] text-white"
                 >
-                  Work
+                  Meniu
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setMobileMenuOpen((value) => !value)}
-                  className="grid h-10 w-10 shrink-0 place-items-center border border-[#111111]/12 bg-white text-[#111111]"
+                  className="grid h-10 w-10 shrink-0 place-items-center border border-[#17382e]/12 bg-white text-[#17382e]"
                   aria-label={
                     mobileMenuOpen ? "Închide meniul" : "Deschide meniul"
                   }
@@ -544,13 +490,13 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
             </div>
 
             {mobileMenuOpen ? (
-              <nav className="mt-4 grid gap-2 border-t border-[#111111]/10 pt-4">
+              <nav className="mt-4 grid gap-2 border-t border-[#17382e]/12 pt-4">
                 {mini.nav?.map((item) => (
                   <button
                     key={item}
                     type="button"
                     onClick={() => handleNavClick(item)}
-                    className="w-full border border-[#111111]/10 bg-white px-4 py-3 text-left text-xs font-black uppercase tracking-[0.06em] text-[#111111]"
+                    className="w-full border border-[#17382e]/12 bg-white px-4 py-3 text-left text-xs font-black uppercase tracking-[0.04em] text-[#17382e]"
                   >
                     {item}
                   </button>
@@ -560,13 +506,15 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
           </div>
         ) : (
           <div className="mx-auto flex max-w-7xl items-center justify-between gap-5">
-            <PortfolioMark brand={mini.brand} />
+            <HieuBowlLogo />
 
             <nav className="flex items-center gap-6">
               {mini.nav?.map((item) => (
                 <NavButton
                   key={item}
-                  onClick={() => scrollToSection(contentRef, targetForNav(item))}
+                  onClick={() =>
+                    scrollToSection(contentRef, targetForNav(item))
+                  }
                 >
                   {item}
                 </NavButton>
@@ -575,10 +523,10 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
 
             <button
               type="button"
-              onClick={() => scrollToSection(contentRef, "contact")}
-              className="bg-[#111111] px-5 py-3 text-xs font-black uppercase tracking-[0.06em] text-[#f4c430] transition hover:bg-[#2563eb] hover:text-white"
+              onClick={() => scrollToSection(contentRef, "services")}
+              className="bg-[#dc2626] px-5 py-3 text-xs font-black uppercase tracking-[0.04em] text-white"
             >
-              {mini.primaryCta}
+              {mini.secondaryCta}
             </button>
           </div>
         )}
@@ -587,22 +535,34 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
       <main>
         <section
           data-mini-section="home"
-          className="bg-[#ece8dd]"
+          className="bg-[#fffaf1]"
           style={{ containerType: "inline-size" }}
         >
           {mobile ? (
             <div>
               <div className="px-6 py-10">
-                <SectionEyebrow>{mini.eyebrow}</SectionEyebrow>
+                <div className="mb-6 flex items-center gap-4">
+                  <HieuBowlLogo />
 
-                <p className="mt-5 inline-flex bg-[#f4c430] px-4 py-2 text-[0.68rem] font-black uppercase tracking-[0.08em] text-[#111111]">
+                  <div className="min-w-0">
+                    <p className="text-xs font-black uppercase tracking-[0.08em] text-[#dc2626]">
+                      {mini.eyebrow}
+                    </p>
+
+                    <p className="mt-1 text-[0.72rem] leading-5 text-[#64748b]">
+                      Asian Bowls • Fresh Food • Restaurant
+                    </p>
+                  </div>
+                </div>
+
+                <p className="font-serif text-4xl font-black italic leading-none text-[#dc2626]">
                   {mini.accent}
                 </p>
 
                 <h1
-                  className="mt-5 max-w-full font-black uppercase leading-[0.92] tracking-[-0.075em] text-[#111111]"
+                  className="mt-4 max-w-full font-black uppercase leading-tight tracking-[-0.04em] text-[#17382e]"
                   style={{
-                    fontSize: "clamp(3.05rem, 15cqw, 4.6rem)",
+                    fontSize: "clamp(2.25rem, 10.5cqw, 3.1rem)",
                     wordBreak: "normal",
                     overflowWrap: "normal",
                     hyphens: "none",
@@ -611,50 +571,66 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
                   {mini.headline}
                 </h1>
 
-                <p className="mt-6 max-w-xl text-sm leading-7 text-[#4b5563]">
+                <p className="mt-5 max-w-xl text-sm leading-7 text-[#64748b]">
                   {mini.description}
                 </p>
 
-                <div className="mt-7 grid gap-3">
+                <div className="mt-7 flex flex-wrap gap-3">
                   <button
                     type="button"
-                    onClick={() => scrollToSection(contentRef, "projects")}
-                    className="inline-flex w-full items-center justify-center gap-2 bg-[#2563eb] px-5 py-4 text-xs font-black uppercase tracking-[0.06em] text-white"
-                  >
-                    {mini.secondaryCta}
-                    <ArrowRight size={15} />
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection(contentRef, "contact")}
-                    className="inline-flex w-full items-center justify-center gap-2 border border-[#111111]/12 bg-white px-5 py-4 text-xs font-black uppercase tracking-[0.06em] text-[#111111]"
+                    onClick={() => scrollToSection(contentRef, "services")}
+                    className="inline-flex items-center gap-2 bg-[#f97316] px-5 py-3 text-xs font-black uppercase text-white"
                   >
                     {mini.primaryCta}
-                    <Mail size={15} />
+                    <ArrowRight size={15} />
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection(contentRef, "about")}
+                    className="border border-[#17382e]/15 bg-white px-5 py-3 text-xs font-black uppercase text-[#17382e]"
+                  >
+                    Despre noi
                   </button>
                 </div>
               </div>
 
-              <HeroVisual mini={mini} mobile />
+              <HeroVisual mobile />
+
+              <div className="bg-[#fffaf1] px-6 py-6">
+                <OrderPanel mini={mini} contentRef={contentRef} />
+              </div>
             </div>
           ) : (
             <div
-              className="grid min-h-[44rem]"
+              className="grid min-h-[42rem]"
               style={{
-                gridTemplateColumns: "minmax(0, 0.95fr) minmax(24rem, 1.05fr)",
+                gridTemplateColumns: "minmax(0, 0.92fr) minmax(22rem, 1.08fr)",
               }}
             >
-              <div className="flex min-w-0 flex-col justify-center border-r border-[#111111]/10 px-10 py-14">
-                <SectionEyebrow>{mini.eyebrow}</SectionEyebrow>
+              <div className="flex min-w-0 flex-col justify-center border-r border-[#17382e]/12 px-10 py-12">
+                <div className="mb-7 flex items-center gap-4">
+                  <HieuBowlLogo />
 
-                <p className="mt-6 inline-flex w-fit bg-[#f4c430] px-4 py-2 text-[0.7rem] font-black uppercase tracking-[0.08em] text-[#111111]">
+                  <div className="min-w-0">
+                    <p className="text-xs font-black uppercase tracking-[0.08em] text-[#dc2626]">
+                      {mini.eyebrow}
+                    </p>
+
+                    <p className="mt-1 text-[0.72rem] leading-5 text-[#64748b]">
+                      Asian Bowls • Fresh Food • Restaurant
+                    </p>
+                  </div>
+                </div>
+
+                <p className="font-serif text-5xl font-black italic leading-none text-[#dc2626]">
                   {mini.accent}
                 </p>
 
                 <h1
-                  className="mt-5 max-w-4xl font-black uppercase leading-[0.9] tracking-[-0.08em] text-[#111111]"
+                  className="mt-4 max-w-[36rem] font-black uppercase leading-tight tracking-[-0.05em] text-[#17382e]"
                   style={{
-                    fontSize: "clamp(4rem, 7.2cqw, 7.4rem)",
+                    fontSize: "clamp(3rem, 5.4cqw, 5.1rem)",
                     wordBreak: "normal",
                     overflowWrap: "normal",
                     hyphens: "none",
@@ -663,106 +639,154 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
                   {mini.headline}
                 </h1>
 
-                <p className="mt-7 max-w-xl text-sm leading-7 text-[#4b5563]">
+                <p className="mt-6 max-w-xl text-sm leading-7 text-[#64748b]">
                   {mini.description}
                 </p>
 
                 <div className="mt-8 flex flex-wrap gap-4">
                   <button
                     type="button"
-                    onClick={() => scrollToSection(contentRef, "projects")}
-                    className="inline-flex items-center gap-2 bg-[#2563eb] px-6 py-4 text-xs font-black uppercase tracking-[0.06em] text-white transition hover:bg-[#111111]"
+                    onClick={() => scrollToSection(contentRef, "services")}
+                    className="inline-flex items-center gap-2 bg-[#f97316] px-6 py-4 text-xs font-black uppercase text-white"
                   >
-                    {mini.secondaryCta}
+                    {mini.primaryCta}
                     <ArrowRight size={16} />
                   </button>
 
                   <button
                     type="button"
-                    onClick={() => scrollToSection(contentRef, "contact")}
-                    className="inline-flex items-center gap-2 border border-[#111111]/12 bg-white px-6 py-4 text-xs font-black uppercase tracking-[0.06em] text-[#111111] transition hover:bg-[#f4c430]"
+                    onClick={() => scrollToSection(contentRef, "about")}
+                    className="border border-[#17382e]/15 bg-white px-6 py-4 text-xs font-black uppercase text-[#17382e]"
                   >
-                    {mini.primaryCta}
-                    <Mail size={16} />
+                    Despre noi
                   </button>
                 </div>
               </div>
 
-              <HeroVisual mini={mini} />
+              <div className="relative pb-10">
+                <HeroVisual />
+
+                <div className="absolute bottom-8 left-8 right-8 z-10">
+                  <OrderPanel mini={mini} contentRef={contentRef} />
+                </div>
+              </div>
             </div>
           )}
         </section>
 
-        <section className="relative z-10 -mt-7 px-6">
-          <div
-            className="mx-auto grid max-w-7xl gap-3"
-            style={{
-              gridTemplateColumns: mobile
-                ? "repeat(2, minmax(0, 1fr))"
-                : "repeat(4, minmax(0, 1fr))",
-            }}
+        <section className="relative z-10 -mt-5 flex justify-center px-6">
+          <button
+            type="button"
+            onClick={() => scrollToSection(contentRef, "services")}
+            className="inline-flex items-center gap-2 bg-[#17382e] px-5 py-3 text-xs font-black uppercase text-white shadow-[0_14px_35px_rgba(23,56,46,.24)]"
           >
-            {stats.slice(0, 4).map((stat) => (
-              <StatCard key={stat.label} stat={stat} />
-            ))}
-          </div>
+            <Utensils size={14} />
+            {mini.filterLabel || "Ce aleg astăzi?"}
+            <ChevronDown size={14} />
+          </button>
         </section>
 
         <section
-          data-mini-section="projects"
-          className="bg-[#111111] px-6 py-14 text-white"
+          data-mini-section="about"
+          className="bg-white px-6 py-12"
           style={{ containerType: "inline-size" }}
         >
-          <div className="mx-auto max-w-7xl">
-            <div
-              className={
-                mobile
-                  ? "grid gap-5"
-                  : "grid grid-cols-[minmax(0,0.9fr)_minmax(18rem,0.55fr)] items-end gap-8"
-              }
-            >
-              <div>
-                <SectionEyebrow light>Selected projects</SectionEyebrow>
-                <SectionTitle mobile={mobile} light>
-                  Proiecte care arată direcția, detaliul și rezultatul final.
-                </SectionTitle>
+          <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[minmax(18rem,0.8fr)_minmax(0,1.2fr)] lg:items-center">
+            <div className="border border-[#17382e]/12 bg-[#fff7ed] p-6">
+              <div className="flex items-center gap-5">
+                <div className="grid h-28 w-28 shrink-0 place-items-center border border-[#17382e]/10 bg-white p-4 shadow-[0_18px_45px_rgba(23,56,46,.10)]">
+                  <img
+                    src={HIEU_BOWL_LOGO}
+                    alt={mini.brand}
+                    className="h-full w-full object-contain"
+                    draggable={false}
+                  />
+                </div>
+
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.08em] text-[#16a34a]">
+                    About
+                  </p>
+
+                  <h2 className="mt-2 font-serif text-4xl font-black italic leading-none text-[#dc2626]">
+                    {mini.brand}
+                  </h2>
+                </div>
               </div>
 
-              <p className="text-sm leading-7 text-white/62">
-                {mini.projectsText ||
-                  "O selecție de lucrări construite pentru branduri, website-uri și campanii digitale cu personalitate vizuală clară."}
-              </p>
+              <div className="mt-6 grid gap-3">
+                {featureSource.slice(0, 3).map((item) => (
+                  <FeaturePill key={item.title} item={item} />
+                ))}
+              </div>
             </div>
 
-            <div
-              className="mt-10 grid gap-5"
-              style={{
-                gridTemplateColumns: mobile
-                  ? "1fr"
-                  : "repeat(3, minmax(0, 1fr))",
-              }}
-            >
-              {projects.slice(0, 3).map((project, index) => (
-                <ProjectCard key={project.title} project={project} index={index} />
-              ))}
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-[0.08em] text-[#16a34a]">
+                Fresh food, clear concept
+              </p>
+
+              <h2
+                className="mt-4 max-w-4xl font-black leading-tight tracking-[-0.04em] text-[#17382e]"
+                style={{
+                  fontSize: mobile
+                    ? "clamp(2.25rem, 10.5cqw, 3rem)"
+                    : "clamp(2.8rem, 5cqw, 4.4rem)",
+                  wordBreak: "normal",
+                  overflowWrap: "normal",
+                  hyphens: "none",
+                }}
+              >
+                Bowls rapide, ingrediente fresh și experiență urbană.
+              </h2>
+
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-[#64748b]">
+                {mini.aboutText}
+              </p>
+
+              <div
+                className="mt-8 grid gap-3"
+                style={{
+                  gridTemplateColumns: mobile
+                    ? "1fr"
+                    : "repeat(auto-fit, minmax(9rem, 1fr))",
+                }}
+              >
+                {mini.stats?.slice(0, 4).map((stat) => (
+                  <StatCard key={stat.label} stat={stat} />
+                ))}
+              </div>
             </div>
           </div>
         </section>
 
         <section
           data-mini-section="services"
-          className="bg-[#ece8dd] px-6 py-14"
+          className="bg-[#17382e] px-6 py-12 text-white"
           style={{ containerType: "inline-size" }}
         >
           <div className="mx-auto max-w-7xl">
             <div className="max-w-4xl">
-              <SectionEyebrow>Servicii</SectionEyebrow>
-              <SectionTitle mobile={mobile}>
-                Design, interfețe și asset-uri pentru branduri digitale.
-              </SectionTitle>
-              <p className="mt-5 max-w-2xl text-sm leading-7 text-[#4b5563]">
-                {mini.servicesText ||
-                  "De la identitate vizuală la website-uri responsive, fiecare livrabil este construit pentru claritate, consistență și utilizare reală."}
+              <p className="text-xs font-black uppercase tracking-[0.08em] text-[#fbbf24]">
+                Meniu
+              </p>
+
+              <h2
+                className="mt-4 font-black leading-tight tracking-[-0.04em]"
+                style={{
+                  fontSize: mobile
+                    ? "clamp(2.2rem, 10cqw, 3rem)"
+                    : "clamp(2.7rem, 5cqw, 4.4rem)",
+                  wordBreak: "normal",
+                  overflowWrap: "normal",
+                  hyphens: "none",
+                }}
+              >
+                Fresh bowls, pregătite rapid și ușor de comandat.
+              </h2>
+
+              <p className="mt-5 max-w-2xl text-sm leading-7 text-white/65">
+                {mini.menuText}
               </p>
             </div>
 
@@ -771,221 +795,101 @@ export default function PersonalSiteMockup({ mini, contentRef, isMobile }) {
               style={{
                 gridTemplateColumns: mobile
                   ? "1fr"
-                  : "repeat(4, minmax(0, 1fr))",
+                  : "repeat(auto-fit, minmax(15rem, 1fr))",
               }}
             >
-              {services.slice(0, 4).map((item, index) => (
-                <ServiceCard key={item.title} item={item} index={index} />
+              {menuItems.map((item, index) => (
+                <MenuCard key={item.title} item={item} index={index} />
               ))}
             </div>
           </div>
         </section>
 
-        <section
-          data-mini-section="about"
-          className="bg-white px-6 py-14"
-          style={{ containerType: "inline-size" }}
-        >
-          <div
-            className="mx-auto grid max-w-7xl gap-8"
-            style={{
-              gridTemplateColumns: mobile
-                ? "1fr"
-                : "minmax(18rem,0.78fr) minmax(0,1.22fr)",
-            }}
-          >
-            <aside className="min-w-0 border border-[#111111]/10 bg-[#f7f3e8] p-6">
-              <div className="mb-7 flex items-center gap-4">
-                <span className="grid h-16 w-16 shrink-0 place-items-center bg-[#111111] text-2xl font-black text-[#f4c430] shadow-[6px_6px_0_#2563eb]">
-                  {getInitials(mini.brand)}
-                </span>
-                <div className="min-w-0">
-                  <p className="truncate text-lg font-black text-[#111111]">
-                    {mini.brand}
-                  </p>
-                  <p className="mt-1 truncate text-xs font-bold uppercase tracking-[0.08em] text-[#64748b]">
-                    {mini.subtitle}
-                  </p>
-                </div>
-              </div>
-
-              <h2 className="text-4xl font-black tracking-[-0.06em] text-[#111111]">
-                {mini.about?.title || "Hello."}
-              </h2>
-              <p className="mt-5 text-sm leading-7 text-[#4b5563]">
-                {mini.about?.text}
-              </p>
-
-              <div className="mt-7 grid gap-3">
-                <div className="border border-[#111111]/10 bg-white p-4">
-                  <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-[#2563eb]">
-                    Educație
-                  </p>
-                  <p className="mt-1 text-sm font-black text-[#111111]">
-                    {mini.about?.education || "Design & frontend"}
-                  </p>
-                </div>
-                <div className="border border-[#111111]/10 bg-white p-4">
-                  <p className="text-[0.65rem] font-black uppercase tracking-[0.08em] text-[#2563eb]">
-                    Experiență
-                  </p>
-                  <p className="mt-1 text-sm font-black text-[#111111]">
-                    {mini.about?.experience || "5+ ani experiență"}
-                  </p>
-                </div>
-              </div>
-            </aside>
-
-            <div className="min-w-0">
-              <SectionEyebrow>Proces & experiență</SectionEyebrow>
-              <SectionTitle mobile={mobile}>
-                Un flux clar, de la idee la livrare.
-              </SectionTitle>
-
-              <div
-                className="mt-8 grid gap-4"
-                style={{
-                  gridTemplateColumns: mobile
-                    ? "1fr"
-                    : "repeat(3, minmax(0, 1fr))",
-                }}
-              >
-                {process.slice(0, 3).map((item, index) => (
-                  <ProcessCard key={item.title} item={item} index={index} />
-                ))}
-              </div>
-
-              <div
-                className="mt-8 grid gap-5"
-                style={{
-                  gridTemplateColumns: mobile
-                    ? "1fr"
-                    : "minmax(0,0.95fr) minmax(16rem,0.65fr)",
-                }}
-              >
-                <div className="grid gap-3 border-l border-[#111111]/10 pl-4">
-                  {timeline.slice(0, 3).map((item, index) => (
-                    <TimelineItem key={item.role} item={item} index={index} />
-                  ))}
-                </div>
-
-                <div className="border border-[#111111]/10 bg-[#111111] p-5 text-white">
-                  <p className="text-xs font-black uppercase tracking-[0.08em] text-[#f4c430]">
-                    Skillset
-                  </p>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {mini.skills?.map((skill) => (
-                      <span
-                        key={skill}
-                        className="border border-white/10 bg-white/10 px-3 py-2 text-[0.65rem] font-black uppercase tracking-[0.06em] text-white/80"
-                      >
-                        {skill}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section className="bg-[#f7f3e8] px-6 py-14">
-          <div
-            className="mx-auto grid max-w-7xl gap-5"
-            style={{
-              gridTemplateColumns: mobile
-                ? "1fr"
-                : "minmax(0,0.7fr) minmax(0,1fr)",
-            }}
-          >
-            <div>
-              <SectionEyebrow>Feedback</SectionEyebrow>
-              <SectionTitle mobile={mobile}>
-                Colaborări clare, livrări curate și rezultate vizibile.
-              </SectionTitle>
-            </div>
-
-            <div
-              className="grid gap-4"
-              style={{
-                gridTemplateColumns: mobile
-                  ? "1fr"
-                  : "repeat(2, minmax(0, 1fr))",
-              }}
-            >
-              {reviews.slice(0, 2).map((review) => (
-                <ReviewCard key={review.name} review={review} />
-              ))}
-            </div>
-          </div>
-        </section>
+        <CommunitySection mini={mini} reviews={reviews} mobile={mobile} />
 
         <section
           data-mini-section="contact"
-          className="relative overflow-hidden bg-[#111111] px-6 py-14 text-white"
+          className={
+            mobile
+              ? "relative overflow-hidden bg-[#dc2626] px-5 py-10 text-white"
+              : "relative overflow-hidden bg-[#dc2626] px-6 py-12 text-white"
+          }
           style={{ containerType: "inline-size" }}
         >
-          <div className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full border-[44px] border-[#f4c430]/65" />
-          <div className="pointer-events-none absolute -bottom-20 left-8 h-52 w-52 bg-[#2563eb]/55" />
-
-          <div
-            className="relative z-10 mx-auto grid max-w-7xl gap-8"
-            style={{
-              gridTemplateColumns: mobile
-                ? "1fr"
-                : "minmax(0,0.95fr) minmax(18rem,0.75fr)",
-            }}
-          >
-            <div className="min-w-0">
-              <SectionEyebrow light>Contact</SectionEyebrow>
-              <SectionTitle mobile={mobile} light>
-                {mini.contactTitle || "Hai să construim ceva memorabil."}
-              </SectionTitle>
-              <p className="mt-5 max-w-xl text-sm leading-7 text-white/70">
-                {mini.contactText ||
-                  "Scrie-mi pentru identitate vizuală, website-uri, interfețe sau materiale digitale. Răspund rapid cu pașii următori."}
-              </p>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                <a
-                  href={`mailto:${mini.contact?.email || "hello@alexnova.ro"}`}
-                  className="inline-flex items-center gap-2 bg-[#f4c430] px-5 py-4 text-xs font-black uppercase tracking-[0.06em] text-[#111111]"
-                >
-                  Trimite email
-                  <ArrowRight size={15} />
-                </a>
-                <button
-                  type="button"
-                  onClick={() => scrollToSection(contentRef, "projects")}
-                  className="inline-flex items-center gap-2 border border-white/15 bg-white/10 px-5 py-4 text-xs font-black uppercase tracking-[0.06em] text-white"
-                >
-                  Vezi proiecte
-                  <BriefcaseBusiness size={15} />
-                </button>
-              </div>
-            </div>
-
-            <ContactPanel mini={mini} mobile={mobile} />
-          </div>
-        </section>
-
-        <footer className="border-t border-[#111111]/10 bg-[#ece8dd] px-6 py-5">
           <div
             className={
               mobile
-                ? "mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[#4b5563]"
-                : "mx-auto flex max-w-7xl items-center justify-between gap-6 text-xs text-[#4b5563]"
+                ? "pointer-events-none absolute -right-20 -top-20 h-44 w-44 rounded-full border-[28px] border-[#fbbf24]/40"
+                : "absolute -right-16 -top-16 h-52 w-52 rounded-full border-[32px] border-[#fbbf24]/60"
+            }
+          />
+          <div
+            className={
+              mobile
+                ? "pointer-events-none absolute -bottom-24 left-4 h-44 w-44 rounded-full bg-[#f97316]/30"
+                : "absolute -bottom-20 left-8 h-52 w-52 rounded-full bg-[#f97316]/40"
+            }
+          />
+
+          <div
+            className={
+              mobile
+                ? "relative z-10 mx-auto grid max-w-7xl gap-5"
+                : "relative z-10 mx-auto grid max-w-7xl gap-8 lg:grid-cols-2 lg:items-start"
             }
           >
-            <p>© 2026 {mini.brand}. Portfolio personal.</p>
+            <div className="min-w-0">
+              <p className="text-xs font-black uppercase tracking-[0.08em] text-[#fbbf24]">
+                Contact
+              </p>
+
+              <div className="mt-7 grid gap-3">
+                <ContactItem
+                  mobile={mobile}
+                  icon={Mail}
+                  label="Email"
+                  value={mini.contact?.email || "rezervari@hieubowl.ro"}
+                />
+
+                <ContactItem
+                  mobile={mobile}
+                  icon={Phone}
+                  label="Telefon"
+                  value={mini.contact?.phone || "+40 700 555 666"}
+                />
+
+                <ContactItem
+                  mobile={mobile}
+                  icon={MapPin}
+                  label="Adresă"
+                  value={mini.contact?.address || "Centrul vechi, Brașov"}
+                />
+              </div>
+            </div>
+
+            <ContactScheduleBlock mini={mini} mobile={mobile} />
+          </div>
+        </section>
+
+        <footer className="border-t border-[#17382e]/12 bg-[#fffaf1] px-6 py-5">
+          <div
+            className={
+              mobile
+                ? "mx-auto flex max-w-7xl flex-col gap-3 text-xs text-[#64748b]"
+                : "mx-auto flex max-w-7xl items-center justify-between gap-6 text-xs text-[#64748b]"
+            }
+          >
+            <p>© 2024 {mini.brand}. Toate drepturile rezervate.</p>
+
             <div className="flex flex-wrap gap-4">
               <span className="inline-flex items-center gap-2">
-                <UserRound size={14} />
-                {mini.subtitle}
+                <Sparkles size={14} />
+                Fresh bowls
               </span>
+
               <span className="inline-flex items-center gap-2">
-                <Award size={14} />
-                Selected work
+                <Utensils size={14} />
+                Asian food
               </span>
             </div>
           </div>

@@ -483,12 +483,30 @@ export default function ShopSiteMockup({ mini, contentRef, isMobile }) {
                 lookbook
               </div>
 
-              <div className="absolute bottom-6 left-6 right-6 border border-white/15 bg-white/10 p-5 text-white backdrop-blur">
+              <div
+                className={
+                  mobile
+                    ? "absolute bottom-4 left-4 right-4 border border-white/15 bg-black/45 p-4 text-white backdrop-blur-md"
+                    : "absolute bottom-6 left-6 right-6 border border-white/15 bg-white/10 p-5 text-white backdrop-blur"
+                }
+              >
                 <p className="text-[0.68rem] font-black uppercase tracking-[0.12em] text-[#a3e635]">
                   styling guide
                 </p>
 
-                <h3 className="mt-3 text-4xl font-black uppercase leading-[0.9] tracking-[-0.05em]">
+                <h3
+                  className={
+                    mobile
+                      ? "mt-3 max-w-full text-[1.45rem] font-black uppercase leading-[0.95] tracking-[-0.035em]"
+                      : "mt-3 text-4xl font-black uppercase leading-[0.9] tracking-[-0.05em]"
+                  }
+                  style={{
+                    wordBreak: "normal",
+                    overflowWrap: "normal",
+                    hyphens: "none",
+                    textWrap: "balance",
+                  }}
+                >
                   hoodie, crossbody bag, loose denim și sneakers all black.
                 </h3>
               </div>

@@ -68,7 +68,7 @@ function getProjectDeliverables(project) {
 
 function PortfolioCardPreview({ project }) {
   return (
-    <div className="relative h-44 overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/50 p-3 md:h-64 md:rounded-[1.7rem]">
+    <div className="relative isolate h-52 overflow-hidden rounded-[1.35rem] border border-white/10 bg-black/50 p-3 md:h-[16rem] md:rounded-[1.7rem]">
       <div
         className={`absolute inset-0 bg-gradient-to-br ${project.theme?.glowFrom || "from-white/20"
           } ${project.theme?.glowVia || "via-white/10"} to-transparent opacity-70`}
@@ -84,7 +84,7 @@ function PortfolioCardPreview({ project }) {
           }`}
       />
 
-      <div className="relative h-full transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.03]">
+      <div className="relative h-full min-h-0 min-w-0 transition-transform duration-500 group-hover:-translate-y-1 group-hover:scale-[1.02]">
         <PortfolioBrowserFrame project={project} size="card" device="desktop" />
       </div>
 
@@ -105,7 +105,7 @@ function PortfolioListCard({ project, onOpen, compact = false }) {
       type="button"
       onClick={() => onOpen(project)}
       aria-label={`Deschide studiul de caz ${project.title}`}
-      className={`group rounded-[1.55rem] border border-white/10 bg-white/[0.035] p-3 text-left transition-transform duration-300 will-change-transform hover:-translate-y-2 hover:bg-white/[0.05] md:rounded-[2rem] md:p-4 ${
+      className={`group min-w-0 overflow-hidden rounded-[1.55rem] border border-white/10 bg-white/[0.035] p-3 text-left transition-transform duration-300 will-change-transform hover:-translate-y-2 hover:bg-white/[0.05] md:rounded-[2rem] md:p-4 ${
         compact ? "w-full" : ""
       }`}
     >

@@ -13,11 +13,28 @@ import {
 import { siteConfig } from "../data/siteConfig";
 import logo from "../assets/logo_wtb.png";
 
+function getIsPortraitViewport() {
+  if (typeof window === "undefined") return false;
+
+  const width = window.visualViewport?.width || window.innerWidth;
+  const height = window.visualViewport?.height || window.innerHeight;
+
+  const isPortraitBySize = height >= width;
+  const isPortraitByMedia = window.matchMedia?.(
+    "(orientation: portrait)"
+  )?.matches;
+
+  return isPortraitBySize || isPortraitByMedia;
+}
+
 function Navbar({ onOpenContact }) {
   const [open, setOpen] = useState(false);
   const [contactMenuOpen, setContactMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState("#home");
+  const [isPortraitViewport, setIsPortraitViewport] = useState(() =>
+    getIsPortraitViewport()
+  );
 
   const contactMenuRef = useRef(null);
 
@@ -39,6 +56,33 @@ function Navbar({ onOpenContact }) {
   const whatsappNumber = phoneDigits.startsWith("40")
     ? phoneDigits
     : `4${phoneDigits}`;
+
+  /*
+    Regula finală:
+    - portrait = logo compact mereu;
+    - landscape = logo se poate extinde la scroll.
+  */
+  const logoExpanded = scrolled && !isPortraitViewport;
+
+  useEffect(() => {
+    function updateViewportMode() {
+      setIsPortraitViewport(getIsPortraitViewport());
+    }
+
+    updateViewportMode();
+
+    window.addEventListener("resize", updateViewportMode);
+    window.addEventListener("orientationchange", updateViewportMode);
+    window.visualViewport?.addEventListener("resize", updateViewportMode);
+    window.visualViewport?.addEventListener("scroll", updateViewportMode);
+
+    return () => {
+      window.removeEventListener("resize", updateViewportMode);
+      window.removeEventListener("orientationchange", updateViewportMode);
+      window.visualViewport?.removeEventListener("resize", updateViewportMode);
+      window.visualViewport?.removeEventListener("scroll", updateViewportMode);
+    };
+  }, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -238,32 +282,27 @@ function Navbar({ onOpenContact }) {
         <a
           href="/"
           onClick={handleLogoClick}
-          className={`group flex h-16 items-center overflow-hidden rounded-full border border-white/10 bg-black/55 text-white/55 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.08] hover:text-white ${
-            scrolled
-              ? "w-16 px-2 sm:w-[270px] sm:px-2.5"
-              : "w-16 px-2"
-          }`}
+          style={{
+            width: logoExpanded ? "270px" : "64px",
+            minWidth: logoExpanded ? "270px" : "64px",
+            maxWidth: logoExpanded ? "270px" : "64px",
+          }}
+          className="group flex h-16 items-center overflow-hidden rounded-full border border-white/10 bg-black/55 px-2 text-white/55 shadow-[0_18px_70px_rgba(0,0,0,0.35)] backdrop-blur-2xl transition-[width,min-width,max-width,background-color,color] duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] hover:bg-white/[0.08] hover:text-white"
           aria-label="Mergi sus pe pagină"
         >
           <span className="relative z-20 flex h-12 w-12 shrink-0 items-center justify-center overflow-visible rounded-full">
             <img
               src={logo}
               alt="A Squared Studio"
-              className={`object-contain transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                scrolled ? "h-10 w-10" : "h-9 w-9 sm:h-10 sm:w-10"
-              }`}
+              className="h-9 w-9 object-contain transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:h-10 sm:w-10"
             />
           </span>
 
-         <span
-           className={`brand-font hidden whitespace-nowrap pl-3 text-[22px] leading-none tracking-normal text-[#FFFFFF] transition-all duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] sm:block ${
-           scrolled
-          ? "max-w-[100px] translate-x-0 translate-y-[3px] opacity-100"
-          : "max-w-0 -translate-x-8 opacity-0"
-          }`}
-          >
-             A Squared Studio
-        </span>
+          {logoExpanded ? (
+            <span className="brand-font block whitespace-nowrap pl-3 text-[22px] leading-none tracking-normal text-white">
+              A Squared Studio
+            </span>
+          ) : null}
         </a>
 
         <div
@@ -295,6 +334,7 @@ function Navbar({ onOpenContact }) {
                   <p className="text-xs uppercase tracking-[0.28em] text-white/30">
                     Contact rapid
                   </p>
+
                   <p className="mt-2 text-sm leading-6 text-white/50">
                     Alege metoda potrivită pentru a discuta rapid despre
                     proiect.
@@ -314,6 +354,7 @@ function Navbar({ onOpenContact }) {
                       <span className="block text-sm font-semibold text-white">
                         Email
                       </span>
+
                       <span className="block text-xs text-white/40">
                         {email}
                       </span>
@@ -334,6 +375,7 @@ function Navbar({ onOpenContact }) {
                       <span className="block text-sm font-semibold text-white">
                         WhatsApp
                       </span>
+
                       <span className="block text-xs text-white/40">
                         {phone}
                       </span>
@@ -352,6 +394,7 @@ function Navbar({ onOpenContact }) {
                       <span className="block text-sm font-semibold text-white">
                         Telefon
                       </span>
+
                       <span className="block text-xs text-white/40">
                         Sună direct
                       </span>
@@ -367,6 +410,7 @@ function Navbar({ onOpenContact }) {
                       <span className="block text-sm font-semibold">
                         Deschide formularul
                       </span>
+
                       <span className="block text-xs text-black/55">
                         Pentru o cerere mai detaliată
                       </span>
