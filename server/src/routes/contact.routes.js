@@ -9,15 +9,6 @@ import { contactSchema } from "../validators/contact.schema.js";
 
 const router = express.Router();
 
-// POST /api/contact
-// Primește formularul din ContactDrawer.
-// Flux:
-// 1. validează datele;
-// 2. blochează spamul prin honeypot;
-// 3. verifică acceptul GDPR;
-// 4. salvează cererea în PostgreSQL;
-// 5. dacă există consimțământ analytics, marchează conversia;
-// 6. trimite email către firmă.
 router.post(
   "/",
   contactLimiter,
@@ -26,8 +17,6 @@ router.post(
     const data = req.validatedBody;
 
     // Honeypot anti-spam.
-    // Câmpul "website" nu este vizibil pentru utilizator.
-    // Dacă este completat, probabil este bot.
     if (data.website) {
       return res.json({
         success: true,
@@ -35,7 +24,7 @@ router.post(
       });
     }
 
-    // GDPR obligatoriu pentru formular.
+    // GDPR obligatoriu
     if (!data.gdprAccepted) {
       return res.status(400).json({
         success: false,
@@ -43,7 +32,6 @@ router.post(
       });
     }
 
-    // Analytics/context se salvează doar dacă utilizatorul a acceptat analytics.
     const hasAnalyticsConsent = Boolean(data.consentAnalytics);
 
     const analyticsData = hasAnalyticsConsent
@@ -64,10 +52,7 @@ router.post(
           utmTerm: null,
         };
 
-    // Salvăm cererea în baza de date.
-    // Date personale: nume, email, telefon, mesaj.
-    // Nu salvăm IP/userAgent aici pentru minimizarea datelor.
-    // Dacă vrei să le salvezi pentru securitate/anti-spam, menționează clar în Privacy Policy.
+    // 1. Salvăm cererea în baza de date
     const submission = await prisma.contactSubmission.create({
       data: {
         name: data.name,
@@ -94,7 +79,7 @@ router.post(
       },
     });
 
-    // Marcăm sesiunea ca fiind convertită doar dacă există consimțământ analytics.
+    // 2. Marcăm conversia analytics
     if (hasAnalyticsConsent && analyticsData.sessionId) {
       await prisma.analyticsSession.updateMany({
         where: {
@@ -128,40 +113,27 @@ router.post(
       });
     }
 
-    try {
-      await sendContactEmail(submission);
+    // 3. RĂSPUNDEM IMEDIAT CLIENTULUI (Trimite instant în Frontend!)
+    res.json({
+      success: true,
+      message: "Cererea a fost trimisă cu succes.",
+    });
 
-      await prisma.contactSubmission.update({
-        where: {
-          id: submission.id,
-        },
-        data: {
-          emailSent: true,
-          emailError: null,
-        },
+    // 4. TRIMITEREA EMAIL-ULUI SE FACE ÎN FUNDAL (fără `await` care să blocheze)
+    sendContactEmail(submission)
+      .then(async () => {
+        await prisma.contactSubmission.update({
+          where: { id: submission.id },
+          data: { emailSent: true, emailError: null },
+        });
+      })
+      .catch(async (error) => {
+        console.error("Eroare trimitere email pe fundal:", error);
+        await prisma.contactSubmission.update({
+          where: { id: submission.id },
+          data: { emailSent: false, emailError: error.message },
+        });
       });
-
-      return res.json({
-        success: true,
-        message: "Cererea a fost trimisă cu succes.",
-      });
-    } catch (error) {
-      await prisma.contactSubmission.update({
-        where: {
-          id: submission.id,
-        },
-        data: {
-          emailSent: false,
-          emailError: error.message,
-        },
-      });
-
-      return res.json({
-        success: true,
-        message:
-          "Cererea a fost salvată. Emailul nu a putut fi trimis momentan, dar datele sunt înregistrate.",
-      });
-    }
   })
 );
 
