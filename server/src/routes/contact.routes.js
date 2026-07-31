@@ -1,7 +1,8 @@
 import express from "express";
 
 import { prisma } from "../lib/prisma.js";
-import { sendContactEmail } from "../lib/mailer.js";
+// 1. Importăm AMBELE funcții din mailer.js
+import { sendContactEmail, sendConfirmationEmail } from "../lib/mailer.js";
 import { validate } from "../middleware/validate.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 import { contactLimiter } from "../middleware/rateLimiters.js";
@@ -113,11 +114,15 @@ router.post(
       });
     }
 
-    // 3. Trimitem email-ul FOLOSIND AWAIT pentru a nu lăsa Vercel să ucidă funcția
+    // 3. Trimitem email-urile (Notificare spre voi + Confirmare cu template spre client)
     try {
+      // Trimite mailul normal către voi (pe Outlook)
       await sendContactEmail(submission);
       
-      // Dacă a trecut de rândul de mai sus, mailul s-a trimis cu succes!
+      // Trimite mailul cu template de confirmare către client
+      await sendConfirmationEmail(submission);
+      
+      // Dacă ambele s-au trimis cu succes!
       await prisma.contactSubmission.update({
         where: { id: submission.id },
         data: { emailSent: true, emailError: null },
@@ -130,7 +135,6 @@ router.post(
       });
 
     } catch (error) {
-      // Dacă Brevo dă o eroare (ex. parolă greșită), o prindem aici și o vedem în Logs!
       console.error("Eroare critică la trimiterea email-ului:", error);
       
       await prisma.contactSubmission.update({
@@ -138,8 +142,6 @@ router.post(
         data: { emailSent: false, emailError: error.message },
       });
 
-      // Răspundem clientului cu succes, deoarece datele lui 
-      // s-au salvat în baza de date, deși notificarea internă a picat.
       return res.json({
         success: true, 
         message: "Cererea a fost înregistrată cu succes.",

@@ -10,7 +10,7 @@ function escapeHtml(value = "") {
     .replaceAll("'", "&#039;");
 }
 
-// Trimite email folosind Brevo REST API (Ultra-rapid pe Vercel)
+// 1. Emailul care vine la FIRMĂ (pe Outlook) - Normal, cu datele din formular
 export async function sendContactEmail(submission) {
   const safe = {
     name: escapeHtml(submission.name),
@@ -18,21 +18,21 @@ export async function sendContactEmail(submission) {
     phone: escapeHtml(submission.phone || "-"),
     selectedPlan: escapeHtml(submission.selectedPlan || "-"),
     message: escapeHtml(submission.message),
+    gdprAccepted: submission.gdprAccepted ? "Acceptat" : "Neacceptat",
   };
 
-  // Structura cerută de API-ul Brevo
   const payload = {
     sender: {
       name: "A Squared Studio",
-      email: "contact@asquaredstudio.ro", // Adresa confirmată!
+      email: "contact@asquaredstudio.ro",
     },
     to: [
       {
-        email: env.COMPANY_EMAIL,
+        email: env.COMPANY_EMAIL, // Vine la voi pe Outlook
       },
     ],
     replyTo: {
-      email: submission.email,
+      email: submission.email, // Poți da Reply direct clientului
     },
     subject: `Cerere ofertă website - ${safe.selectedPlan}`,
     htmlContent: `
@@ -45,18 +45,15 @@ export async function sendContactEmail(submission) {
       <p><strong>Mesaj:</strong></p>
       <p>${safe.message.replaceAll("\n", "<br />")}</p>
       <hr />
-      <p><strong>GDPR:</strong> ${
-        submission.gdprAccepted ? "Acceptat" : "Neacceptat"
-      }</p>
+      <p><strong>GDPR:</strong> ${safe.gdprAccepted}</p>
     `,
   };
 
-  // Facem o cerere HTTP simplă, care durează o fracțiune de secundă
   const response = await fetch("https://api.brevo.com/v3/smtp/email", {
     method: "POST",
     headers: {
       "accept": "application/json",
-      "api-key": env.BREVO_API_KEY, // Cheia pe care o pui în Vercel
+      "api-key": env.BREVO_API_KEY,
       "content-type": "application/json",
     },
     body: JSON.stringify(payload),
@@ -64,7 +61,49 @@ export async function sendContactEmail(submission) {
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(`Eroare Brevo API: ${JSON.stringify(errorData)}`);
+    throw new Error(`Eroare Brevo API (Admin): ${JSON.stringify(errorData)}`);
+  }
+
+  return await response.json();
+}
+
+// 2. Emailul de confirmare care pleacă spre CLIENT - Folosește Template din Brevo
+export async function sendConfirmationEmail(submission) {
+  const safe = {
+    name: escapeHtml(submission.name),
+    selectedPlan: escapeHtml(submission.selectedPlan || "servicii web"),
+  };
+
+  const payload = {
+    sender: {
+      name: "A Squared Studio",
+      email: "contact@asquaredstudio.ro",
+    },
+    to: [
+      {
+        email: submission.email, // Se duce la client
+      },
+    ],
+    templateId: 2, // Înlocuiește cu ID-ul șablonului tău din Brevo creat pentru client
+    params: {
+      name: safe.name,
+      selectedPlan: safe.selectedPlan,
+    },
+  };
+
+  const response = await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "accept": "application/json",
+      "api-key": env.BREVO_API_KEY,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(`Eroare Brevo API (Client): ${JSON.stringify(errorData)}`);
   }
 
   return await response.json();
