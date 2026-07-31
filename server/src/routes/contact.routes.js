@@ -113,27 +113,38 @@ router.post(
       });
     }
 
-    // 3. RĂSPUNDEM IMEDIAT CLIENTULUI (Trimite instant în Frontend!)
-    res.json({
-      success: true,
-      message: "Cererea a fost trimisă cu succes.",
-    });
-
-    // 4. TRIMITEREA EMAIL-ULUI SE FACE ÎN FUNDAL (fără `await` care să blocheze)
-    sendContactEmail(submission)
-      .then(async () => {
-        await prisma.contactSubmission.update({
-          where: { id: submission.id },
-          data: { emailSent: true, emailError: null },
-        });
-      })
-      .catch(async (error) => {
-        console.error("Eroare trimitere email pe fundal:", error);
-        await prisma.contactSubmission.update({
-          where: { id: submission.id },
-          data: { emailSent: false, emailError: error.message },
-        });
+    // 3. Trimitem email-ul FOLOSIND AWAIT pentru a nu lăsa Vercel să ucidă funcția
+    try {
+      await sendContactEmail(submission);
+      
+      // Dacă a trecut de rândul de mai sus, mailul s-a trimis cu succes!
+      await prisma.contactSubmission.update({
+        where: { id: submission.id },
+        data: { emailSent: true, emailError: null },
       });
+
+      // 4. RĂSPUNDEM CLIENTULUI LA FINAL
+      return res.json({
+        success: true,
+        message: "Cererea a fost trimisă cu succes.",
+      });
+
+    } catch (error) {
+      // Dacă Brevo dă o eroare (ex. parolă greșită), o prindem aici și o vedem în Logs!
+      console.error("Eroare critică la trimiterea email-ului:", error);
+      
+      await prisma.contactSubmission.update({
+        where: { id: submission.id },
+        data: { emailSent: false, emailError: error.message },
+      });
+
+      // Răspundem clientului cu succes, deoarece datele lui 
+      // s-au salvat în baza de date, deși notificarea internă a picat.
+      return res.json({
+        success: true, 
+        message: "Cererea a fost înregistrată cu succes.",
+      });
+    }
   })
 );
 
