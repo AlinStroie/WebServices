@@ -6,6 +6,8 @@ import Home from "./pages/HomeReplica";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import FormSuccess from "./pages/FormSuccess";
+import Discovery from "./pages/Discovery";
+import CaptureMockup from "./pages/CaptureMockup";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import NotFound from "./pages/NotFound";
 import CookiePolicy from "./pages/CookiePolicy";
@@ -34,6 +36,13 @@ function App() {
 
         <Route path="/blog" element={<Blog />} />
         <Route path="/blog/:slug" element={<BlogPost />} />
+
+        <Route path="/discovery" element={<Discovery />} />
+
+        {/* Dev-only surface for recording showcase videos. Not built in prod. */}
+        {import.meta.env.DEV && (
+          <Route path="/__capture/:id" element={<CaptureMockup />} />
+        )}
 
         <Route path="/succes" element={<FormSuccess />} />
 

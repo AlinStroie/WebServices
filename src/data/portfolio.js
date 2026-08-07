@@ -101,6 +101,7 @@ function createProject({
   mockupType = "default",
   features,
   miniSite,
+  video = null,
   caseStudy = defaultCaseStudy,
   deliverables = defaultDeliverables,
 }) {
@@ -118,6 +119,10 @@ function createProject({
     caseStudy,
     deliverables,
     miniSite,
+    // Showcase clip (recorded from our own mockup via scripts/record-mockups.mjs).
+    // Swap for a real client screen-recording later; VideoShowcase renders it
+    // automatically. See docs/PLACEHOLDERS-TO-PREPARE.md #3.
+    video,
   };
 }
 
@@ -135,6 +140,7 @@ export const portfolio = [
       "Layout responsive pentru mobil și desktop",
     ],
     miniSite: kinetoMiniSite,
+    video: "/showcase/kineto.webm",
   }),
   createProject({
     id: "beauty",
@@ -149,6 +155,7 @@ export const portfolio = [
       "Layout premium pentru telefon și desktop",
     ],
     miniSite: beautyMiniSite,
+    video: "/showcase/beauty.webm",
   }),
   createProject({
     id: "transport",
@@ -162,6 +169,7 @@ export const portfolio = [
       "Design corporate responsive",
     ],
     miniSite: transportMiniSite,
+    video: "/showcase/transport.webm",
   }),
   createProject({
     id: "restaurant",
@@ -175,6 +183,7 @@ export const portfolio = [
       "Design responsive pentru mobil",
     ],
     miniSite: restaurantMiniSite,
+    video: "/showcase/restaurant.webm",
   }),
   createProject({
     id: "personal",
@@ -188,6 +197,7 @@ export const portfolio = [
       "Contact rapid pentru colaborări",
     ],
     miniSite: personalMiniSite,
+    video: "/showcase/personal.webm",
   }),
   createProject({
     id: "shop",
@@ -201,5 +211,6 @@ export const portfolio = [
       "Design responsive pentru cumpărători",
     ],
     miniSite: shopMiniSite,
+    video: "/showcase/shop.webm",
   }),
 ];
