@@ -1,6 +1,7 @@
 import { Quote } from "lucide-react";
 
 import Reveal from "./Reveal";
+import { testimonials } from "../../data/testimonials";
 
 /**
  * Two-column card grid occupying the reference's testimonials slot.
@@ -9,37 +10,14 @@ import Reveal from "./Reveal";
  * gaps, inset by one column at xl so the grid sits narrower than the rest
  * of the page, standard translateY(100px) reveal per card).
  *
- * The CONTENT is deliberately not testimonials. We have no client quotes
- * cleared for publication, and inventing them — or reusing the reference
- * site's — would be fabricated social proof about a real business.
- * These are our actual working principles instead.
- *
- * TO SWAP IN REAL TESTIMONIALS: replace `principles` with an array of
- * { text, name, role } and render name/role in the footer of each card.
- * The layout needs no other change.
+ * Content lives in src/data/testimonials.js. Each entry renders as a
+ * working principle by default; the moment its `name` is filled in, the
+ * same card renders as a real testimonial with an author footer. We do
+ * not fabricate client quotes, so placeholders ship author-less.
  */
-const principles = [
-  {
-    text: "Structura vine înaintea decorului. Dacă vizitatorul nu găsește informația, nu contează cât de bine arată pagina.",
-    label: "Principiu de lucru",
-  },
-  {
-    text: "Mobile-first, nu mobile-după. Peste jumătate din trafic vine de pe telefon, deci acolo se decide dacă site-ul funcționează.",
-    label: "Principiu de lucru",
-  },
-  {
-    text: "Fără librării încărcate degeaba. Fiecare kilobyte trimis către utilizator trebuie să își merite locul.",
-    label: "Principiu de lucru",
-  },
-  {
-    text: "Site-ul rămâne al tău. Textele stau în fișiere simple, ușor de editat, fără să depinzi de noi pentru fiecare virgulă.",
-    label: "Principiu de lucru",
-  },
-];
-
 function Principles() {
   return (
-    <section className="relative z-30 w-full overflow-clip bg-[color:var(--color-surface)]">
+    <section className="grad-light relative z-30 w-full overflow-clip">
       <div className="relative z-10 mx-auto grid w-full max-w-[1366px] gap-24 px-6 py-40 sm:px-8">
         <div className="grid gap-6">
           <p className="eyebrow text-[color:var(--color-copy-muted)]">
@@ -53,8 +31,8 @@ function Principles() {
 
         <div className="grid gap-10 xl:grid-cols-12">
           <div className="grid gap-10 md:grid-cols-2 xl:col-span-10 xl:col-start-2">
-            {principles.map((item, index) => (
-              <Reveal key={item.text} delay={(index % 2) * 0.08}>
+            {testimonials.map((item, index) => (
+              <Reveal key={item.quote} delay={(index % 2) * 0.08}>
                 <figure className="relative grid h-full gap-y-6 overflow-hidden rounded-2xl bg-white/60 p-8 backdrop-blur-sm">
                   <Quote
                     size={28}
@@ -63,12 +41,34 @@ function Principles() {
                   />
 
                   <blockquote className="text-lg leading-relaxed text-[color:var(--color-ink)]">
-                    {item.text}
+                    {item.quote}
                   </blockquote>
 
-                  <figcaption className="text-sm text-[color:var(--color-copy-muted)]">
-                    {item.label}
-                  </figcaption>
+                  {item.name ? (
+                    <figcaption className="mt-auto flex items-center gap-3">
+                      {item.avatar && (
+                        <img
+                          src={item.avatar}
+                          alt={item.name}
+                          className="h-10 w-10 shrink-0 rounded-full object-cover"
+                        />
+                      )}
+                      <span className="grid">
+                        <span className="text-sm font-semibold text-[color:var(--color-ink)]">
+                          {item.name}
+                        </span>
+                        <span className="text-sm text-[color:var(--color-copy-muted)]">
+                          {[item.role, item.company]
+                            .filter(Boolean)
+                            .join(", ")}
+                        </span>
+                      </span>
+                    </figcaption>
+                  ) : (
+                    <figcaption className="text-sm text-[color:var(--color-copy-muted)]">
+                      {item.label}
+                    </figcaption>
+                  )}
                 </figure>
               </Reveal>
             ))}
