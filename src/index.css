@@ -1,5 +1,14 @@
 @import "tailwindcss";
 
+/* Self-hosted Inter — the reference ships Inter 400/500/600/700 as woff2
+   rather than relying on a system fallback. Matching that removes a real
+   fidelity gap: system "Inter" silently falls back to Helvetica/Arial on
+   most machines, which throws off every measured letter-spacing value. */
+@import "@fontsource/inter/400.css";
+@import "@fontsource/inter/500.css";
+@import "@fontsource/inter/600.css";
+@import "@fontsource/inter/700.css";
+
 :root {
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", sans-serif;
@@ -256,7 +265,7 @@ body {
   --color-surface: #c9d3d7;
   --color-surface-2: #dfe6e9;
   --color-accent: #10b981;
-  --color-brand: #2f4bff;
+  --color-brand: #2c2cf3;
   --color-copy-on-dark: #a3aabf;
   --color-copy-subtle-on-dark: #8491ab;
   --color-copy-muted: #53628d;
@@ -276,6 +285,21 @@ body {
   line-height: 1;
   letter-spacing: -0.05em;
   font-weight: 700;
+}
+
+/* Serif italic accent inside a sans display heading.
+   The reference literally sets Times New Roman italic against Inter Bold
+   at the same size — the contrast between a tight geometric sans and a
+   loose old-style serif is doing most of the work in that headline.
+   Serif italics run optically smaller, hence the 1.06em bump, and they
+   need positive tracking because the display class sets -0.05em. */
+.replica .accent-serif {
+  font-family: "Times New Roman", Times, Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 1.06em;
+  letter-spacing: -0.01em;
+  padding-right: 0.04em;
 }
 
 .replica .eyebrow {
@@ -391,11 +415,244 @@ body {
   }
 }
 
+/* ---- Nav link hover: text-clip roll ----
+   The label is rendered twice inside a 1.25rem-tall clip; hovering
+   translates the wrapper up by exactly one line so the copy below
+   arrives as the original leaves. Same construction as the reference. */
+.text-clip {
+  overflow: hidden;
+  height: 1.25rem;
+  display: block;
+}
+
+.text-wrapper {
+  display: flex;
+  flex-direction: column;
+  transform: translateY(0);
+  will-change: transform;
+  transition: transform 0.4s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.text-wrapper > span {
+  height: 1.25rem;
+  line-height: 1.25rem;
+  display: block;
+}
+
+.text-roll:hover .text-wrapper,
+.text-roll:focus-visible .text-wrapper {
+  transform: translateY(-1.25rem);
+}
+
+/* ---- Section rail: circle collapses, pill expands ----
+   Collapsed is a 2.5rem square with the label display:none; active
+   expands to a padded pill and reveals the label. */
+.rail-item {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  border-radius: 999px;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.rail-item[aria-expanded="false"] {
+  width: 2.5rem;
+  aspect-ratio: 1 / 1;
+  justify-content: center;
+  padding: 0;
+}
+
+.rail-item[aria-expanded="false"] .rail-text {
+  display: none;
+}
+
+.rail-item[aria-expanded="true"] {
+  padding: 0.5rem 1rem;
+}
+
+/* ---- Slideout menu: overlay fade + panel in from the left ---- */
+@keyframes replica-overlay-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes replica-slide-in-left {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(0); }
+}
+
+.slideout-overlay {
+  animation: replica-overlay-fade 0.3s ease-out forwards;
+}
+
+.slideout-menu {
+  display: flex;
+  flex-direction: column;
+  height: 100dvh;
+  overscroll-behavior: contain;
+  transform: translateX(-100%);
+  animation: replica-slide-in-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* ---- Ambient gradient fields ----
+   The reference never paints a flat colour: every surface carries a soft
+   off-axis gradient plus one or two large, very low-opacity radial
+   blooms. That is what stops big blocks of one colour reading as dead. */
+.grad-dark {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(1200px 600px at 15% -10%, rgba(47, 75, 255, 0.16), transparent 60%),
+    radial-gradient(900px 500px at 95% 10%, rgba(16, 185, 129, 0.1), transparent 55%),
+    linear-gradient(152deg, rgba(54, 66, 93, 0.55) 0%, rgba(23, 27, 39, 0) 62%);
+}
+
+.grad-light {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(1000px 520px at 12% 0%, rgba(255, 255, 255, 0.75), transparent 58%),
+    radial-gradient(760px 420px at 88% 12%, rgba(47, 75, 255, 0.09), transparent 55%),
+    linear-gradient(168deg, rgba(255, 255, 255, 0.5) 0%, rgba(201, 211, 215, 0) 55%);
+}
+
+.grad-white {
+  background-color: #fff;
+  background-image:
+    radial-gradient(900px 460px at 50% -12%, rgba(47, 75, 255, 0.07), transparent 60%),
+    radial-gradient(700px 400px at 100% 100%, rgba(16, 185, 129, 0.06), transparent 55%);
+}
+
+/* ---- Hero composition ----
+   The reference hero reads premium because of layered depth: a soft
+   corner colour bloom (its "apple glass" wash), a real subject floated
+   over it, a giant outlined numeral behind, and a ghosted caption band.
+   We rebuild that composition with our OWN product mockup as the subject
+   (real UI, not a placeholder box) and a corner bloom in our palette. */
+
+/* The pink -> lavender -> periwinkle wash the reference blooms out of the
+   lower-left. Low opacity, large radius; it is atmosphere, not a shape. */
+.hero-bloom {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 46% at 8% 104%, rgba(232, 150, 205, 0.55), transparent 66%),
+    radial-gradient(46% 40% at 30% 108%, rgba(180, 170, 255, 0.5), transparent 62%),
+    radial-gradient(60% 48% at 62% 118%, rgba(120, 150, 255, 0.32), transparent 60%),
+    radial-gradient(70% 60% at 96% 8%, rgba(255, 255, 255, 0.7), transparent 58%);
+}
+
+/* Giant stroked numeral sitting behind the subject. Outline only, so the
+   subject reads in front of it exactly like the reference's "15". */
+.hero-numeral {
+  font-weight: 700;
+  line-height: 0.8;
+  letter-spacing: -0.04em;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(23, 27, 39, 0.28);
+  text-stroke: 1.5px rgba(23, 27, 39, 0.28);
+  user-select: none;
+}
+
+/* Ghosted, wide-tracked caption band under the subject ("years of
+   experience" in the reference). */
+.hero-ghost {
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: lowercase;
+  color: rgba(255, 255, 255, 0.72);
+  user-select: none;
+}
+
+/* Floated product mockup: soft, layered, premium shadow + faint ring, a
+   slight tilt so it reads as an object in space rather than a flat panel. */
+.hero-product {
+  border-radius: 20px;
+  box-shadow:
+    0 2px 4px rgba(23, 27, 39, 0.04),
+    0 24px 48px -12px rgba(23, 27, 39, 0.28),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset;
+  outline: 1px solid rgba(255, 255, 255, 0.5);
+  transform: rotate(-1.2deg);
+  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hero-product:hover {
+  transform: rotate(0deg) translateY(-4px);
+}
+
+/* Overlapping avatar proof row. Placeholder avatars are crafted gradient
+   discs with initials; swap `src` in for real 300x300 headshots later. */
+.hero-avatar {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  border: 2px solid var(--color-surface);
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #fff;
+  margin-left: -0.7rem;
+  box-shadow: 0 1px 2px rgba(23, 27, 39, 0.12);
+}
+
+.hero-avatar:first-child {
+  margin-left: 0;
+}
+
+/* ---- Drifting image strip (problem statement) ---- */
+@keyframes replica-drift {
+  to { transform: translateX(-50%); }
+}
+
+.drift-row {
+  display: flex;
+  gap: 10px;
+  min-width: max-content;
+  animation: replica-drift 60s linear infinite;
+}
+
+.drift-row--reverse {
+  animation-direction: reverse;
+  animation-duration: 75s;
+}
+
+/* ---- Video thumbnail overlay ---- */
+.video-thumb__overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  transition: background 0.3s ease;
+}
+
+.video-thumb:hover .video-thumb__overlay {
+  background: rgba(0, 0, 0, 0.4);
+}
+
 /* Reduced motion: kill the infinite ambient animations outright. */
 @media (prefers-reduced-motion: reduce) {
   .replica-marquee__track,
   .replica-glow::before,
-  .replica-glow::after {
+  .replica-glow::after,
+  .drift-row,
+  .slideout-menu,
+  .slideout-overlay {
     animation: none !important;
+  }
+
+  .slideout-menu {
+    transform: none;
+  }
+
+  .text-wrapper {
+    transition: none;
   }
 }
