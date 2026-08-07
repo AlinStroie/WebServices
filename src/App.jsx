@@ -1,6 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 
-import Home from "./pages/Home";
+// Replica build. The previous design lives on in ./pages/Home — swap the
+// "/" route back to it to roll this out in one line.
+import Home from "./pages/HomeReplica";
 import Blog from "./pages/Blog";
 import BlogPost from "./pages/BlogPost";
 import FormSuccess from "./pages/FormSuccess";
