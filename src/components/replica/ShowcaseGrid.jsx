@@ -90,13 +90,13 @@ function ShowcaseGrid() {
     target: ref,
     offset: ["start end", "end start"],
   });
-  const driftRight = useTransform(scrollYProgress, [0, 1], [0, 80]);
-  const driftLeft = useTransform(scrollYProgress, [0, 1], [0, -80]);
-  const rowX = [driftRight, driftLeft, driftRight];
-
-  // A per-row starting shift so the three rows stagger instead of stacking
-  // in a perfect grid (matches the reference's offset look).
-  const rowInset = [0, -60, -30];
+  // The rows drift in opposite directions with scroll, but the translation is
+  // kept NON-NEGATIVE so no tile is ever pulled left of the collage's start —
+  // the left edge stays flush (uncut), the text is never overlapped, and only
+  // the far right runs off-screen where the section clips it at the viewport.
+  const driftA = useTransform(scrollYProgress, [0, 1], [0, 40]);
+  const driftB = useTransform(scrollYProgress, [0, 1], [40, 0]);
+  const rowX = [driftA, driftB, driftA];
 
   const [preview, setPreview] = useState(null); // { tile, x, y }
 
@@ -105,16 +105,12 @@ function ShowcaseGrid() {
   }
 
   return (
-    <div ref={ref} className="my-8 space-y-[10px] overflow-hidden">
+    <div ref={ref} className="my-8 space-y-[10px]">
       {rows.map((tiles, r) => (
         <motion.div
           key={r}
           className="flex min-w-max gap-[10px] will-change-transform"
-          style={
-            reduceMotion
-              ? { marginLeft: rowInset[r] }
-              : { x: rowX[r], marginLeft: rowInset[r] }
-          }
+          style={reduceMotion ? undefined : { x: rowX[r] }}
         >
           {tiles.map((tile) => (
             <button
