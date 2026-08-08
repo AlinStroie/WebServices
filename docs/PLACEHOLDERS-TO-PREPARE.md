@@ -17,7 +17,7 @@ Last updated: 2026-08-07 (updated per section as the rebuild proceeds).
 | 1 | 🔴 Floated **kineto mockup** in hero | A **cut-out portrait** (you/team) OR a signature product shot | ~1290×1978, `.webp`, transparent or clean bg | `Hero.jsx` — replaces the mockup; unlocks the giant outlined numeral + ghost caption layers too |
 | 2 | 🔴 **Gradient-disc avatars** (initials) in hero + testimonials | 6+ **real headshots** | 300×300 min, `.webp` | `Hero.jsx` avatars → add `src`; `data/testimonials.js` → `avatar` |
 | 3 | 🟢 ~~Static mockups~~ → **now our own recorded mockup videos** (`public/showcase/*.webm`) | Optional: **real client screen-recordings** to replace them | 1600px+ wide, muted, looping, `.webm` (+`.mp4` if you have ffmpeg) | `data/portfolio.js` → point `video:` at the new file. Re-record ours: `node scripts/record-mockups.mjs` |
-| 4 | 🟠 **Gradient tiles** in the drifting strip | ~16 **project screenshots** | 1024×768, `.webp` | `DriftingStrip.jsx` tiles → `<img>` |
+| 4 | 🟠 **Browser-frame mock tiles** in the ProblemStatement collage (`ShowcaseGrid`) | **12 real website screenshots** | 512×384 (2:1.5), `.webp` — the hover preview shows them at 2× | `data/showcaseGrid.js` → add `src: "/showcase/grid/<name>.webp"` to each tile; `SiteThumb` swaps the mock for the image automatically |
 
 ## Tier 2 — content (needed for structural parity, no fabrication)
 

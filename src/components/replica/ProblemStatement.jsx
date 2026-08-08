@@ -1,64 +1,89 @@
-import Reveal from "./Reveal";
+import { Link } from "react-router-dom";
+import { ArrowUpRight, CircleCheck } from "lucide-react";
 
-const points = [
-  "Site-uri care arată bine, dar nu explică nimic despre ce faci.",
-  "Structură încâlcită, în care vizitatorul nu găsește ce caută.",
-  "Pagini lente, care se încarcă greu pe telefon.",
-  "Formulare care nu funcționează sau ajung în spam.",
+import ShowcaseGrid from "./ShowcaseGrid";
+
+// Checklist mirrors the reference's four promises, in A Squared's voice.
+const checklist = [
+  "Captează atenția în sub 3 secunde",
+  "Construiesc credibilitate instantaneu",
+  "Au un design unic, adaptat brandului tău",
+  "Oferă o experiență fluidă, ca o aplicație",
 ];
 
 /**
- * The section that performs the hero wipe.
+ * ProblemStatement — rebuilt 1:1 on the reference's first section.
  *
- * `z-20` + a fully opaque background are the two properties that make it
- * work — it has to genuinely cover the pinned hero, not blend with it.
- * The hard light -> dark switch does most of the visual work here; the
- * section itself has no entrance animation at all.
+ * This is also the section that performs the hero wipe: `z-20` + a fully
+ * opaque dark background are what let it cover the pinned, fading hero
+ * rather than blend with it, so both must stay.
+ *
+ * Left: a gradient-clipped headline with a Times-italic accent, muted body
+ * copy (#a3aabf), a green-checked list, and the brand CTA. There are no
+ * entrance animations on the text — the reference keeps it static.
+ *
+ * Right: ShowcaseGrid — three scroll-drifting rows of site thumbnails with
+ * a cursor-following 2× hover preview. It bleeds off the right edge, clipped
+ * by the section's overflow.
  */
 function ProblemStatement() {
   return (
     <section
       id="despre"
-      className="relative z-20 w-full shrink-0 overflow-clip bg-[color:var(--color-ink)]"
+      className="grad-dark relative z-20 w-full shrink-0 overflow-clip"
     >
-      <div className="mx-auto w-full max-w-[1366px] px-6 py-32 sm:px-8 lg:py-40">
-        <div className="relative grid gap-8 md:gap-10 lg:grid-cols-2">
-          <div className="flex flex-col justify-between">
-            <div className="measure grid gap-12">
-              <p className="eyebrow text-[color:var(--color-copy-subtle-on-dark)]">
-                Problema
-              </p>
+      <div className="mx-auto w-full max-w-[1366px] px-6 py-28 sm:px-8 lg:py-36">
+        <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
+          {/* Left — copy */}
+          <div className="max-w-[36rem]">
+            <h2 className="display title-gradient text-[clamp(2.25rem,5.2vw,4rem)]">
+              Site-ul tău <span className="accent-serif">costă</span> clienți în
+              fiecare zi?
+            </h2>
 
-              <h2 className="display text-[clamp(2rem,5vw,4rem)] text-white">
-                Majoritatea site-urilor nu pierd clienți din design.
-              </h2>
-            </div>
-          </div>
-
-          <div className="grid gap-8 self-center">
-            <p className="measure-tight text-lg text-[color:var(--color-copy-on-dark)]">
-              Le pierd din structură. Informația e acolo, dar nu în ordinea în
-              care omul o caută — așa că închide pagina înainte să ajungă la
-              partea care conta.
+            <p className="mt-8 text-base leading-6 text-[color:var(--color-copy-on-dark)]">
+              Dacă site-ul tău nu reflectă calitatea muncii tale, alungă exact
+              clienții pe care îi meriți.
             </p>
 
-            <ul className="grid gap-4">
-              {points.map((point) => (
-                <li
-                  key={point}
-                  className="flex gap-4 border-t border-[color:var(--color-divider-on-dark)] pt-4 text-[color:var(--color-copy-on-dark)]"
-                >
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--color-accent)]" />
-                  <span>{point}</span>
+            <p className="mt-6 text-base leading-6 text-[color:var(--color-copy-on-dark)]">
+              Construim site-uri care:
+            </p>
+
+            <ul className="mt-6 grid gap-3">
+              {checklist.map((item) => (
+                <li key={item} className="flex items-center gap-2">
+                  <CircleCheck
+                    size={18}
+                    className="shrink-0 text-[color:var(--color-accent)]"
+                  />
+                  <span className="text-base text-white">{item}</span>
                 </li>
               ))}
             </ul>
 
-            <Reveal>
-              <p className="text-lg font-medium text-white">
-                Noi începem de la structură, nu de la decor.
-              </p>
-            </Reveal>
+            <p className="mt-8 text-base leading-6 text-[color:var(--color-copy-on-dark)]">
+              Un site generic te costă mai mult decât crezi: credibilitate,
+              conversii și oportunități. Un site construit pe măsura brandului și
+              a publicului tău lucrează 24/7 ca să-ți crească autoritatea și
+              să-ți aducă mai mulți clienți.
+            </p>
+
+            <Link
+              to="/discovery"
+              className="group mt-10 inline-flex w-fit items-center gap-2 rounded-full bg-[color:var(--color-brand)] px-6 py-3 text-sm font-medium text-white transition-transform duration-300 hover:scale-[1.03]"
+            >
+              Consultanță gratuită
+              <ArrowUpRight
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+              />
+            </Link>
+          </div>
+
+          {/* Right — scroll-drifting screenshot collage, bleeding off-edge */}
+          <div className="lg:-mr-[10vw]">
+            <ShowcaseGrid />
           </div>
         </div>
       </div>
