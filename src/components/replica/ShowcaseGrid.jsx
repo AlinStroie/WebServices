@@ -139,17 +139,19 @@ function ShowcaseGrid() {
 
 /**
  * The 2× cursor-following preview, portaled to <body> so the section's
- * overflow-clip never crops it. It floats up-and-right of the cursor, then
- * flips to the opposite side when it would leave the viewport.
+ * overflow-clip never crops it. It floats to the left of the cursor, then
+ * flips to the right only when it would clip off the left edge.
  */
 function HoverPreview({ tile, x, y }) {
   const W = 512;
   const H = 384;
   const pad = 16;
 
-  let left = x + pad;
-  if (left + W > window.innerWidth - pad) left = x - W - pad;
-  left = Math.max(pad, left);
+  // Prefer the left of the cursor; fall back to the right only if it would
+  // clip off the left edge.
+  let left = x - W - pad;
+  if (left < pad) left = x + pad;
+  left = Math.min(left, window.innerWidth - W - pad);
 
   let top = y - H / 2;
   top = Math.max(pad, Math.min(top, window.innerHeight - H - pad));
