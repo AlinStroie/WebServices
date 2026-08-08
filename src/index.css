@@ -407,11 +407,17 @@ body {
 @property --replica-usp-glow-angle {
   syntax: "<angle>";
   inherits: false;
-  initial-value: 132deg;
+  initial-value: 0deg;
 }
 
+/* Explicit 0%->100% (not just "to") so every loop restart continues from
+   360deg back to 0deg — the same angle, so the restart is seamless instead
+   of snapping back to the @property initial-value. */
 @keyframes replica-usp-glow-spin {
-  to {
+  0% {
+    --replica-usp-glow-angle: 0deg;
+  }
+  100% {
     --replica-usp-glow-angle: 360deg;
   }
 }

@@ -50,7 +50,7 @@ function ServiceCards() {
                     highlighted ? "replica-usp-glow" : ""
                   }`}
                 >
-                  <div className="relative flex h-full min-h-[23.75rem] flex-col gap-4 overflow-hidden rounded-2xl border border-[#36425d] bg-[#171b27] p-8 transition-[transform,box-shadow,border-color] duration-300 hover:-translate-y-1 hover:border-[#4c5a73] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4)]">
+                  <div className="relative flex h-full min-h-[23.75rem] flex-col gap-4 overflow-hidden rounded-2xl border border-[#36425d] bg-[#171b27] p-8 transition-[translate,box-shadow,border-color] duration-500 ease-out hover:-translate-y-1 hover:border-[#4c5a73] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4)]">
                     <h3 className="text-[34px] font-bold leading-tight text-white">
                       {usp.title}
                     </h3>
