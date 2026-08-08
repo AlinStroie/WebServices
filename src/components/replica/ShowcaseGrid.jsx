@@ -109,7 +109,16 @@ function ShowcaseGrid() {
       {rows.map((tiles, r) => (
         <motion.div
           key={r}
-          className="flex min-w-max gap-[10px] will-change-transform"
+          className={`flex min-w-max gap-[10px] will-change-transform ${
+            // Brick-stagger: the middle row reads half a tile (+gap) further
+            // left than rows 1 & 3. Rather than pull row 2 left (which would
+            // slide it under the copy), we push rows 1 & 3 right — same
+            // relative offset, but nothing ever moves toward the text, so
+            // there's no overlap at any width. Rows 1 & 3 just bleed a touch
+            // more off the right edge. Only from lg up, where the collage is
+            // beside the copy.
+            r !== 1 ? "lg:ml-[133px]" : ""
+          }`}
           style={reduceMotion ? undefined : { x: rowX[r] }}
         >
           {tiles.map((tile) => (
