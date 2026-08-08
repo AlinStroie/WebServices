@@ -297,8 +297,11 @@ body {
   font-family: "Times New Roman", Times, Georgia, serif;
   font-style: italic;
   font-weight: 400;
-  font-size: 1.06em;
-  letter-spacing: -0.01em;
+  /* Reference measures the italic accent at 1.2x the Inter run (86.4px on a
+     72px h1), not merely optically matched — the serif is deliberately the
+     largest thing in the headline. */
+  font-size: 1.2em;
+  letter-spacing: -0.03em;
   padding-right: 0.04em;
 }
 
@@ -585,19 +588,19 @@ body {
 /* Overlapping avatar proof row. Placeholder avatars are crafted gradient
    discs with initials; swap `src` in for real 300x300 headshots later. */
 .hero-avatar {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3rem;
+  height: 3rem;
   border-radius: 9999px;
-  border: 2px solid var(--color-surface);
+  border: 2px solid #ffffff;
   object-fit: cover;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   font-weight: 600;
   color: #fff;
-  margin-left: -0.7rem;
-  box-shadow: 0 1px 2px rgba(23, 27, 39, 0.12);
+  margin-left: -0.85rem;
+  box-shadow: 0 1px 2px rgba(23, 27, 39, 0.14);
 }
 
 .hero-avatar:first-child {

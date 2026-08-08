@@ -1,20 +1,29 @@
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { Link } from "react-router-dom";
-import { ArrowUpRight, Check, Star } from "lucide-react";
+import { ArrowUpRight, CircleCheck, Star } from "lucide-react";
 
 import SplitText from "./SplitText";
 import PortfolioBrowserFrame from "../PortfolioBrowserFrame";
 import { portfolio } from "../../data/portfolio";
 
-const proofPoints = ["Design curat", "Livrare rapidă", "Optimizat mobil"];
+// Reference checkmark row, translated. Same three promises as the reference
+// ("Build Customer Trust / Drive Organic Traffic / Maximize Conversions").
+const proofPoints = [
+  "Construiește încredere",
+  "Atrage trafic organic",
+  "Maximizează conversiile",
+];
 
 /**
- * Placeholder proof avatars.
- *
- * The reference floats a row of real client headshots here. We have no
- * cleared photos, so each avatar is a crafted gradient disc with initials.
- * TO SWAP IN REAL PEOPLE: add `src: "/team/ana.webp"` to an entry and it
- * renders as an <img>; the initials disc is the fallback.
+ * Placeholder proof avatars — the reference floats a row of 7 real client
+ * headshots at 48px. We have no cleared photos, so each is a crafted
+ * gradient disc with initials. Add `src: "/team/ana.webp"` to render a real
+ * image instead. See docs/PLACEHOLDERS-TO-PREPARE.md #2.
  */
 const avatars = [
   { initials: "AM", from: "#2c2cf3", to: "#7a5cff" },
@@ -23,24 +32,36 @@ const avatars = [
   { initials: "SV", from: "#f59e0b", to: "#f7c56b" },
   { initials: "MC", from: "#2c2cf3", to: "#4c86ff" },
   { initials: "LT", from: "#6366f1", to: "#a78bfa" },
+  { initials: "GA", from: "#0ea5e9", to: "#6ee7f0" },
 ];
 
 const featured = portfolio[0];
 
 /**
- * Sticky hero.
+ * Sticky hero with a scroll-linked fade.
  *
  * The wrapper carries `mb-[-100svh]` and the section is `sticky top-0`, so
- * the next section is pulled up by exactly one viewport height and scrolls
- * OVER the pinned hero. Pure CSS — no scroll listener.
+ * the next section is pulled up by one viewport and scrolls OVER the pinned
+ * hero. On top of that, the reference hero does NOT sit statically behind a
+ * cover — it fades and recedes as you scroll: its whole content drops from
+ * opacity 1 -> 0 and scale 1 -> ~0.93 across the first ~700px of page scroll,
+ * revealing the light ground behind it (the "whiteish fog"). We drive that
+ * with useScroll on the page and map scrollY onto opacity + scale.
  *
- * Composition mirrors the reference's layered depth: a soft corner colour
- * bloom (its "apple glass" wash), a real subject floated over it, a giant
- * outlined numeral behind, and a ghosted caption band. Our subject is our
- * OWN product mockup (real UI), not a placeholder box.
+ * Composition mirrors the reference: soft corner colour bloom, a floated
+ * subject (our own product mockup — real UI), translated checkmark row, and
+ * the avatars │ stars + trust-line block.
  */
 function Hero() {
   const reduceMotion = useReducedMotion();
+
+  // Scroll fade mapped to real page distance: opacity reaches 0 by 640px and
+  // scale eases to 0.93 by 720px, so the hero gradually fogs out and recedes,
+  // gone by the time the next (opaque) section scrolls over the pin.
+  const { scrollY } = useScroll();
+  const opacity = useTransform(scrollY, [0, 640], [1, 0]);
+  const scale = useTransform(scrollY, [0, 720], [1, 0.93]);
+
   const fade = (delay) =>
     reduceMotion
       ? {}
@@ -60,7 +81,10 @@ function Hero() {
         {/* Atmospheric corner bloom — behind everything. */}
         <div className="hero-bloom" aria-hidden="true" />
 
-        <div className="relative z-10 mx-auto h-full w-full max-w-[1366px] px-6 sm:px-8">
+        <motion.div
+          className="relative z-10 mx-auto h-full w-full max-w-[1366px] px-6 sm:px-8"
+          style={reduceMotion ? undefined : { opacity, scale }}
+        >
           <div className="grid h-full items-center gap-12 md:grid-cols-6 lg:grid-cols-12">
             <div className="col-span-full grid gap-10 pt-12 md:col-span-6 lg:col-span-7 lg:gap-14 lg:pt-0">
               <div className="grid gap-8">
@@ -83,11 +107,11 @@ function Hero() {
                 >
                   {proofPoints.map((point) => (
                     <li key={point} className="flex items-center gap-2">
-                      <Check
-                        size={16}
+                      <CircleCheck
+                        size={17}
                         className="text-[color:var(--color-accent)]"
                       />
-                      <span className="text-[color:var(--color-ink)]/80">
+                      <span className="text-[color:var(--color-ink)]/85">
                         {point}
                       </span>
                     </li>
@@ -107,8 +131,10 @@ function Hero() {
                   />
                 </Link>
 
-                {/* Social proof: avatar row + stars, mirroring the reference. */}
-                <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+                {/* Social proof, laid out like the reference: overlapping
+                    avatars │ a thin divider │ stars stacked over the trust
+                    line. */}
+                <div className="flex items-center gap-4">
                   <div className="flex" aria-hidden="true">
                     {avatars.map((a) =>
                       a.src ? (
@@ -132,8 +158,13 @@ function Hero() {
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3">
-                    <div className="flex" aria-hidden="true">
+                  <span
+                    className="h-10 w-px bg-[color:var(--color-ink)]/15"
+                    aria-hidden="true"
+                  />
+
+                  <div className="grid gap-1.5">
+                    <div className="flex gap-0.5" aria-hidden="true">
                       {[0, 1, 2, 3, 4].map((i) => (
                         <Star
                           key={i}
@@ -142,8 +173,8 @@ function Hero() {
                         />
                       ))}
                     </div>
-                    <p className="text-sm text-[color:var(--color-copy-muted)]">
-                      Proiecte livrate pentru afaceri locale
+                    <p className="text-sm text-[color:var(--color-ink)]">
+                      Servicii de web design de încredere
                     </p>
                   </div>
                 </div>
@@ -152,11 +183,8 @@ function Hero() {
 
             {/*
               Right subject. The reference bleeds a cut-out portrait here; we
-              have no such asset, so we float one of our OWN product mockups
-              (real UI) over the bloom. Swap the mockup for a portrait `.webp`
-              cut-out later — the bloom layer stays. (A giant outlined numeral
-              only reads behind a transparent cut-out, not a solid mockup, so
-              it is intentionally omitted until a real portrait exists.)
+              float one of our OWN product mockups (real UI) over the bloom.
+              Swap for a portrait `.webp` cut-out later.
             */}
             <motion.div
               className="relative col-span-full hidden self-center md:col-span-6 lg:col-span-5 lg:block"
@@ -167,7 +195,7 @@ function Hero() {
               </div>
             </motion.div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* Scroll room for the pin — without it the sticky hero has no travel
