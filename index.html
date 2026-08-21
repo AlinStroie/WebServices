@@ -19,6 +19,18 @@
     <link rel="icon" type="image/png" href="/src/assets/logo_wtb.png" />
     <link rel="canonical" href="https://example.com/" />
 
+    <!-- Hero video is the first thing the user sees; without this the file
+         only starts downloading once React mounts and the in-view observer
+         fires, which is well after HTML parse. Preloading here starts the
+         fetch immediately, in parallel with the JS bundle. -->
+    <link
+      rel="preload"
+      as="video"
+      href="/hero/hero-video.mp4"
+      type="video/mp4"
+      fetchpriority="high"
+    />
+
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="A Squared Studio" />
     <meta property="og:title" content="A Squared Studio" />
@@ -76,16 +88,52 @@
       }
 
       .loader-logo {
-       display: flex;
-      justify-content: center;
-      align-items: center;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 120px;
+        height: 120px;
+      }
+
+      /* Same brand blue / accent green as the rest of the site
+         (--color-brand / --color-accent in src/index.css) — the loader is
+         the first thing painted, before that stylesheet is parsed, so the
+         values are inlined here rather than referenced. */
+      .loader-ring {
+        position: absolute;
+        inset: 0;
+        border-radius: 9999px;
+        border: 2px solid rgba(44, 44, 243, 0.25);
+        border-top-color: #10b981;
+        animation: loader-spin 0.9s linear infinite;
+      }
+
+      .loader-logo img {
+        width: 64px;
+        height: auto;
+        position: relative;
+        z-index: 1;
+      }
+
+      @keyframes loader-spin {
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       .loader-text {
         font-family: Inter, system-ui, sans-serif;
-        font-size: 25px;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.65);
+        font-size: 15px;
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.55);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .loader-ring {
+          animation: none;
+        }
       }
     </style>
   </head>
@@ -94,7 +142,8 @@
     <div id="initial-loader">
       <div class="loader-card">
         <div class="loader-logo">
-          <img src="/src/assets/logo_wtb.png" alt="Logo" style="width: 120px; height: auto;" />
+          <div class="loader-ring" aria-hidden="true"></div>
+          <img src="/src/assets/logo_wtb.png" alt="Logo" />
         </div>
         <div class="loader-text">Se încarcă experiența...</div>
       </div>

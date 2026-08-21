@@ -5,7 +5,7 @@ export const siteConfig = {
     name: "A Squared Studio",
     shortName: "A² Studio",
     logoLetter: "A²",
-    tagline: "Website-uri moderne pentru afaceri care vor să crească online.",
+    tagline: "Site-uri de excepție, construite de o echipă care transformă vizitatori în clienți fideli.",
   },
 
   contact: {
@@ -43,9 +43,9 @@ export const siteConfig = {
     defaultTitle: "A Squared Studio",
     titleTemplate: "%s | A Squared Studio",
     description:
-      "Creare site-uri de prezentare, landing page-uri și portofolii responsive pentru afaceri care vor o imagine profesională online.",
+      "Agenție de web design din Brașov — echipa noastră construiește site-uri de prezentare, landing page-uri și magazine online care transformă vizitatorii în clienți.",
     keywords:
-      "creare site web, site de prezentare, landing page, web design, portofoliu, SEO basic, mentenanță website",
+      "agenție web design, creare site web, site de prezentare, landing page, web design Brașov, portofoliu, SEO, mentenanță website",
     ogImage: "/banner site.svg",
   },
 
