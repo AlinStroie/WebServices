@@ -157,6 +157,30 @@ seeded into the new `CaseStudy` table as the first row (status PUBLISHED,
 featured true) via a one-off seed script (`server/prisma/seedCaseStudies.js`,
 replacing `importBlogPosts.js`), so nothing is lost.
 
+## Addendum: analytics `BLOG_VIEW` rename
+
+Discovered while mapping files for the implementation plan: the
+`AnalyticsEventType` enum's `BLOG_VIEW` value is woven through analytics,
+not just the Blog pages themselves —
+
+- `server/prisma/schema.prisma` — `AnalyticsEventType.BLOG_VIEW`
+- `server/src/routes/analytics.routes.js:14` — in the public event-type
+  allow-list
+- `server/src/routes/admin/analytics.routes.js` — aggregates `BLOG_VIEW`
+  into `blogViews` totals/timeseries (lines 24, 66, 143, 245, 297, 341, 358)
+- `src/lib/analytics.js:127` — `trackBlogView(slug)` helper
+- `src/pages/admin/AdminAnalytics.jsx` — a stat card and a chart series keyed
+  on `blogViews`
+
+Since Blog is being fully retired, this gets renamed end-to-end rather than
+left dangling: `BLOG_VIEW` → `CASE_STUDY_VIEW`, `trackBlogView` →
+`trackCaseStudyView`, `blogViews` → `caseStudyViews` in both the admin
+aggregation route and the `AdminAnalytics.jsx` stat card/chart. This is
+baseline correctness for retiring Blog (an event type and two UI elements
+that only exist because Blog did), not part of the admin dashboard redesign
+(spec B) — it keeps analytics honest rather than reporting a metric with no
+underlying content.
+
 ## Testing
 
 - Backend: exercise public + admin route handlers against the new schema
