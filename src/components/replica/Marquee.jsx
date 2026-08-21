@@ -9,6 +9,9 @@ import { clients } from "../../data/clients";
  * src/data/clients.js: entries with a `logo` path render as an <img>,
  * entries without one render as their text `label`. Default placeholders
  * are text-only — nothing borrowed, nothing implied.
+ *
+ * Edge fade is `.replica-marquee`'s mask-image in index.css, not here —
+ * it has to live on the overflow:hidden element itself.
  */
 function Marquee() {
   const track = (key) => (
@@ -24,6 +27,8 @@ function Marquee() {
               src={client.logo}
               alt={client.label}
               className="h-8 w-auto object-contain opacity-80"
+              loading="lazy"
+              decoding="async"
             />
           ) : (
             client.label
@@ -34,8 +39,12 @@ function Marquee() {
   );
 
   return (
-    <section className="grad-dark relative grid gap-20 py-20">
-      <div className="replica-marquee mx-auto w-full max-w-[1366px]">
+    <section className="relative grid gap-20 bg-[color:var(--color-ink)] py-20">
+      <h2 className="title-gradient mx-auto max-w-[24ch] px-6 text-center text-[clamp(1.25rem,0.9545rem+1.2727vw,2rem)] font-normal leading-[1.2]">
+        Web Design Premium în România: Soluții Complete, Livrate de o Echipă Dedicată
+      </h2>
+
+      <div className="replica-marquee mx-auto w-full max-w-[1600px]">
         {track("a")}
         {track("b")}
       </div>

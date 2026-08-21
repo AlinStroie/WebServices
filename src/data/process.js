@@ -1,7 +1,7 @@
 export const processSteps = [
   {
     number: "01",
-    title: "Clarificăm direcția proiectului",
+    title: "Clarificăm direcția, împreună",
     shortText:
       "Începem prin a înțelege ce trebuie să transmită site-ul și ce rezultat vrei să obții.",
     tag: "Brief",
@@ -9,7 +9,7 @@ export const processSteps = [
     hoverPoints: ["obiectiv clar", "public țintă", "direcție vizuală"],
     details: {
       intro:
-        "Înainte de design sau dezvoltare, stabilim scopul real al site-ului: ce trebuie să comunice, cui se adresează și ce acțiune trebuie să facă vizitatorul.",
+        "Echipa noastră începe prin a înțelege exact ce trebuie să transmită site-ul tău, cui se adresează și ce rezultat concret vrei să obții.",
       points: [
         "analizăm tipul afacerii și serviciile oferite",
         "stabilim publicul țintă și nevoile lui",
@@ -31,7 +31,7 @@ export const processSteps = [
     hoverPoints: ["pagini logice", "CTA-uri clare", "traseu simplu"],
     details: {
       intro:
-        "Un site bun nu înseamnă doar design. Structura trebuie să conducă vizitatorul natural de la prima impresie până la contact, programare sau cerere de ofertă.",
+        "Un site bun nu înseamnă doar design frumos. Structura trebuie să ghideze vizitatorul, fără fricțiune, de la prima impresie până la contact, programare sau cerere de ofertă.",
       points: [
         "definim paginile și secțiunile necesare",
         "ordonăm informația în funcție de importanță",
@@ -53,7 +53,7 @@ export const processSteps = [
     hoverPoints: ["layout premium", "stil coerent", "UI curat"],
     details: {
       intro:
-        "Designul este gândit să transmită încredere și profesionalism, dar și să ajute utilizatorul să înțeleagă rapid ce oferi.",
+        "Fiecare decizie de design e gândită să transmită încredere și profesionalism instant, și să ajute vizitatorul să înțeleagă în secunde ce oferi.",
       points: [
         "stabilim stilul vizual general",
         "alegem culori, fonturi și spațiere potrivite",
@@ -75,7 +75,7 @@ export const processSteps = [
     hoverPoints: ["responsive", "performanță", "editare ușoară"],
     details: {
       intro:
-        "Site-ul este construit organizat, astfel încât textele, secțiunile și informațiile importante să poată fi modificate rapid.",
+        "Site-ul este construit curat și organizat, astfel încât textele, secțiunile și informațiile importante să poată fi actualizate rapid, oricând ai nevoie.",
       points: [
         "dezvoltăm interfața finală",
         "separăm datele importante în fișiere ușor de editat",
@@ -97,7 +97,7 @@ export const processSteps = [
     hoverPoints: ["test mobil", "verificări finale", "publicare"],
     details: {
       intro:
-        "Înainte ca site-ul să fie publicat, verificăm zonele importante pentru ca experiența utilizatorului să fie cât mai clară și stabilă.",
+        "Înainte de lansare, echipa noastră verifică fiecare detaliu — pentru o experiență impecabilă, clară și stabilă, din prima secundă.",
       points: [
         "testăm site-ul pe desktop, tabletă și telefon",
         "verificăm linkurile, butoanele și formularul de contact",
@@ -119,7 +119,7 @@ export const processSteps = [
     hoverPoints: ["modificări", "mentenanță", "îmbunătățiri"],
     details: {
       intro:
-        "Un site nu trebuie să rămână blocat în forma inițială. Pe măsură ce afacerea evoluează, pot fi adăugate secțiuni, texte, servicii sau funcționalități noi.",
+        "Un site nu rămâne niciodată blocat în forma inițială. Pe măsură ce afacerea ta crește, echipa noastră adaugă secțiuni, texte, servicii sau funcționalități noi.",
       points: [
         "actualizăm texte, imagini sau informații",
         "adăugăm secțiuni noi atunci când este nevoie",

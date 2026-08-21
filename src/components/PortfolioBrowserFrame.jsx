@@ -100,7 +100,7 @@ function getProjectPreviewImage(project = {}) {
   return null;
 }
 
-function StaticCardPreview({ project }) {
+export function StaticCardPreview({ project }) {
   const [imageFailed, setImageFailed] = useState(false);
   const previewImage = useMemo(() => getProjectPreviewImage(project), [project]);
 
@@ -128,8 +128,25 @@ function PortfolioBrowserFrame({
   size = "card",
   device = "desktop",
   interactive = false,
+  chrome = true,
 }) {
   const isCard = size === "card";
+
+  if (!chrome) {
+    return (
+      <div
+        className="relative h-full w-full overflow-hidden"
+        onContextMenu={(event) => event.preventDefault()}
+        onDragStart={(event) => event.preventDefault()}
+      >
+        {isCard ? (
+          <StaticCardPreview project={project} />
+        ) : (
+          <MiniSiteRenderer project={project} size={size} device={device} />
+        )}
+      </div>
+    );
+  }
 
   return (
     <div

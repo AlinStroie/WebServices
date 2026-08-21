@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
@@ -40,6 +40,8 @@ function SiteThumb({ tile, large = false }) {
         alt={tile.label}
         className="h-full w-full rounded-lg object-cover"
         draggable="false"
+        loading="lazy"
+        decoding="async"
       />
     );
   }
@@ -98,14 +100,47 @@ function ShowcaseGrid() {
   const driftB = useTransform(scrollYProgress, [0, 1], [40, 0]);
   const rowX = [driftA, driftB, driftA];
 
+  // Cursor-following preview, desktop hover only — touch has no hover, and
+  // a tap-to-open version of this on mobile turned out worse than no
+  // preview at all, so touch just doesn't set this.
   const [preview, setPreview] = useState(null); // { tile, x, y }
 
+  // Pointermove can fire far faster than the display repaints (a 125Hz+
+  // mouse), and each one was triggering a full setState + re-render of the
+  // portaled preview — a straight main-thread hammering while the cursor
+  // just sat over a tile. Coalescing to one flush per animation frame keeps
+  // the preview exactly as responsive (still every frame) without the
+  // redundant sub-frame re-renders.
+  const rafRef = useRef(null);
+  const pendingRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
+
   function onMove(tile, event) {
-    setPreview({ tile, x: event.clientX, y: event.clientY });
+    if (event.pointerType === "touch") return;
+    pendingRef.current = { tile, x: event.clientX, y: event.clientY };
+    if (rafRef.current) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      setPreview(pendingRef.current);
+    });
+  }
+
+  function clearPreview() {
+    if (rafRef.current) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
+    }
+    pendingRef.current = null;
+    setPreview(null);
   }
 
   return (
-    <div ref={ref} className="my-8 space-y-[10px]">
+    <div ref={ref} className="relative my-8 space-y-[10px]">
       {rows.map((tiles, r) => (
         <motion.div
           key={r}
@@ -126,10 +161,12 @@ function ShowcaseGrid() {
               key={tile.id}
               type="button"
               aria-label={`${tile.kind} — ${tile.label}`}
-              onMouseEnter={(e) => onMove(tile, e)}
-              onMouseMove={(e) => onMove(tile, e)}
-              onMouseLeave={() => setPreview(null)}
-              className="h-48 w-64 shrink-0 cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02]"
+              onPointerEnter={(e) => onMove(tile, e)}
+              onPointerMove={(e) => onMove(tile, e)}
+              onPointerLeave={(e) => {
+                if (e.pointerType !== "touch") clearPreview();
+              }}
+              className="h-32 w-44 shrink-0 cursor-pointer overflow-hidden rounded-lg transition-transform duration-300 hover:scale-[1.02] sm:h-48 sm:w-64"
             >
               <SiteThumb tile={tile} />
             </button>
@@ -148,8 +185,11 @@ function ShowcaseGrid() {
  * flips to the right only when it would clip off the left edge.
  */
 function HoverPreview({ tile, x, y }) {
-  const W = 512;
-  const H = 384;
+  // Clamp to the viewport width so a 512px preview doesn't overflow a
+  // narrow phone screen (the desktop cursor-following case never hits
+  // this clamp — 512 + 2*pad comfortably fits any desktop viewport).
+  const W = Math.min(512, window.innerWidth - 32);
+  const H = W * (384 / 512);
   const pad = 16;
 
   // Prefer the left of the cursor; fall back to the right only if it would

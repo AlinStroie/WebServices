@@ -1,5 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import MagneticCta from "./MagneticCta";
 import {
   motion,
   motionValue,
@@ -10,6 +17,7 @@ import {
 } from "framer-motion";
 
 import { processSteps } from "../../data/process";
+import useIsMobile from "../../hooks/useIsMobile";
 
 const CTA_TITLE_WORDS = [
   { text: "Pregătit" },
@@ -21,6 +29,77 @@ const CTA_TITLE_WORDS = [
   { text: "aduce", accent: true },
   { text: "clienți?" },
 ];
+
+// The title is rendered twice, in two exactly-overlapping layers: a muted
+// base that is always there, and a lit layer on top whose characters are
+// revealed one by one. Every character needs a stable position in the
+// overall sequence to stagger against, so the words are flattened once
+// here rather than counted during render.
+const CTA_TITLE_CHARS = (() => {
+  let cursor = 0;
+  return CTA_TITLE_WORDS.map((word) => ({
+    accent: word.accent,
+    chars: Array.from(word.text, (char) => ({ char, order: cursor++ })),
+  }));
+})();
+
+const CTA_TILT_DEG = 12;
+const CTA_CHAR_STAGGER = 0.035;
+const CTA_MUTED = "rgb(116, 128, 160)";
+
+// A vertical gradient repeated per character is indistinguishable from one
+// gradient spanning the whole line — every character box shares the same
+// line height — and unlike a single `background-clip: text` on the heading
+// it survives per-character reveal, since a parent-level clipped
+// background ignores the opacity of the child spans painting over it.
+const CTA_TITLE_GRADIENT =
+  "linear-gradient(180deg, #ffffff 0%, #f4f7ff 45%, #bccaef 100%)";
+
+// `background-clip: text` only paints within the character's own box, but
+// that box is sized off font *metrics* (line-height x font-size), not off
+// the glyph's actual drawn ink — and the italic accent-serif run (Times
+// New Roman italic at 1.2x scale) overshoots those metrics on ascenders,
+// descenders and connecting swashes. Where ink pokes outside the box, the
+// gradient simply isn't there to clip to, leaving an unpainted (visually
+// "missing gradient") spot on exactly the cursive letters that swash the
+// most. Padding the box out on all sides gives the paint region enough
+// margin to comfortably contain that overshoot; an equal, opposite margin
+// cancels the padding back out for LAYOUT purposes (inline-block spacing
+// is resolved off the margin box), so neighbouring characters don't drift
+// apart even though each one's own paint region now runs wider than its
+// glyph. The extra region beyond the ink is simply glyph-less, so
+// overlapping it with a neighbour's is invisible.
+const CTA_LIT_CHAR_STYLE = {
+  display: "inline-block",
+  backgroundImage: CTA_TITLE_GRADIENT,
+  backgroundClip: "text",
+  WebkitBackgroundClip: "text",
+  backgroundRepeat: "no-repeat",
+  color: "transparent",
+  WebkitTextFillColor: "transparent",
+  paddingBlock: "0.35em",
+  paddingInline: "0.2em",
+  marginBlock: "-0.35em",
+  marginInline: "-0.2em",
+};
+
+// `drop-shadow` rather than `text-shadow`: it applies to the element's
+// painted result, so it sits behind the gradient-filled glyph instead of
+// hazing over the top of it the way a text shadow does once the glyph's
+// own fill is transparent.
+const CTA_CHAR_DARK = {
+  opacity: 0,
+  filter: "blur(6px) drop-shadow(0 0 0px rgba(190, 212, 255, 0))",
+};
+
+const CTA_CHAR_LIT = {
+  opacity: [0, 1, 1],
+  filter: [
+    "blur(6px) drop-shadow(0 0 0px rgba(190, 212, 255, 0))",
+    "blur(0px) drop-shadow(0 0 26px rgba(190, 212, 255, 0.7))",
+    "blur(0px) drop-shadow(0 0 12px rgba(190, 212, 255, 0.3))",
+  ],
+};
 
 const ACTIVE_COLOR = "rgba(23, 27, 39, 1)";
 const MUTED_COLOR = "rgba(23, 27, 39, 0.35)";
@@ -146,7 +225,11 @@ function Timeline() {
     const metrics = metricsRef.current;
     if (!metrics || metrics.dots.length === 0) return;
 
-    const viewport = window.innerHeight;
+    // Cached at last measure(), not read live: iOS Safari's dynamic
+    // toolbar changes window.innerHeight mid-gesture as it shows/hides
+    // during scroll, which would otherwise jostle the head line (and
+    // every dot position derived from it) on every scroll tick.
+    const viewport = metrics.viewport ?? window.innerHeight;
     const head = viewport * RAIL_HEAD;
     const scrolled = window.scrollY;
     let nextActive = 0;
@@ -234,6 +317,7 @@ function Timeline() {
     setGaps(tops.map((top, i) => (i === 0 ? 0 : top - tops[i - 1])));
     metricsRef.current = {
       dots: tops.map((top) => top + scrolled + DOT_OFFSET),
+      viewport: window.innerHeight,
     };
 
     if (tops.length > 1) {
@@ -398,68 +482,149 @@ function Timeline() {
 }
 
 /**
- * Closing CTA card — the same section, per the reference (`section7_2`):
- * a wide, full-bleed dark rounded card that simply fades into view once
- * scrolled to (no scroll-linked mask trick here, just a fade), with the
- * title revealing word by word — each word clip-path-wipes in from the
- * left, "filling" it with solid white — once the card itself has settled.
+ * Closing CTA card — sized off the reference capture (`section_7_bottom`):
+ * near full-bleed rather than centred inside the site's 1366px measure
+ * (its side margins there are ~25px against a ~1590px viewport, i.e. just
+ * the section's own gutter), around 725px tall, 28px corners, ~62px title.
+ *
+ * Two scroll behaviours, in sequence:
+ *
+ *   1. The card tilts up as it scrolls in — hinged on its bottom edge, so
+ *      it reads as standing up to face the viewer rather than pivoting
+ *      about its middle — driven 1:1 by scroll position.
+ *   2. Once that tilt has finished, the title lights up character by
+ *      character: a muted grey-blue base layer, with a gradient-filled,
+ *      glowing white layer revealed over the top of it one glyph at a
+ *      time, each blooming out of a blur as it lands.
+ *
+ * The scroll target is the outer, untransformed wrapper. Measuring the
+ * card itself would feed its own rotation back into the progress driving
+ * that rotation.
  */
 function ProcessCTA() {
   const reduceMotion = useReducedMotion();
+  const isMobile = useIsMobile();
+  const wrapRef = useRef(null);
+  const litRef = useRef(false);
+  const [lit, setLit] = useState(false);
+
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ["start end", "start 0.4"],
+  });
+
+  const rotateX = useTransform(scrollYProgress, [0, 1], [CTA_TILT_DEG, 0]);
+  const scale = useTransform(scrollYProgress, [0, 1], [0.94, 1]);
+  const opacity = useTransform(scrollYProgress, [0, 0.35], [0, 1], {
+    clamp: true,
+  });
+
+  const settle = useCallback((value) => {
+    if (value >= 0.999 && !litRef.current) {
+      litRef.current = true;
+      setLit(true);
+    }
+  }, []);
+
+  useMotionValueEvent(scrollYProgress, "change", settle);
+
+  // Deep links and reloads can land past the card, where no scroll event
+  // will ever fire to light the title.
+  useEffect(() => {
+    settle(scrollYProgress.get());
+  }, [settle, scrollYProgress]);
+
+  const stagger = reduceMotion ? 0 : CTA_CHAR_STAGGER;
+  const showLit = reduceMotion || lit;
+
+  const renderTitle = (isLitLayer) =>
+    CTA_TITLE_CHARS.map((word, wordIndex) => (
+      <Fragment key={wordIndex}>
+        <span
+          className={`inline-block whitespace-nowrap ${
+            word.accent ? "accent-serif font-normal" : ""
+          }`}
+        >
+          {word.chars.map(({ char, order }) =>
+            isLitLayer ? (
+              <motion.span
+                key={order}
+                style={CTA_LIT_CHAR_STYLE}
+                initial={CTA_CHAR_DARK}
+                animate={showLit ? CTA_CHAR_LIT : CTA_CHAR_DARK}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.7,
+                  times: [0, 0.55, 1],
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: order * stagger,
+                }}
+              >
+                {char}
+              </motion.span>
+            ) : (
+              <span key={order} className="inline-block">
+                {char}
+              </span>
+            )
+          )}
+        </span>
+        {wordIndex < CTA_TITLE_CHARS.length - 1 ? " " : null}
+      </Fragment>
+    ));
 
   return (
-    <motion.div
-      className="mx-auto mt-24 w-full max-w-[1366px] lg:mt-32"
-      initial={reduceMotion ? false : { opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.4 }}
-      transition={{ duration: 0.9, ease: [0.33, 1, 0.68, 1] }}
+    <div
+      ref={wrapRef}
+      className="relative mt-24 w-full lg:mt-32"
+      style={isMobile ? undefined : { perspective: 1400 }}
     >
-      <div className="flex w-full flex-col items-center gap-6 rounded-[24px] bg-[color:var(--color-ink)] px-6 py-20 text-center sm:px-12 sm:py-24">
-        <motion.h2
-          className="max-w-[24ch] text-[clamp(1.75rem,1.2rem+2.5vw,3rem)] font-bold leading-[1.15] text-white"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.6 }}
-          transition={{ staggerChildren: 0.09, delayChildren: 0.25 }}
-        >
-          {CTA_TITLE_WORDS.map((word, i) => (
-            <motion.span
-              key={i}
-              className={`inline-block whitespace-nowrap ${
-                word.accent ? "accent-serif font-normal" : ""
-              }`}
-              style={{ clipPath: reduceMotion ? "inset(0 0% 0 0)" : undefined }}
-              variants={
-                reduceMotion
-                  ? undefined
-                  : {
-                      hidden: { clipPath: "inset(0 100% 0 0)" },
-                      visible: { clipPath: "inset(0 0% 0 0)" },
-                    }
+      <motion.div
+        className="flex min-h-[clamp(420px,78vh,760px)] w-full flex-col items-center justify-center rounded-[28px] bg-[color:var(--color-ink)] px-6 py-20 text-center sm:px-12"
+        style={
+          reduceMotion
+            ? undefined
+            : // 3D perspective tilt is the priciest part of this card to paint
+              // repeatedly on scroll; mobile keeps the fade/scale entrance and
+              // drops just the rotateX, which reads the same at arm's length
+              // on a small screen anyway.
+              {
+                rotateX: isMobile ? 0 : rotateX,
+                scale,
+                opacity,
+                transformOrigin: "50% 100%",
               }
-              transition={{ duration: 0.55, ease: [0.4, 0, 0.2, 1] }}
-            >
-              {word.text}
-              {i < CTA_TITLE_WORDS.length - 1 ? " " : ""}
-            </motion.span>
-          ))}
-        </motion.h2>
+        }
+      >
+        <h2 className="relative max-w-[24ch] text-[clamp(2rem,1.1rem+3.1vw,3.9rem)] font-bold leading-[1.12] tracking-[-0.02em]">
+          <span className="block" style={{ color: CTA_MUTED }}>
+            {renderTitle(false)}
+          </span>
 
-        <p className="max-w-[52ch] text-[15px] leading-relaxed text-[color:var(--color-copy-on-dark)]">
-          Afacerea ta este excelentă. Site-ul tău ar trebui să arate asta.
-          Hai să construim împreună o prezență online la superlativ,
-          gândită să transforme vizitatori în clienți.
+          {/* Same markup at the same measure, so it wraps identically and
+              every lit glyph lands exactly on its muted twin. */}
+          <span
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 block"
+          >
+            {renderTitle(true)}
+          </span>
+        </h2>
+
+        <p className="mt-10 max-w-[64ch] text-base leading-relaxed text-[color:var(--color-copy-on-dark)]">
+          Afacerea ta este excepțională. Site-ul tău ar trebui să transmită
+          exact asta. Hai să construim, împreună, o prezență online la
+          superlativ — gândită de echipa noastră să transforme fiecare
+          vizitator într-un client.
         </p>
 
-        <Link
+        <MagneticCta
           to="/discovery"
-          className="mt-2 rounded-full bg-[color:var(--color-brand)] px-6 py-3 text-sm font-medium text-white transition-transform duration-300 hover:scale-[1.03]"
+          className="mt-20 px-6 py-3.5 text-sm font-medium text-white sm:px-9 sm:py-4 sm:text-[17px]"
         >
           Consultanță gratuită
-        </Link>
-      </div>
-    </motion.div>
+        </MagneticCta>
+      </motion.div>
+    </div>
   );
 }
 

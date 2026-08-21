@@ -1,14 +1,31 @@
+import { useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 
 /**
- * FAQ accordion.
+ * FAQ accordion — rebuilt on the reference's own section (`section9_1`):
+ * a big plain heading (no eyebrow, no italic accent — the reference has
+ * neither), then a numbered list where each row is "01" + question, a
+ * +/x toggle at the far right, and a hairline divider underneath.
  *
  * The only pure-white section on the page — after a long dark scroll the
  * switch to white is what signals "we are at the end".
  *
- * Content measure capped at 896px (narrower than the 1366px container)
- * because answers are pure prose and need a readable line length.
- * Native <details>, full-width left-aligned trigger, 250ms ease-out.
+ * Two behaviours not in the reference's own static screenshot, added per
+ * brief:
+ *
+ *   - Hovering a row sweeps its numeral, question and divider from muted
+ *     grey to full ink via a shared circular reveal expanding from the
+ *     bottom-centre of each element (`.faq-reveal`, driven by one
+ *     `clip-path: circle()` transition per element, all on the same
+ *     timing so they read as one motion). The open row sits permanently
+ *     revealed; hovering a closed row previews the same reveal and lets
+ *     go of it on mouse-leave.
+ *   - Opening is a real height animation (framer-motion, not native
+ *     `<details>`, which cannot animate `height: auto` smoothly), and
+ *     only one row is open at a time — clicking a question closes
+ *     whichever other one was open. The toggle is a single `Plus` glyph
+ *     rotated 45° into an "x" rather than swapped for a second icon.
  */
 const faqs = [
   {
@@ -37,46 +54,104 @@ const faqs = [
   },
 ];
 
+function FaqRow({ faq, index, isOpen, onToggle }) {
+  const reduceMotion = useReducedMotion();
+  const numeral = String(index + 1).padStart(2, "0");
+
+  return (
+    <div className="faq-row relative" data-open={isOpen || undefined}>
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+        className="flex w-full items-start justify-between gap-6 py-7 text-left sm:py-8"
+      >
+        <span className="flex items-baseline gap-4 sm:gap-5">
+          <span className="relative inline-block shrink-0 text-sm font-medium text-[color:var(--color-copy-muted)] sm:text-base">
+            {numeral}
+            <span
+              aria-hidden="true"
+              className="faq-reveal absolute inset-0 text-[color:var(--color-ink)]"
+            >
+              {numeral}
+            </span>
+          </span>
+
+          <span className="relative inline-block text-xl font-semibold leading-snug text-[color:var(--color-copy-muted)] sm:text-2xl">
+            {faq.q}
+            <span
+              aria-hidden="true"
+              className="faq-reveal absolute inset-0 text-[color:var(--color-ink)]"
+            >
+              {faq.q}
+            </span>
+          </span>
+        </span>
+
+        <Plus
+          size={20}
+          className={`mt-1 shrink-0 text-[color:var(--color-ink)] transition-transform duration-300 ${
+            isOpen ? "rotate-45" : ""
+          }`}
+        />
+      </button>
+
+      <AnimatePresence initial={false}>
+        {isOpen && (
+          <motion.div
+            key="content"
+            initial={reduceMotion ? false : { height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={reduceMotion ? undefined : { height: 0, opacity: 0 }}
+            transition={{
+              height: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
+              opacity: { duration: 0.3 },
+            }}
+            className="overflow-hidden"
+          >
+            <p className="pb-7 pr-10 text-[15px] leading-relaxed text-[color:var(--color-copy-muted)] sm:pb-8">
+              {faq.a}
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <span className="relative block h-px w-full bg-[color:var(--color-divider)]">
+        <span
+          aria-hidden="true"
+          className="faq-reveal absolute inset-0 bg-[color:var(--color-ink)]"
+        />
+      </span>
+    </div>
+  );
+}
+
 function Faqs() {
+  // -1 = nothing open on mount. Was `useState(0)`, which opened the first
+  // question by default even though nobody clicked it.
+  const [openIndex, setOpenIndex] = useState(-1);
+
   return (
     <section
       id="faq"
-      className="relative z-20 w-full bg-white px-6 py-32 sm:px-8 lg:py-40"
+      className="grad-white relative z-20 w-full px-6 py-32 sm:px-8 lg:py-40"
     >
       <div className="mx-auto w-full max-w-[896px]">
-        <div className="grid gap-6 pb-16">
-          <p className="eyebrow text-[color:var(--color-copy-muted)]">
-            Întrebări frecvente
-          </p>
+        <h2 className="display pb-20 text-[clamp(2.25rem,6vw,4.5rem)] text-[color:var(--color-ink)] sm:pb-24">
+          Ce ne întreabă lumea
+        </h2>
 
-          <h2 className="display text-[clamp(2rem,5vw,3.5rem)] text-[color:var(--color-ink)]">
-            Ce ne întreabă lumea
-          </h2>
-        </div>
-
-        <div className="grid gap-4">
-          {faqs.map((faq) => (
-            <details
+        <div className="grid">
+          {faqs.map((faq, index) => (
+            <FaqRow
               key={faq.q}
-              className="replica-details border-b border-[color:var(--color-divider)]"
-            >
-              <summary className="flex w-full cursor-pointer items-center justify-between gap-2 py-6 text-left">
-                <span className="flex items-start gap-5 text-lg font-medium text-[color:var(--color-ink)] sm:font-medium">
-                  {faq.q}
-                </span>
-
-                <Plus
-                  size={20}
-                  className="chev shrink-0 text-[color:var(--color-ink)]/45"
-                />
-              </summary>
-
-              <div className="pb-6 pr-10">
-                <p className="text-[15px] leading-relaxed text-[color:var(--color-ink)]/70">
-                  {faq.a}
-                </p>
-              </div>
-            </details>
+              faq={faq}
+              index={index}
+              isOpen={openIndex === index}
+              onToggle={() =>
+                setOpenIndex((current) => (current === index ? -1 : index))
+              }
+            />
           ))}
         </div>
       </div>

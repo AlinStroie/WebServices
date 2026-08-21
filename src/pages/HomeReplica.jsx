@@ -8,14 +8,13 @@ import SectionRail from "../components/replica/SectionRail";
 import Hero from "../components/replica/Hero";
 import ProblemStatement from "../components/replica/ProblemStatement";
 import ServiceCards from "../components/replica/ServiceCards";
-import Stats from "../components/replica/Stats";
 import VideoShowcase from "../components/replica/VideoShowcase";
+import CaseStudy from "../components/replica/CaseStudy";
 import Marquee from "../components/replica/Marquee";
-import BenefitsAccordion from "../components/replica/BenefitsAccordion";
+import WhyUs from "../components/replica/WhyUs";
 import Works from "../components/replica/Works";
 import Timeline from "../components/replica/Timeline";
-import Principles from "../components/replica/Principles";
-import Pricing from "../components/replica/Pricing";
+import Testimonials from "../components/replica/Testimonials";
 import Faqs from "../components/replica/Faqs";
 import SiteFooter from "../components/replica/SiteFooter";
 
@@ -82,21 +81,19 @@ function HomeReplica() {
 
         <ServiceCards />
 
-        <Stats />
-
         <VideoShowcase />
+
+        <CaseStudy />
 
         <Marquee />
 
-        <BenefitsAccordion />
+        <WhyUs />
 
         <Works />
 
         <Timeline />
 
-        <Principles />
-
-        <Pricing />
+        <Testimonials />
 
         <Faqs />
       </main>

@@ -9,16 +9,34 @@
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
 
+/* Metric-matched fallback: Arial resized/re-baselined to Inter's own
+   ascent/descent/line-gap (the standard capsize-derived values for this
+   pairing). Without it, the hero copy renders in Arial's box metrics
+   until the Inter woff2s land, then reflows to Inter's — a
+   ~0.14 CLS layout shift on slower connections, all landing on the hero
+   heading. Same-metrics fallback means the swap repaints text in place
+   with no size change, so there's nothing left to shift. */
+@font-face {
+  font-family: "Inter Fallback";
+  src: local("Arial");
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
+  size-adjust: 107.06%;
+}
+
 :root {
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
-    "Segoe UI", sans-serif;
+  font-family: Inter, "Inter Fallback", ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", sans-serif;
   color: #ffffff;
   background: #030303;
 }
 
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 6rem;
+  /* Nav's fixed header is h-[88px] (5.5rem); pad past it plus a 1rem
+     breathing gap so anchor-scrolled sections don't land flush under it. */
+  scroll-padding-top: 6.5rem;
 }
 
 body {
@@ -182,8 +200,23 @@ body {
 }
 
 @media (max-width: 767px) {
-  .glass {
+  .glass,
+  .testimonial-card {
     backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+
+  /* .replica-glow (footer/pricing-tier hover halos elsewhere) still uses
+     the older blurred-blob technique and runs unconditionally — freeze it
+     on mobile rather than pay that repaint cost on weaker GPUs.
+     .replica-halo-glow (Pricing's best-value card, the homepage USP
+     section's first card) stays spinning on mobile too: it's a single
+     blurred layer, and its -18px bleed already fits inside the padding
+     each of those layouts reserves for it, so there's nothing left for a
+     scroll container's overflow to clip. */
+  .replica-glow::before,
+  .replica-glow::after {
+    animation: none;
   }
 }
 
@@ -276,7 +309,8 @@ body {
 .replica {
   background: var(--color-surface);
   color: var(--color-ink);
-  font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
+  font-family: Inter, "Inter Fallback", ui-sans-serif, system-ui, -apple-system,
+    sans-serif;
 }
 
 /* Display type: line-height 1.0 + tight negative tracking, the two
@@ -300,6 +334,16 @@ body {
   -webkit-text-fill-color: transparent;
   color: transparent;
   letter-spacing: -0.0375em;
+  /* The gradient only paints across the element's own box — with
+     .display's line-height:1 that box is barely taller than cap-height,
+     so a Romanian capital diacritic (Î, Â, Ă — real risk here, this is a
+     Romanian-language site) that rises above cap-height pokes out past
+     where the gradient paints. There's no fill out there, so that sliver
+     of the glyph renders as if it were cut off. Padding grows the
+     gradient's own canvas (background defaults to painting the padding
+     box) without visibly shifting the text down by any noticeable amount. */
+  padding-top: 0.14em;
+  margin-top: -0.14em;
 }
 
 /* Serif italic accent inside a sans display heading.
@@ -328,6 +372,23 @@ body {
   font-weight: 400;
 }
 
+/* Pill-badge eyebrow — reference's pricing hero wraps the eyebrow in a
+   soft rounded chip instead of running it bare over the background. */
+.replica .eyebrow-pill {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 9999px;
+  border: 1px solid rgba(23, 27, 39, 0.1);
+  background-color: rgba(255, 255, 255, 0.6);
+  padding: 0.5rem 1.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 400;
+  color: var(--color-copy-muted);
+}
+
 /* Measure caps — line length bound by character count, not pixels. */
 .replica .measure {
   width: min(100%, 64ch);
@@ -348,6 +409,20 @@ body {
   display: flex;
   gap: 5rem;
   overflow: hidden;
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
 }
 
 .replica-marquee__track {
@@ -398,63 +473,86 @@ body {
   z-index: 1;
 }
 
-/* ---- Orbiting diffuse glow on the first USP card ----
-   Read directly off dixieraizpacheco.com's computed styles: the "spin" is
-   not a transform rotate, it's a `linear-gradient(<angle>, ...)` whose
-   angle is an animated CSS custom property (`@property` typed as <angle>
-   so the browser can tween it), then blurred hard. That's what makes the
-   light diffuse and drift around the border instead of visibly rotating. */
-@property --replica-usp-glow-angle {
+/* ---- Breathing halo BEHIND a card ----
+   Shared by the Pricing page's "best value" card and the homepage USP
+   section's first card. A blurred conic-gradient sits entirely behind the
+   (opaque) card — negative z-index, so the card's own fill covers it
+   completely except where it bleeds past the card's edges. Its angle is
+   driven by an animated `@property` for smooth, GPU-friendly rotation,
+   plus an opacity/scale pulse on top for the "breathing" read.
+   No ring layer painted ON the card edge — earlier versions on both cards
+   did that (a masked hairline border), which reads as a different, less
+   premium effect than a glow sitting behind an otherwise-unchanged card. */
+@property --halo-glow-angle {
   syntax: "<angle>";
   inherits: false;
   initial-value: 0deg;
 }
 
-/* Explicit 0%->100% (not just "to") so every loop restart continues from
-   360deg back to 0deg — the same angle, so the restart is seamless instead
-   of snapping back to the @property initial-value. */
-@keyframes replica-usp-glow-spin {
-  0% {
-    --replica-usp-glow-angle: 0deg;
-  }
-  100% {
-    --replica-usp-glow-angle: 360deg;
+@keyframes halo-glow-spin {
+  to {
+    --halo-glow-angle: 360deg;
   }
 }
 
-.replica-usp-glow::before,
-.replica-usp-glow::after {
+@keyframes halo-glow-breathe {
+  0%,
+  100% {
+    opacity: 0.45;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+}
+
+.replica-halo-glow {
+  position: relative;
+  --halo-glow-gradient: conic-gradient(
+    from var(--halo-glow-angle),
+    #38bdf8,
+    #818cf8 30%,
+    #38bdf8 50%,
+    #818cf8 80%,
+    #38bdf8
+  );
+}
+
+.replica-halo-glow::before {
   content: "";
   position: absolute;
+  inset: -18px;
   z-index: -1;
-  background-image: linear-gradient(
-    var(--replica-usp-glow-angle),
-    #5ddcff,
-    #3c67e3 43%,
-    #171b27
-  );
-  animation: replica-usp-glow-spin 5s linear infinite;
+  border-radius: 2rem;
+  background: var(--halo-glow-gradient);
+  filter: blur(24px);
+  animation:
+    halo-glow-spin 6s linear infinite,
+    halo-glow-breathe 3.4s ease-in-out infinite;
 }
 
-.replica-usp-glow::before {
-  top: -1%;
-  left: -2%;
-  width: 104%;
-  height: 102%;
-  border-radius: 1.5rem;
-  filter: blur(10px);
+/* Below md, ServiceCards switches this row to a horizontal scroll-snap
+   carousel, whose overflow-x-auto forces overflow-y to clip too (a CSS
+   rule, not a choice — one axis can't stay `visible` once the other
+   isn't). The card's own vertical clip padding (py-9, 36px) was sized for
+   this glow's ~18px inset, but blur(24px) bleeds visibly further than
+   that past the inset edge, so the top/bottom of the glow was still
+   getting hard-clipped. Shrinking the glow itself here — rather than
+   growing the padding again, which was already tried and still didn't
+   fully cover it — keeps its whole bleed inside the existing clip room. */
+@media (max-width: 767px) {
+  .replica-halo-glow::before {
+    inset: -8px;
+    filter: blur(14px);
+  }
 }
 
-.replica-usp-glow::after {
-  top: 16.67%;
-  left: 0;
-  right: 0;
-  width: 100%;
-  height: 100%;
-  margin: 0 auto;
-  transform: scale(0.8);
-  filter: blur(60px);
-  animation-duration: 4s;
+@media (prefers-reduced-motion: reduce) {
+  .replica-halo-glow::before {
+    animation: none;
+    opacity: 0.6;
+  }
 }
 
 /* ---- Native <details> accordion, 250ms ease-out ---- */
@@ -465,14 +563,6 @@ body {
 
 .replica-details > summary::-webkit-details-marker {
   display: none;
-}
-
-.replica-details .chev {
-  transition: transform 0.25s ease-out;
-}
-
-.replica-details[open] .chev {
-  transform: rotate(45deg);
 }
 
 @supports (interpolate-size: allow-keywords) {
@@ -490,6 +580,38 @@ body {
   .replica-details[open]::details-content {
     block-size: auto;
   }
+}
+
+/* ---- FAQ row: circular grey -> ink reveal ----
+   .faq-reveal is a duplicate (ink-coloured) copy stacked exactly over a
+   muted base, clipped to a circle anchored at its OWN bottom-centre — the
+   same class is reused on the numeral, the question and the divider line,
+   so growing that circle from 0 to full on hover sweeps all three from
+   grey to ink as one motion, starting low and expanding outward/upward.
+   An open row (.faq-row[data-open]) stays fully revealed without hover. */
+.faq-reveal {
+  position: absolute;
+  inset: 0;
+  clip-path: circle(0% at 50% 100%);
+  transition: clip-path 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+
+.faq-row:hover .faq-reveal,
+.faq-row:focus-within .faq-reveal,
+.faq-row:active .faq-reveal,
+.faq-row[data-open] .faq-reveal {
+  clip-path: circle(140% at 50% 100%);
+}
+
+/* ---- Footer CTA: magnetic circular fill ----
+   clip-path's circle() origin is driven inline (per-interaction, off the
+   cursor's entry point) — this just owns the transition, so growing to
+   reveal on mouse-enter and shrinking to retract on mouse-leave are the
+   same animation running forward/backward, not two different ones. */
+.footer-cta-fill {
+  transition: clip-path 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
 }
 
 /* ---- Nav link hover: text-clip roll ----
@@ -521,46 +643,47 @@ body {
   transform: translateY(-1.25rem);
 }
 
-/* ---- Section rail: circle collapses, pill expands ----
-   Collapsed is a 2.5rem square with the label display:none; active
-   expands to a padded pill and reveals the label. */
+/* ---- Section rail: icon-only, pill expands on hover ----
+   Always a 2.5rem circle with the label display:none; hovering (any item,
+   active or not) expands it to a padded pill and reveals the label. Active
+   state is a color change only (rail-item's own bg class), fully decoupled
+   from hover so it never fights the hover expansion. */
 .rail-item {
   display: flex;
   align-items: center;
   gap: 0.625rem;
   border-radius: 999px;
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.rail-item[aria-expanded="false"] {
   width: 2.5rem;
-  aspect-ratio: 1 / 1;
+  height: 2.5rem;
   justify-content: center;
   padding: 0;
+  overflow: hidden;
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+    padding 0.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.rail-item[aria-expanded="false"] .rail-text {
+.rail-item .rail-text {
   display: none;
 }
 
-.rail-item[aria-expanded="true"] {
+.rail-item:hover {
+  width: auto;
+  justify-content: flex-start;
   padding: 0.5rem 1rem;
 }
 
-/* ---- Slideout menu: overlay fade + panel in from the left ---- */
+.rail-item:hover .rail-text {
+  display: block;
+}
+
+/* replica-overlay-fade is still used by ShowcaseGrid's HoverPreview. The
+   slideout menu itself now animates via framer-motion (Nav.jsx) instead of
+   these CSS keyframes — plain CSS animations can't run an exit transition
+   on unmount, which made the menu close instantly instead of sliding out. */
 @keyframes replica-overlay-fade {
   from { opacity: 0; }
   to { opacity: 1; }
-}
-
-@keyframes replica-slide-in-left {
-  from { transform: translateX(-100%); }
-  to { transform: translateX(0); }
-}
-
-.slideout-overlay {
-  animation: replica-overlay-fade 0.3s ease-out forwards;
 }
 
 .slideout-menu {
@@ -568,8 +691,6 @@ body {
   flex-direction: column;
   height: 100dvh;
   overscroll-behavior: contain;
-  transform: translateX(-100%);
-  animation: replica-slide-in-left 0.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 /* ---- Ambient gradient fields ----
@@ -582,6 +703,17 @@ body {
     radial-gradient(1200px 600px at 15% -10%, rgba(47, 75, 255, 0.16), transparent 60%),
     radial-gradient(900px 500px at 95% 10%, rgba(16, 185, 129, 0.1), transparent 55%),
     linear-gradient(152deg, rgba(54, 66, 93, 0.55) 0%, rgba(23, 27, 39, 0) 62%);
+}
+
+/* Pricing section — deliberately flatter and darker than .grad-dark's
+   lightened-wash sections: the reference's pricing tiers sit on a near-
+   black surface so the barely-tinted cards can read as distinct without
+   needing a lighter fill. */
+.pricing-surface {
+  background-color: var(--color-ink);
+  background-image:
+    radial-gradient(900px 480px at 15% -10%, rgba(47, 75, 255, 0.08), transparent 60%),
+    radial-gradient(700px 420px at 95% 10%, rgba(16, 185, 129, 0.05), transparent 55%);
 }
 
 .grad-light {
@@ -620,43 +752,90 @@ body {
     radial-gradient(70% 60% at 96% 8%, rgba(255, 255, 255, 0.7), transparent 58%);
 }
 
-/* Giant stroked numeral sitting behind the subject. Outline only, so the
-   subject reads in front of it exactly like the reference's "15". */
-.hero-numeral {
-  font-weight: 700;
-  line-height: 0.8;
-  letter-spacing: -0.04em;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(23, 27, 39, 0.28);
-  text-stroke: 1.5px rgba(23, 27, 39, 0.28);
-  user-select: none;
+/* ---- Hero video glass ----
+   The laptop mockup (three attempts: a multi-face 3D scene, a flat CSS
+   bezel, a ported devices.css frame with parallax/lid-open) never read as
+   "real" — replaced with an actual full-bleed looping video as the hero
+   subject. Readability comes from blurring the VIDEO itself under the
+   copy (no boxed card behind the text): a `mask-image` gradient — not
+   `clip-path`, which was a hard geometric cut — feathers the blur+tint
+   down to nothing along the same 115deg angle as the tint itself, so the
+   effect visibly dissolves into clean video rather than ending on a
+   line. The mask's opaque stop is tiered per breakpoint so it still
+   fully covers the text column's actual right edge (Hero.jsx's copy
+   wrapper is `max-w-[560px]`, measured at each size) before the fade
+   begins: near-uniform below `sm` (the column fills most of the
+   viewport there), a wide fade from `sm`, a proper diagonal fade from
+   `lg`. */
+.hero-video-glass {
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    rgba(8, 9, 13, 0.85) 0%,
+    rgba(8, 9, 13, 0.78) 45%,
+    rgba(8, 9, 13, 0.6) 65%,
+    rgba(8, 9, 13, 0.32) 85%,
+    rgba(8, 9, 13, 0) 100%
+  );
+  mask-image: linear-gradient(
+    115deg,
+    #000 0%,
+    #000 50%,
+    rgba(0, 0, 0, 0.75) 65%,
+    rgba(0, 0, 0, 0.35) 82%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    115deg,
+    #000 0%,
+    #000 50%,
+    rgba(0, 0, 0, 0.75) 65%,
+    rgba(0, 0, 0, 0.35) 82%,
+    transparent 100%
+  );
 }
 
-/* Ghosted, wide-tracked caption band under the subject ("years of
-   experience" in the reference). */
-.hero-ghost {
-  font-weight: 700;
-  letter-spacing: 0.22em;
-  text-transform: lowercase;
-  color: rgba(255, 255, 255, 0.72);
-  user-select: none;
+@media (min-width: 640px) {
+  .hero-video-glass {
+    mask-image: linear-gradient(
+      115deg,
+      #000 0%,
+      #000 66%,
+      rgba(0, 0, 0, 0.75) 78%,
+      rgba(0, 0, 0, 0.35) 90%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      115deg,
+      #000 0%,
+      #000 66%,
+      rgba(0, 0, 0, 0.75) 78%,
+      rgba(0, 0, 0, 0.35) 90%,
+      transparent 100%
+    );
+  }
 }
 
-/* Floated product mockup: soft, layered, premium shadow + faint ring, a
-   slight tilt so it reads as an object in space rather than a flat panel. */
-.hero-product {
-  border-radius: 20px;
-  box-shadow:
-    0 2px 4px rgba(23, 27, 39, 0.04),
-    0 24px 48px -12px rgba(23, 27, 39, 0.28),
-    0 1px 0 rgba(255, 255, 255, 0.6) inset;
-  outline: 1px solid rgba(255, 255, 255, 0.5);
-  transform: rotate(-1.2deg);
-  transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.hero-product:hover {
-  transform: rotate(0deg) translateY(-4px);
+@media (min-width: 1024px) {
+  .hero-video-glass {
+    mask-image: linear-gradient(
+      115deg,
+      #000 0%,
+      #000 36%,
+      rgba(0, 0, 0, 0.75) 48%,
+      rgba(0, 0, 0, 0.3) 62%,
+      transparent 74%
+    );
+    -webkit-mask-image: linear-gradient(
+      115deg,
+      #000 0%,
+      #000 36%,
+      rgba(0, 0, 0, 0.75) 48%,
+      rgba(0, 0, 0, 0.3) 62%,
+      transparent 74%
+    );
+  }
 }
 
 /* Overlapping avatar proof row. Placeholder avatars are crafted gradient
@@ -679,6 +858,105 @@ body {
 
 .hero-avatar:first-child {
   margin-left: 0;
+}
+
+/* Hero-only shrink of the proof-row avatars on mobile — Testimonials reuses
+   the base .hero-avatar size untouched, so this is scoped with an extra
+   modifier class rather than changing the shared rule above. */
+.hero-avatar--sm {
+  width: 2.1rem;
+  height: 2.1rem;
+  font-size: 0.6rem;
+  margin-left: -0.6rem;
+}
+
+.hero-avatar--sm:first-child {
+  margin-left: 0;
+}
+
+@media (min-width: 640px) {
+  .hero-avatar--sm {
+    width: 3rem;
+    height: 3rem;
+    font-size: 0.72rem;
+    margin-left: -0.85rem;
+  }
+}
+
+/* ---- Testimonials section ----
+   Reference (section8_*): a light grad-light-family surface, a giant
+   stroked "WHAT / THEY SAY" watermark bleeding off the left edge behind
+   the heading, and a soft pink -> lavender -> blue bloom pooling behind
+   the card grid (the same wash family as .hero-bloom, re-centred). */
+.testimonials-surface {
+  background-color: var(--color-surface);
+  background-image:
+    radial-gradient(900px 480px at 6% -6%, rgba(255, 255, 255, 0.7), transparent 58%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.45) 0%, rgba(201, 211, 215, 0) 55%);
+}
+
+.testimonials-bloom {
+  background:
+    radial-gradient(52% 58% at 82% 60%, rgba(232, 150, 205, 0.32), transparent 66%),
+    radial-gradient(46% 50% at 62% 78%, rgba(160, 170, 255, 0.3), transparent 62%),
+    radial-gradient(55% 55% at 100% 20%, rgba(120, 150, 255, 0.16), transparent 60%);
+}
+
+/* Mobile carousel: the peeking prev/next card was ending in a hard cut at
+   the viewport edge (same mask trick Marquee already uses for its own
+   edge fade). A narrower fade than Marquee's — these cards only peek in a
+   little, so an 8% fade would eat most of that peek. */
+.testimonials-carousel {
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    black 3%,
+    black 97%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    black 3%,
+    black 97%,
+    transparent 100%
+  );
+}
+
+/* Giant stroked watermark pinned to the left edge, behind everything.
+   Outline only, same device as .hero-numeral. Sized directly off the
+   reference measurement: "WHAT"'s glyph height runs ~16% of the capture's
+   WIDTH (~300px against a ~1877px-wide shot) — not a guess. The three
+   words' vertical spread across the section comes from the flex
+   justify-between on the wrapper in Testimonials.jsx, not from this
+   font-size, so the cap here just needs to be high enough not to choke
+   the glyph itself on a wide viewport. */
+.testimonials-watermark {
+  font-weight: 700;
+  line-height: 0.82;
+  letter-spacing: -0.03em;
+  font-size: clamp(6rem, 16vw, 26rem);
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(23, 27, 39, 0.16);
+  text-stroke: 1.5px rgba(23, 27, 39, 0.16);
+  user-select: none;
+}
+
+/* Whitish glass testimonial card: translucent gradient fill, blurred
+   backdrop, a faint top-edge highlight standing in for a border, and a
+   soft diffuse shadow instead of a hard drop shadow. */
+.testimonial-card {
+  background-image: linear-gradient(
+    160deg,
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0.4)
+  );
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    0 24px 60px -30px rgba(23, 27, 39, 0.35),
+    0 1px 0 rgba(255, 255, 255, 0.6) inset;
 }
 
 /* ---- Drifting image strip (problem statement) ---- */
@@ -719,16 +997,9 @@ body {
   .replica-marquee__track,
   .replica-glow::before,
   .replica-glow::after,
-  .replica-usp-glow::before,
-  .replica-usp-glow::after,
-  .drift-row,
-  .slideout-menu,
-  .slideout-overlay {
+  .replica-halo-glow::before,
+  .drift-row {
     animation: none !important;
-  }
-
-  .slideout-menu {
-    transform: none;
   }
 
   .text-wrapper {

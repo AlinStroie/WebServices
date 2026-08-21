@@ -1,60 +1,49 @@
 /**
- * Testimonials slot (rendered by components/replica/Principles.jsx).
+ * Testimonials grid (rendered by components/replica/Testimonials.jsx).
  *
- * PLACEHOLDER STATE: we currently show our real working principles rather
- * than invented client quotes — fabricated social proof about a real
- * business is not acceptable. Each entry below is shaped so that dropping
- * in a real testimonial needs no code change.
+ * PLACEHOLDER STATE: no real client has been quoted yet, so every entry
+ * below is a generic placeholder rather than an invented specific person —
+ * fabricating a fake name, company or photo passed off as a real client
+ * is not acceptable. `avatar` follows the same gradient-initials pattern
+ * already used for Hero's placeholder proof row (`avatars` in Hero.jsx):
+ * a coloured disc with initials, with an empty `src` ready to take a real
+ * photo later.
  *
- * TO ADD A REAL TESTIMONIAL: fill `name`, `role`, `company` (and optional
- * `avatar` path). As soon as `name` is set, the card renders as a
- * testimonial with an author footer instead of a principle label.
- *
- *   {
- *     quote: "They rebuilt our site in three weeks and bookings doubled.",
- *     name: "Ana Pop",
- *     role: "Owner",
- *     company: "Clinica Zâmbet",
- *     avatar: "/testimonials/ana-pop.webp", // 300x300 min, optional
- *   }
- *
- * Leave `name` empty to keep an entry rendering as a principle.
+ * TO ADD A REAL TESTIMONIAL: replace `quote`, `name`, `role`, `company`,
+ * and set `avatar.src` to a real photo (300x300 min) — `avatar.initials`
+ * and the two gradient stops stay as a fallback if `src` is ever cleared.
  */
 export const testimonials = [
   {
     quote:
-      "Structura vine înaintea decorului. Dacă vizitatorul nu găsește informația, nu contează cât de bine arată pagina.",
-    label: "Principiu de lucru",
-    name: "",
-    role: "",
-    company: "",
-    avatar: "",
+      "„Aici va apărea o recenzie reală, de la un client impresionat de rezultatele livrate de echipa noastră.”",
+    name: "Nume client",
+    role: "Funcție",
+    company: "Companie",
+    avatar: { initials: "NC", from: "#2c2cf3", to: "#7a5cff", src: "" },
   },
   {
     quote:
-      "Mobile-first, nu mobile-după. Peste jumătate din trafic vine de pe telefon, deci acolo se decide dacă site-ul funcționează.",
-    label: "Principiu de lucru",
-    name: "",
-    role: "",
-    company: "",
-    avatar: "",
+      "„Testimoniale autentice vor fi adăugate imediat ce proiectele finalizate primesc feedback-ul entuziast al clienților.”",
+    name: "Nume client",
+    role: "Funcție",
+    company: "Companie",
+    avatar: { initials: "NC", from: "#10b981", to: "#3bc8a6", src: "" },
   },
   {
     quote:
-      "Fără librării încărcate degeaba. Fiecare kilobyte trimis către utilizator trebuie să își merite locul.",
-    label: "Principiu de lucru",
-    name: "",
-    role: "",
-    company: "",
-    avatar: "",
+      "„Fiecare proiect e construit cu obsesie pentru detalii, iar rezultatele vorbesc de la sine — recenziile urmează.”",
+    name: "Nume client",
+    role: "Funcție",
+    company: "Companie",
+    avatar: { initials: "NC", from: "#e896cd", to: "#b4aaff", src: "" },
   },
   {
     quote:
-      "Site-ul rămâne al tău. Textele stau în fișiere simple, ușor de editat, fără să depinzi de noi pentru fiecare virgulă.",
-    label: "Principiu de lucru",
-    name: "",
-    role: "",
-    company: "",
-    avatar: "",
+      "„Spațiu rezervat pentru cuvintele clienților noștri, în curând completat cu povești reale de succes.”",
+    name: "Nume client",
+    role: "Funcție",
+    company: "Companie",
+    avatar: { initials: "NC", from: "#f59e0b", to: "#f7c56b", src: "" },
   },
 ];

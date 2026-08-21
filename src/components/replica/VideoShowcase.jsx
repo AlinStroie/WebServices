@@ -5,6 +5,10 @@ import Reveal from "./Reveal";
 import PortfolioBrowserFrame from "../PortfolioBrowserFrame";
 import { portfolio } from "../../data/portfolio";
 
+// Only 3 for now — trims the carousel while the rest of the portfolio data
+// is still being finalized. Bump/remove this slice to bring the others back.
+const slides = portfolio.slice(0, 3);
+
 /**
  * Full-bleed showcase carousel.
  *
@@ -25,6 +29,23 @@ function VideoShowcase() {
   const trackRef = useRef(null);
   const videoRefs = useRef([]);
   const [index, setIndex] = useState(0);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track) return undefined;
+
+    // rootMargin gives the active slide's video a head start on buffering
+    // — without it, `inView` (and so the play() below) only flipped true
+    // once the carousel had actually scrolled into the viewport, leaving a
+    // blank gap while `preload="metadata"` scrambled to fetch real frames.
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { threshold: 0.25, rootMargin: "600px 0px" }
+    );
+    observer.observe(track);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const track = trackRef.current;
@@ -48,7 +69,7 @@ function VideoShowcase() {
         // registers as active. Once we're pinned at the scroll end, it's
         // unambiguously the last slide regardless of the grid math.
         if (track.scrollLeft >= maxScroll - 2) {
-          setIndex(portfolio.length - 1);
+          setIndex(slides.length - 1);
         } else {
           setIndex(Math.round(track.scrollLeft / width));
         }
@@ -66,13 +87,18 @@ function VideoShowcase() {
   useEffect(() => {
     videoRefs.current.forEach((video, i) => {
       if (!video) return;
-      if (i === index) {
+      if (i === index && inView) {
+        // React's `muted` prop sets the attribute, not reliably the live
+        // DOM property autoplay policy actually checks — set it
+        // imperatively so play() isn't silently rejected.
+        video.muted = true;
+        video.defaultMuted = true;
         video.play().catch(() => {});
       } else {
         video.pause();
       }
     });
-  }, [index]);
+  }, [index, inView]);
 
   function page(delta) {
     const track = trackRef.current;
@@ -89,10 +115,10 @@ function VideoShowcase() {
     const maxScroll = track.scrollWidth - track.clientWidth;
     const targetIndex = Math.min(
       Math.max(index + delta, 0),
-      portfolio.length - 1,
+      slides.length - 1,
     );
     const targetScroll =
-      targetIndex === portfolio.length - 1
+      targetIndex === slides.length - 1
         ? maxScroll
         : targetIndex * width;
 
@@ -122,7 +148,7 @@ function VideoShowcase() {
         ref={trackRef}
         className="mt-16 flex snap-x snap-mandatory gap-6 overflow-x-auto px-6 pb-4 sm:px-8 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {portfolio.map((project, i) => (
+        {slides.map((project, i) => (
           <article
             key={project.id}
             className="video-thumb relative w-[65%] max-w-[1040px] shrink-0 snap-start overflow-hidden rounded-2xl"
@@ -133,10 +159,17 @@ function VideoShowcase() {
                   ref={(el) => (videoRefs.current[i] = el)}
                   className="h-full w-full object-cover"
                   src={project.video}
+                  poster={project.poster}
                   muted
                   loop
                   playsInline
-                  preload="metadata"
+                  // The active slide's own play() has a rootMargin head
+                  // start (see the observer above), but swiping to the
+                  // *next* slide had none — its video only started really
+                  // fetching the instant it became active. Bumping the
+                  // immediate neighbours to "auto" gets them buffering
+                  // ahead of that swipe instead.
+                  preload={Math.abs(i - index) <= 1 ? "auto" : "metadata"}
                 />
               ) : (
                 <PortfolioBrowserFrame project={project} size="card" />
@@ -175,7 +208,7 @@ function VideoShowcase() {
         </div>
 
         <div className="flex gap-2">
-          {portfolio.map((project, i) => (
+          {slides.map((project, i) => (
             <span
               key={project.id}
               className={`h-1.5 rounded-full transition-all duration-300 ${

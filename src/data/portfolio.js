@@ -1,6 +1,5 @@
 import {
   beautyMiniSite,
-  kinetoMiniSite,
   personalMiniSite,
   restaurantMiniSite,
   shopMiniSite,
@@ -25,13 +24,13 @@ const defaultDeliverables = [
 ];
 
 const colorThemes = {
-  kineto: {
-    gradient: "bg-gradient-to-br from-emerald-400/40 via-cyan-300/20 to-white/5",
-    glowFrom: "from-emerald-400/20",
-    glowVia: "via-cyan-300/10",
-    glowAccentOne: "bg-emerald-400/20",
-    glowAccentTwo: "bg-cyan-300/20",
-    modalBg: "from-emerald-400/10 via-cyan-300/5 to-transparent",
+  prolinen: {
+    gradient: "bg-gradient-to-br from-teal-400/40 via-slate-300/20 to-white/5",
+    glowFrom: "from-teal-400/20",
+    glowVia: "via-slate-300/10",
+    glowAccentOne: "bg-teal-400/20",
+    glowAccentTwo: "bg-slate-300/20",
+    modalBg: "from-teal-400/10 via-slate-300/5 to-transparent",
     browserBar: "bg-slate-50",
     browserLine: "bg-slate-200",
     browserBorder: "border-slate-200",
@@ -98,10 +97,14 @@ function createProject({
   title,
   category,
   text,
+  client,
+  tags,
   mockupType = "default",
   features,
   miniSite,
   video = null,
+  poster = null,
+  liveUrl = null,
   caseStudy = defaultCaseStudy,
   deliverables = defaultDeliverables,
 }) {
@@ -112,6 +115,8 @@ function createProject({
     title,
     category,
     text,
+    client,
+    tags,
     mockupType,
     gradient,
     theme,
@@ -119,34 +124,47 @@ function createProject({
     caseStudy,
     deliverables,
     miniSite,
-    // Showcase clip (recorded from our own mockup via scripts/record-mockups.mjs).
-    // Swap for a real client screen-recording later; VideoShowcase renders it
-    // automatically. See docs/PLACEHOLDERS-TO-PREPARE.md #3.
+    // Showcase clip (recorded from our own mockup via scripts/record-mockups.mjs,
+    // or from the live site itself via scripts/record-live-site.mjs). VideoShowcase
+    // and Works render it automatically. See docs/PLACEHOLDERS-TO-PREPARE.md #3.
     video,
+    // First-frame still, extracted from the clip itself — shown instantly
+    // via the <video poster> attribute while the actual video is still
+    // buffering, so an inactive carousel slide never shows a blank black
+    // box before you swipe to it.
+    poster,
+    // Real, shipped client work only — when set, the portfolio card links out
+    // to the live site instead of the internal /project/:id placeholder.
+    liveUrl,
   };
 }
 
 export const portfolio = [
   createProject({
-    id: "kineto",
-    title: "Cabinet kinetoterapie",
-    category: "Website servicii medicale",
-    text: "Design curat, secțiuni de servicii, beneficii, programări și contact rapid.",
-    mockupType: "medical",
+    id: "prolinen",
+    title: "ProLinen HORECA",
+    category: "Website B2B — servicii industriale",
+    text: "Site de prezentare pentru o spălătorie industrială dedicată exclusiv hotelurilor și restaurantelor.",
+    client: "ProLinen HORECA",
+    tags: ["Web Design", "B2B / HORECA", "Cerere ofertă"],
+    mockupType: "default",
     features: [
-      "Design modern pentru cabinet medical",
-      "Secțiune hero cu programare rapidă",
-      "Carduri pentru servicii de recuperare",
-      "Layout responsive pentru mobil și desktop",
+      "Prezentare clară a celor 5 categorii de textile deservite",
+      "Proces de colectare–spălare–livrare explicat pas cu pas",
+      "Zonă de acoperire afișată explicit (Brașov & Întorsura Buzăului)",
+      "Buton „Cere o ofertă” repetat la fiecare secțiune relevantă",
     ],
-    miniSite: kinetoMiniSite,
-    video: "/showcase/kineto.webm",
+    video: "/showcase/prolinen.webm",
+    poster: "/showcase/prolinen-poster.jpg",
+    liveUrl: "https://prolinen-horeca.vercel.app/",
   }),
   createProject({
     id: "beauty",
     title: "Salon beauty",
     category: "Website servicii beauty",
     text: "Prezentare elegantă pentru servicii, galerie, testimoniale și programări.",
+    client: "Salon Luna",
+    tags: ["Web Design", "Galerie foto", "Programări online"],
     mockupType: "beauty",
     features: [
       "Design elegant pentru servicii beauty",
@@ -156,12 +174,15 @@ export const portfolio = [
     ],
     miniSite: beautyMiniSite,
     video: "/showcase/beauty.webm",
+    poster: "/showcase/beauty-poster.jpg",
   }),
   createProject({
     id: "transport",
     title: "Firmă transport",
     category: "Website corporate",
     text: "Structură clară pentru flotă, servicii, rute, parteneri și cereri rapide.",
+    client: "Atlas Transport",
+    tags: ["Web Design", "Corporate", "Formular cereri"],
     features: [
       "Prezentare servicii transport",
       "Secțiune pentru flotă și parteneri",
@@ -170,12 +191,15 @@ export const portfolio = [
     ],
     miniSite: transportMiniSite,
     video: "/showcase/transport.webm",
+    poster: "/showcase/transport-poster.jpg",
   }),
   createProject({
     id: "restaurant",
     title: "Restaurant",
     category: "Website HoReCa",
     text: "Meniu, atmosferă, rezervări și secțiuni vizuale pentru prezentarea localului.",
+    client: "Bistro Local",
+    tags: ["Web Design", "HoReCa", "Meniu digital"],
     features: [
       "Prezentare meniu și atmosferă",
       "Secțiune pentru rezervări",
@@ -184,12 +208,15 @@ export const portfolio = [
     ],
     miniSite: restaurantMiniSite,
     video: "/showcase/restaurant.webm",
+    poster: "/showcase/restaurant-poster.jpg",
   }),
   createProject({
     id: "personal",
     title: "Portofoliu personal",
     category: "Personal brand",
     text: "Prezentare modernă pentru proiecte, experiență, servicii și contact.",
+    client: "Andrei Design",
+    tags: ["Web Design", "Personal Brand", "Portofoliu"],
     features: [
       "Prezentare personală modernă",
       "Secțiune pentru proiecte",
@@ -198,12 +225,15 @@ export const portfolio = [
     ],
     miniSite: personalMiniSite,
     video: "/showcase/personal.webm",
+    poster: "/showcase/personal-poster.jpg",
   }),
   createProject({
     id: "shop",
     title: "Magazin online",
     category: "E-commerce simplu",
     text: "Layout pentru produse, categorii, beneficii, coș și proces simplu de comandă.",
+    client: "Vlom Shop",
+    tags: ["Web Design", "E-commerce", "Coș & comandă"],
     features: [
       "Layout pentru produse și categorii",
       "Carduri pentru beneficii",
@@ -212,5 +242,6 @@ export const portfolio = [
     ],
     miniSite: shopMiniSite,
     video: "/showcase/shop.webm",
+    poster: "/showcase/shop-poster.jpg",
   }),
 ];

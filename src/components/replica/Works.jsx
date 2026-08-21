@@ -1,100 +1,154 @@
-import { ArrowUpRight } from "lucide-react";
+import { useRef } from "react";
+import { Link } from "react-router-dom";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 import Reveal from "./Reveal";
-import PortfolioBrowserFrame from "../PortfolioBrowserFrame";
+import { StaticCardPreview } from "../PortfolioBrowserFrame";
 import { portfolio } from "../../data/portfolio";
+import { caseStudyDetails } from "../../data/caseStudyDetails";
+import useInViewVideo from "../../hooks/useInViewVideo";
+
+// Featured slice — only the first 3 case studies show here; the rest stay
+// in the data file (still reachable at /project/:id) until real client
+// work replaces the mockup set.
+const featured = portfolio.slice(0, 3);
 
 /**
- * Featured projects.
+ * Featured projects — rebuilt on dixieraizpacheco.com's own project list
+ * (`.project` / `.img-mask`, read from its live computed styles).
  *
- * Layout follows the reference: a `2fr 1fr` split so the visual gets twice
- * the width of the copy, the copy column vertically centred against it,
- * and a generous 160px between projects. That spacing is why the section
- * is so tall — each project gets its own moment instead of reading as a
- * grid.
+ * Two separate layers, and only one of them moves:
+ *   - the "window" — the bordered, rounded, overflow-hidden frame — never
+ *     animates. It just sits in normal scroll flow like any other element.
+ *   - the image inside it is the only thing with motion: a continuous,
+ *     scroll-linked scale from 1 -> 1.13 as the window travels through the
+ *     viewport (not a one-shot reveal), so it keeps slowly zooming in the
+ *     whole time it's on screen — the "immersive" Ken-Burns-ish effect.
  *
- * Rows alternate direction on desktop so the eye zig-zags down the page.
+ * Every project stays in the same left-image/right-copy order down the
+ * page (the reference doesn't alternate sides either), and the whole
+ * image is the link into `/project/:id` — a stub page (same pattern as
+ * `/studii-de-caz`) until each project gets its own documented write-up.
  *
- * We keep PortfolioBrowserFrame (our own browser-chrome mockup) rather
- * than the reference's bare images — it is a stronger presentation and
- * it is ours.
+ * Right column is deliberately minimal: title, a client "logo" (placeholder
+ * wordmark — no real client logos exist yet), then up to 3 tags. No eyebrow
+ * category label and no description paragraph — just enough to identify
+ * the project.
  */
-function Works({ onBook }) {
+function Works() {
   return (
-    <section id="lucrari" className="w-full bg-[color:var(--color-ink)]">
+    <section id="lucrari" className="grad-dark w-full">
       <div className="mx-auto grid w-full max-w-[1366px] gap-24 px-6 pb-40 pt-40 sm:px-8 md:gap-40">
-        <div className="grid gap-6">
-          <p className="eyebrow text-[color:var(--color-copy-subtle-on-dark)]">
-            Lucrări
-          </p>
-
-          <h2 className="display max-w-[16ch] text-[clamp(2rem,5vw,4rem)] text-white">
-            Proiecte și concepte
+        <Reveal>
+          <h2 className="title-gradient max-w-[20ch] text-[clamp(2.5rem,1.8932rem+2.589vw,4rem)] font-bold leading-[1.05]">
+            Proiecte și <span className="accent-serif">concepte</span>
           </h2>
-        </div>
+        </Reveal>
 
         <div className="grid gap-20 md:gap-40">
-          {portfolio.map((project, index) => {
-            const flipped = index % 2 === 1;
+          {featured.map((project) => (
+            <article
+              key={project.id}
+              className="grid justify-between gap-10 md:gap-20 lg:grid-cols-[2fr_1fr]"
+            >
+              <ProjectThumbnail project={project} />
 
-            return (
-              <Reveal key={project.id}>
-                <article className="grid justify-between gap-10 md:gap-20 lg:grid-cols-[2fr_1fr]">
-                  <div
-                    className={`aspect-[16/10] w-full ${
-                      flipped ? "lg:order-2" : ""
-                    }`}
-                  >
-                    <PortfolioBrowserFrame project={project} size="card" />
-                  </div>
+              <div className="grid content-center gap-10 lg:gap-16">
+                <h3 className="max-w-[20ch] text-[clamp(1.75rem,3vw,2.5rem)] font-normal capitalize leading-[1.15] text-white/70">
+                  {project.title}
+                </h3>
 
-                  <div
-                    className={`grid content-center gap-10 lg:gap-16 ${
-                      flipped ? "lg:order-1" : ""
-                    }`}
-                  >
-                    <div className="grid gap-5">
-                      <p className="eyebrow text-[color:var(--color-accent)]">
-                        {project.category}
-                      </p>
+                {project.client && (
+                  <p className="text-lg font-semibold uppercase tracking-[0.08em] text-white/50">
+                    {project.client}
+                  </p>
+                )}
 
-                      <h3 className="display text-[clamp(1.75rem,3vw,2.5rem)] text-white">
-                        {project.title}
-                      </h3>
-
-                      <p className="text-[15px] leading-relaxed text-[color:var(--color-copy-on-dark)]">
-                        {project.text}
-                      </p>
-                    </div>
-
-                    <ul className="grid gap-3">
-                      {project.features.slice(0, 3).map((feature) => (
-                        <li
-                          key={feature}
-                          className="flex gap-3 border-t border-[color:var(--color-divider-on-dark)] pt-3 text-sm text-[color:var(--color-copy-subtle-on-dark)]"
-                        >
-                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-[color:var(--color-accent)]" />
-                          {feature}
-                        </li>
-                      ))}
-                    </ul>
-
-                    <button
-                      type="button"
-                      onClick={onBook}
-                      className="inline-flex w-fit items-center gap-2 text-sm font-medium text-white transition-opacity duration-200 hover:opacity-70"
-                    >
-                      Vreau ceva similar
-                      <ArrowUpRight size={16} />
-                    </button>
-                  </div>
-                </article>
-              </Reveal>
-            );
-          })}
+                {project.tags?.length > 0 && (
+                  <ul className="flex flex-wrap gap-3">
+                    {project.tags.slice(0, 3).map((tag) => (
+                      <li
+                        key={tag}
+                        className="shrink-0 rounded-full bg-white/10 px-4 py-2.5 text-sm text-white/70"
+                      >
+                        {tag}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            </article>
+          ))}
         </div>
+
+        <Reveal className="flex flex-col items-center gap-5 text-center">
+          <h3 className="display text-[clamp(1.75rem,3vw,2.5rem)] text-white">
+            Vrei un site ca acesta?
+          </h3>
+
+          <p className="max-w-[46ch] text-[15px] leading-relaxed text-[color:var(--color-copy-on-dark)]">
+            Hai să vorbim despre proiectul tău — programează o consultație
+            gratuită, fără obligații.
+          </p>
+
+          <Link
+            to="/discovery"
+            className="mt-3 rounded-full border-2 border-white px-4 py-2 text-sm text-white transition-colors duration-300 hover:border-[color:var(--color-accent)] hover:text-[color:var(--color-accent)]"
+          >
+            Programează o consultație
+          </Link>
+        </Reveal>
       </div>
     </section>
+  );
+}
+
+function ProjectThumbnail({ project }) {
+  const windowRef = useRef(null);
+  const videoRef = useInViewVideo();
+  const reduceMotion = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: windowRef,
+    offset: ["start end", "end start"],
+  });
+  const scale = useTransform(scrollYProgress, [0, 1], [1, 1.13]);
+
+  const hasCaseStudy = Boolean(caseStudyDetails[project.id]);
+  const to = hasCaseStudy
+    ? `/studii-de-caz/${project.id}`
+    : `/project/${project.id}`;
+
+  return (
+    <Link to={to} className="relative block">
+      <div
+        ref={windowRef}
+        className="relative z-10 aspect-[1.6/1] w-full overflow-hidden rounded-xl border border-white/15 bg-white/60 backdrop-blur-md md:rounded-3xl"
+      >
+        <motion.div
+          className="h-full w-full origin-center will-change-transform"
+          style={{ scale: reduceMotion ? 1 : scale }}
+        >
+          {project.video ? (
+            <video
+              ref={videoRef}
+              className="h-full w-full object-cover object-top"
+              src={project.video}
+              poster={project.poster}
+              muted
+              loop
+              playsInline
+              preload="metadata"
+            />
+          ) : (
+            <StaticCardPreview project={project} />
+          )}
+        </motion.div>
+      </div>
+
+      <div className="absolute inset-x-0 bottom-[-6%] z-0 h-20 w-full rounded-full bg-[#0b0d13] blur-lg" />
+      <div className="absolute inset-x-0 bottom-[-8%] z-0 h-20 w-full rounded-full bg-[#0b0d13] blur-3xl" />
+    </Link>
   );
 }
 

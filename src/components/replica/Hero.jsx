@@ -1,22 +1,17 @@
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { ArrowUpRight, CircleCheck, Star } from "lucide-react";
 
 import SplitText from "./SplitText";
-import PortfolioBrowserFrame from "../PortfolioBrowserFrame";
-import { portfolio } from "../../data/portfolio";
+import MagneticCta from "./MagneticCta";
+import useInViewVideo from "../../hooks/useInViewVideo";
 
 // Reference checkmark row, translated. Same three promises as the reference
 // ("Build Customer Trust / Drive Organic Traffic / Maximize Conversions").
 const proofPoints = [
-  "Construiește încredere",
-  "Atrage trafic organic",
-  "Maximizează conversiile",
+  "Construim încredere instant",
+  "Atragem trafic organic constant",
+  "Maximizăm fiecare conversie",
 ];
 
 /**
@@ -35,32 +30,40 @@ const avatars = [
   { initials: "GA", from: "#0ea5e9", to: "#6ee7f0" },
 ];
 
-const featured = portfolio[0];
-
 /**
- * Sticky hero with a scroll-linked fade.
+ * Sticky hero with a scroll-linked fade, over a full-bleed looping
+ * background video (`public/hero/hero-video.mp4`). The reference floats a
+ * cut-out subject on the right; here the video itself is the subject, and
+ * the copy sits in a frosted glass panel over its left third so it stays
+ * legible against whatever the footage is doing underneath — the right
+ * two-thirds show the video clean.
  *
  * The wrapper carries `mb-[-100svh]` and the section is `sticky top-0`, so
  * the next section is pulled up by one viewport and scrolls OVER the pinned
- * hero. On top of that, the reference hero does NOT sit statically behind a
- * cover — it fades and recedes as you scroll: its whole content drops from
- * opacity 1 -> 0 and scale 1 -> ~0.93 across the first ~700px of page scroll,
- * revealing the light ground behind it (the "whiteish fog"). We drive that
- * with useScroll on the page and map scrollY onto opacity + scale.
- *
- * Composition mirrors the reference: soft corner colour bloom, a floated
- * subject (our own product mockup — real UI), translated checkmark row, and
- * the avatars │ stars + trust-line block.
+ * hero. The glass panel + copy fade/recede on scroll (opacity 1 -> 0, scale
+ * 1 -> ~0.93); the video itself stays put as the static backdrop.
  */
 function Hero() {
   const reduceMotion = useReducedMotion();
+  const videoRef = useInViewVideo(0.15);
 
-  // Scroll fade mapped to real page distance: opacity reaches 0 by 640px and
-  // scale eases to 0.93 by 720px, so the hero gradually fogs out and recedes,
-  // gone by the time the next (opaque) section scrolls over the pin.
+  // Scroll fade mapped to a fraction of the live viewport height (80%/90%,
+  // matching the original 640px/720px thresholds measured off an ~800px
+  // desktop viewport) rather than fixed pixels — a short mobile viewport
+  // would otherwise finish the fade well before the pin's own scroll room
+  // (100svh) runs out, or a tall one would never finish it at all.
+  const [viewportH, setViewportH] = useState(() =>
+    typeof window !== "undefined" ? window.innerHeight : 800
+  );
+  useEffect(() => {
+    const onResize = () => setViewportH(window.innerHeight);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
   const { scrollY } = useScroll();
-  const opacity = useTransform(scrollY, [0, 640], [1, 0]);
-  const scale = useTransform(scrollY, [0, 720], [1, 0.93]);
+  const opacity = useTransform(scrollY, [0, viewportH * 0.8], [1, 0]);
+  const scale = useTransform(scrollY, [0, viewportH * 0.9], [1, 0.93]);
 
   const fade = (delay) =>
     reduceMotion
@@ -72,126 +75,126 @@ function Hero() {
         };
 
   return (
-    <div className="grad-light mb-[-100svh]">
+    <div className="mb-[-100svh] bg-[color:var(--color-ink)]">
       <section
         id="hero"
-        className="relative sticky top-0 overflow-clip"
-        style={{ height: "min(880px, 100svh)" }}
+        // Shorter on mobile on purpose: at full 100svh, a narrow-tall
+        // viewport forces object-cover to zoom the 16:9 video in hard to
+        // cover the height, cropping down to a narrow, over-zoomed sliver
+        // of the frame. A shallower box needs far less zoom to cover, so
+        // more of the actual shot stays visible. 72svh was too aggressive
+        // though — content taller than the box got clipped by this
+        // section's own `overflow-clip` (the heading's first line was
+        // disappearing under the fixed nav). 84svh leaves real headroom.
+        className="relative sticky top-0 h-[min(680px,84svh)] overflow-clip sm:h-[min(880px,100svh)]"
       >
-        {/* Atmospheric corner bloom — behind everything. */}
-        <div className="hero-bloom" aria-hidden="true" />
+        <video
+          ref={videoRef}
+          data-hero-video
+          className="absolute inset-0 h-full w-full object-cover"
+          src="/hero/hero-video.mp4"
+          muted
+          loop
+          playsInline
+          preload="auto"
+          fetchPriority="high"
+          aria-hidden="true"
+        />
+
+        <div className="hero-video-glass absolute inset-0" aria-hidden="true" />
 
         <motion.div
-          className="relative z-10 mx-auto h-full w-full max-w-[1366px] px-6 sm:px-8"
+          // items-start + pt on mobile instead of relying on centering math
+          // to happen to leave enough headroom under the fixed nav — the
+          // eyebrow line was still getting clipped by this section's own
+          // overflow-clip at the top edge even after the height fix. This
+          // guarantees clearance regardless of exact content height.
+          className="relative z-10 mx-auto flex h-full w-full max-w-[1366px] items-start px-6 pt-20 sm:items-center sm:px-8 sm:pt-0"
           style={reduceMotion ? undefined : { opacity, scale }}
         >
-          <div className="grid h-full items-center gap-12 md:grid-cols-6 lg:grid-cols-12">
-            <div className="col-span-full grid gap-10 pt-12 md:col-span-6 lg:col-span-7 lg:gap-14 lg:pt-0">
-              <div className="grid gap-8">
-                <motion.p
-                  className="eyebrow text-[color:var(--color-copy-muted)]"
-                  {...fade(0)}
-                >
-                  Web design · Brașov
-                </motion.p>
+          <div className="w-full max-w-[560px]">
+            <div className="grid gap-5 sm:gap-8">
+              <motion.p className="eyebrow text-white/60" {...fade(0)}>
+                Agenție de web design · Brașov
+              </motion.p>
 
-                <h1 className="display text-[clamp(2.5rem,7vw,4.5rem)] text-[color:var(--color-ink)]">
-                  <SplitText
-                    text={"Site-uri clare,\nrapide și\n*bine gândite*"}
-                  />
-                </h1>
+              <h1 className="display text-[clamp(2.5rem,6vw,4rem)] text-white">
+                <SplitText
+                  text={"Site-uri care\ntransformă vizitatori\n*în clienți fideli*"}
+                />
+              </h1>
 
-                <motion.ul
-                  className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
-                  {...fade(0.5)}
-                >
-                  {proofPoints.map((point) => (
-                    <li key={point} className="flex items-center gap-2">
-                      <CircleCheck
-                        size={17}
-                        className="text-[color:var(--color-accent)]"
-                      />
-                      <span className="text-[color:var(--color-ink)]/85">
-                        {point}
-                      </span>
-                    </li>
-                  ))}
-                </motion.ul>
-              </div>
-
-              <motion.div className="grid gap-8" {...fade(0.65)}>
-                <Link
-                  to="/discovery"
-                  className="group flex w-fit items-center gap-2 rounded-full bg-[color:var(--color-brand)] px-8 py-4 text-base font-medium text-white transition-transform duration-300 hover:scale-[1.03]"
-                >
-                  Consultanță gratuită
-                  <ArrowUpRight
-                    size={18}
-                    className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-                  />
-                </Link>
-
-                {/* Social proof, laid out like the reference: overlapping
-                    avatars │ a thin divider │ stars stacked over the trust
-                    line. */}
-                <div className="flex items-center gap-4">
-                  <div className="flex" aria-hidden="true">
-                    {avatars.map((a) =>
-                      a.src ? (
-                        <img
-                          key={a.initials}
-                          src={a.src}
-                          alt=""
-                          className="hero-avatar"
-                        />
-                      ) : (
-                        <span
-                          key={a.initials}
-                          className="hero-avatar"
-                          style={{
-                            backgroundImage: `linear-gradient(135deg, ${a.from}, ${a.to})`,
-                          }}
-                        >
-                          {a.initials}
-                        </span>
-                      )
-                    )}
-                  </div>
-
-                  <span
-                    className="h-10 w-px bg-[color:var(--color-ink)]/15"
-                    aria-hidden="true"
-                  />
-
-                  <div className="grid gap-1.5">
-                    <div className="flex gap-0.5" aria-hidden="true">
-                      {[0, 1, 2, 3, 4].map((i) => (
-                        <Star
-                          key={i}
-                          size={16}
-                          className="fill-[color:var(--color-ink)] text-[color:var(--color-ink)]"
-                        />
-                      ))}
-                    </div>
-                    <p className="text-sm text-[color:var(--color-ink)]">
-                      Servicii de web design de încredere
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+              <motion.ul
+                className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
+                {...fade(0.5)}
+              >
+                {proofPoints.map((point) => (
+                  <li key={point} className="flex items-center gap-2">
+                    <CircleCheck
+                      size={17}
+                      className="text-[color:var(--color-accent)]"
+                    />
+                    <span className="text-white/85">{point}</span>
+                  </li>
+                ))}
+              </motion.ul>
             </div>
 
-            {/*
-              Right subject. The reference bleeds a cut-out portrait here; we
-              float one of our OWN product mockups (real UI) over the bloom.
-              Swap for a portrait `.webp` cut-out later.
-            */}
-            <motion.div
-              className="relative col-span-full hidden self-center md:col-span-6 lg:col-span-5 lg:block"
-              {...fade(0.4)}
-            >
-              <div className="hero-product relative z-10 ml-auto max-w-[440px] overflow-hidden bg-white">
-                <PortfolioBrowserFrame project={featured} size="card" />
+            <motion.div className="mt-5 grid gap-5 sm:mt-8 sm:gap-8" {...fade(0.65)}>
+              <MagneticCta
+                to="/discovery"
+                className="w-fit px-6 py-3.5 text-sm font-medium text-white sm:px-8 sm:py-4 sm:text-base"
+              >
+                Consultanță gratuită
+                <ArrowUpRight
+                  size={18}
+                  className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+                />
+              </MagneticCta>
+
+              {/* Social proof, laid out like the reference: overlapping
+                  avatars │ a thin divider │ stars stacked over the trust
+                  line. */}
+              <div className="flex items-center gap-3 sm:gap-4">
+                <div className="flex" aria-hidden="true">
+                  {avatars.map((a) =>
+                    a.src ? (
+                      <img
+                        key={a.initials}
+                        src={a.src}
+                        alt=""
+                        className="hero-avatar hero-avatar--sm"
+                      />
+                    ) : (
+                      <span
+                        key={a.initials}
+                        className="hero-avatar hero-avatar--sm"
+                        style={{
+                          backgroundImage: `linear-gradient(135deg, ${a.from}, ${a.to})`,
+                        }}
+                      >
+                        {a.initials}
+                      </span>
+                    )
+                  )}
+                </div>
+
+                <span className="h-8 w-px bg-white/20 sm:h-10" aria-hidden="true" />
+
+                <div className="grid gap-1.5">
+                  <div className="flex gap-0.5" aria-hidden="true">
+                    {[0, 1, 2, 3, 4].map((i) => (
+                      <Star
+                        key={i}
+                        size={14}
+                        className="fill-white text-white sm:h-4 sm:w-4"
+                      />
+                    ))}
+                  </div>
+                  <p className="text-sm text-white">
+                    Agenție de web design de încredere
+                  </p>
+                </div>
               </div>
             </motion.div>
           </div>

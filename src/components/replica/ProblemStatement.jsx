@@ -1,14 +1,14 @@
-import { Link } from "react-router-dom";
 import { ArrowUpRight, CircleCheck } from "lucide-react";
 
 import ShowcaseGrid from "./ShowcaseGrid";
+import MagneticCta from "./MagneticCta";
 
 // Checklist mirrors the reference's four promises, in A Squared's voice.
 const checklist = [
-  "Captează atenția în sub 3 secunde",
+  "Captează atenția din prima secundă",
   "Construiesc credibilitate instantaneu",
-  "Au un design unic, adaptat brandului tău",
-  "Oferă o experiență fluidă, ca o aplicație",
+  "Au un design unic, făcut pentru brandul tău",
+  "Oferă o experiență la fel de fluidă ca o aplicație premium",
 ];
 
 /**
@@ -34,20 +34,26 @@ function ProblemStatement() {
     >
       <div className="mx-auto w-full max-w-[1366px] px-6 py-28 sm:px-8 lg:py-36">
         <div className="grid items-center gap-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-10">
+          {/* min-w-0 on both items: grid items default to min-width:auto,
+              so ShowcaseGrid's intentionally-unshrinkable min-w-max rows
+              would otherwise force the whole (implicit, single-column)
+              track wider than the viewport below lg — dragging this copy
+              column along and clipping its text at the section's
+              overflow-clip edge. */}
           {/* Left — copy */}
-          <div className="max-w-[36rem]">
+          <div className="min-w-0 max-w-[36rem]">
             <h2 className="display title-gradient text-[clamp(2.25rem,5.2vw,4rem)]">
               Site-ul tău <span className="accent-serif">costă</span> clienți în
               fiecare zi?
             </h2>
 
             <p className="mt-8 text-base leading-6 text-[color:var(--color-copy-on-dark)]">
-              Dacă site-ul tău nu reflectă calitatea muncii tale, alungă exact
-              clienții pe care îi meriți.
+              Dacă site-ul tău nu reflectă calitatea muncii tale, îi alungi
+              exact spre concurență pe clienții pe care îi meriți.
             </p>
 
             <p className="mt-6 text-base leading-6 text-[color:var(--color-copy-on-dark)]">
-              Construim site-uri care:
+              Echipa noastră construiește site-uri care:
             </p>
 
             <ul className="mt-6 grid gap-3">
@@ -64,25 +70,26 @@ function ProblemStatement() {
 
             <p className="mt-8 text-base leading-6 text-[color:var(--color-copy-on-dark)]">
               Un site generic te costă mai mult decât crezi: credibilitate,
-              conversii și oportunități. Un site construit pe măsura brandului și
-              a publicului tău lucrează 24/7 ca să-ți crească autoritatea și
-              să-ți aducă mai mulți clienți.
+              conversii și oportunități. Un site construit de echipa noastră,
+              pe măsura brandului și a publicului tău, muncește 24/7 ca
+              să-ți crească autoritatea și să-ți aducă un flux constant de
+              clienți noi.
             </p>
 
-            <Link
+            <MagneticCta
               to="/discovery"
-              className="group mt-10 inline-flex w-fit items-center gap-2 rounded-full bg-[color:var(--color-brand)] px-6 py-3 text-sm font-medium text-white transition-transform duration-300 hover:scale-[1.03]"
+              className="mt-10 inline-flex w-fit px-5 py-2.5 text-sm font-medium text-white sm:px-6 sm:py-3"
             >
               Consultanță gratuită
               <ArrowUpRight
                 size={16}
                 className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
               />
-            </Link>
+            </MagneticCta>
           </div>
 
           {/* Right — scroll-drifting screenshot collage, bleeding off-edge */}
-          <div className="lg:-mr-[10vw]">
+          <div className="min-w-0 overflow-clip lg:-mr-[10vw] lg:overflow-visible">
             <ShowcaseGrid />
           </div>
         </div>
