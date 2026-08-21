@@ -144,43 +144,29 @@ exports.Prisma.AdminAuditLogScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
-exports.Prisma.BlogPostScalarFieldEnum = {
+exports.Prisma.CaseStudyScalarFieldEnum = {
   id: 'id',
-  title: 'title',
   slug: 'slug',
-  excerpt: 'excerpt',
-  content: 'content',
-  coverImage: 'coverImage',
   status: 'status',
   featured: 'featured',
-  readingMinutes: 'readingMinutes',
+  publishedAt: 'publishedAt',
+  kicker: 'kicker',
+  title: 'title',
+  description: 'description',
+  role: 'role',
+  timeline: 'timeline',
+  overview: 'overview',
+  challengeIntro: 'challengeIntro',
+  challengePoints: 'challengePoints',
+  approach: 'approach',
+  solution: 'solution',
+  results: 'results',
+  gallery: 'gallery',
+  stats: 'stats',
   metaTitle: 'metaTitle',
   metaDescription: 'metaDescription',
-  publishedAt: 'publishedAt',
-  categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
-};
-
-exports.Prisma.BlogCategoryScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  description: 'description',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.BlogTagScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  slug: 'slug',
-  createdAt: 'createdAt'
-};
-
-exports.Prisma.BlogPostTagScalarFieldEnum = {
-  postId: 'postId',
-  tagId: 'tagId'
 };
 
 exports.Prisma.ContactSubmissionScalarFieldEnum = {
@@ -290,6 +276,10 @@ exports.Prisma.NullableJsonNullValueInput = {
   JsonNull: Prisma.JsonNull
 };
 
+exports.Prisma.JsonNullValueInput = {
+  JsonNull: Prisma.JsonNull
+};
+
 exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
@@ -311,7 +301,7 @@ exports.AdminRole = exports.$Enums.AdminRole = {
   EDITOR: 'EDITOR'
 };
 
-exports.BlogStatus = exports.$Enums.BlogStatus = {
+exports.CaseStudyStatus = exports.$Enums.CaseStudyStatus = {
   DRAFT: 'DRAFT',
   PUBLISHED: 'PUBLISHED',
   ARCHIVED: 'ARCHIVED'
@@ -326,7 +316,7 @@ exports.ContactStatus = exports.$Enums.ContactStatus = {
 
 exports.AnalyticsEventType = exports.$Enums.AnalyticsEventType = {
   PAGE_VIEW: 'PAGE_VIEW',
-  BLOG_VIEW: 'BLOG_VIEW',
+  CASE_STUDY_VIEW: 'CASE_STUDY_VIEW',
   SCROLL_DEPTH: 'SCROLL_DEPTH',
   TIME_ON_PAGE: 'TIME_ON_PAGE',
   CTA_CLICK: 'CTA_CLICK',
@@ -344,10 +334,7 @@ exports.AnalyticsEventType = exports.$Enums.AnalyticsEventType = {
 exports.Prisma.ModelName = {
   AdminUser: 'AdminUser',
   AdminAuditLog: 'AdminAuditLog',
-  BlogPost: 'BlogPost',
-  BlogCategory: 'BlogCategory',
-  BlogTag: 'BlogTag',
-  BlogPostTag: 'BlogPostTag',
+  CaseStudy: 'CaseStudy',
   ContactSubmission: 'ContactSubmission',
   AnalyticsSession: 'AnalyticsSession',
   AnalyticsEvent: 'AnalyticsEvent',
