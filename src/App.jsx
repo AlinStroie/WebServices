@@ -13,8 +13,6 @@ import { Route, Routes } from "react-router-dom";
 // slow to appear.
 import Home from "./pages/HomeReplica";
 
-const Blog = lazy(() => import("./pages/Blog"));
-const BlogPost = lazy(() => import("./pages/BlogPost"));
 const FormSuccess = lazy(() => import("./pages/FormSuccess"));
 const Discovery = lazy(() => import("./pages/Discovery"));
 const Pricing = lazy(() => import("./pages/Pricing"));
@@ -35,8 +33,12 @@ const AdminContactDetails = lazy(() =>
   import("./pages/admin/AdminContactDetails")
 );
 const AdminAnalytics = lazy(() => import("./pages/admin/AdminAnalytics"));
-const AdminBlog = lazy(() => import("./pages/admin/AdminBlog"));
-const AdminBlogEditor = lazy(() => import("./pages/admin/AdminBlogEditor"));
+const AdminCaseStudies = lazy(() =>
+  import("./pages/admin/AdminCaseStudies")
+);
+const AdminCaseStudyEditor = lazy(() =>
+  import("./pages/admin/AdminCaseStudyEditor")
+);
 
 import ScrollToTop from "./components/ScrollToTop";
 import AnalyticsTracker from "./components/AnalyticsTracker";
@@ -50,9 +52,6 @@ function App() {
       <Suspense fallback={null}>
         <Routes>
           <Route path="/" element={<Home />} />
-
-          <Route path="/blog" element={<Blog />} />
-          <Route path="/blog/:slug" element={<BlogPost />} />
 
           <Route path="/discovery" element={<Discovery />} />
           <Route path="/preturi" element={<Pricing />} />
@@ -79,9 +78,15 @@ function App() {
 
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<AdminDashboard />} />
-            <Route path="blog" element={<AdminBlog />} />
-            <Route path="blog/new" element={<AdminBlogEditor />} />
-            <Route path="blog/:id/edit" element={<AdminBlogEditor />} />
+            <Route path="case-studies" element={<AdminCaseStudies />} />
+            <Route
+              path="case-studies/new"
+              element={<AdminCaseStudyEditor />}
+            />
+            <Route
+              path="case-studies/:id/edit"
+              element={<AdminCaseStudyEditor />}
+            />
             <Route path="contacts" element={<AdminContacts />} />
             <Route path="contacts/:id" element={<AdminContactDetails />} />
             <Route path="analytics" element={<AdminAnalytics />} />

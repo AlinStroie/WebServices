@@ -21,7 +21,7 @@ function AdminDashboard() {
     <div>
       <PageHeader
         title="Dashboard"
-        text="Privire rapidă asupra cererilor, blogului și conversiilor."
+        text="Privire rapidă asupra cererilor, studiilor de caz și conversiilor."
       />
 
       <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
@@ -34,9 +34,9 @@ function AdminDashboard() {
 
         <StatCard
           icon={<FileText />}
-          label="Articole blog"
-          value={stats.totalPosts}
-          helper={`${stats.publishedPosts} publicate`}
+          label="Studii de caz"
+          value={stats.totalCaseStudies}
+          helper={`${stats.publishedCaseStudies} publicate`}
         />
 
         <StatCard
@@ -81,15 +81,17 @@ function AdminDashboard() {
           </div>
         </Panel>
 
-        <Panel title="Ultimele articole">
+        <Panel title="Ultimele studii de caz">
           <div className="space-y-3">
-            {data.latestPosts.map((item) => (
+            {data.latestCaseStudies.map((item) => (
               <div
                 key={item.id}
                 className="rounded-2xl border border-white/10 bg-white/[0.025] p-4"
               >
                 <p className="font-medium">{item.title}</p>
-                <p className="mt-1 text-sm text-white/40">/{item.slug}</p>
+                <p className="mt-1 text-sm text-white/40">
+                  /studii-de-caz/{item.slug}
+                </p>
 
                 <span className="mt-3 inline-flex rounded-full bg-white/[0.08] px-3 py-1 text-xs text-white/55">
                   {item.status}
