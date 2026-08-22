@@ -21,14 +21,14 @@ router.get(
       sessions,
       convertedSessions,
       pageViews,
-      blogViews,
+      caseStudyViews,
       ctaClicks,
       pricingClicks,
       contactOpens,
       contactSuccess,
       outboundClicks,
       topPages,
-      topBlogPosts,
+      topCaseStudies,
       topCtas,
       topUtmSources,
       selectedPlans,
@@ -63,7 +63,7 @@ router.get(
 
       prisma.analyticsEvent.count({
         where: {
-          type: "BLOG_VIEW",
+          type: "CASE_STUDY_VIEW",
           createdAt: {
             gte: fromDate,
           },
@@ -140,7 +140,7 @@ router.get(
       prisma.analyticsEvent.groupBy({
         by: ["label"],
         where: {
-          type: "BLOG_VIEW",
+          type: "CASE_STUDY_VIEW",
           label: {
             not: null,
           },
@@ -242,7 +242,7 @@ router.get(
           convertedSessions,
           conversionRate,
           pageViews,
-          blogViews,
+          caseStudyViews,
           ctaClicks,
           pricingClicks,
           contactOpens,
@@ -253,7 +253,7 @@ router.get(
           path: item.path,
           count: item._count.path,
         })),
-        topBlogPosts: topBlogPosts.map((item) => ({
+        topCaseStudies: topCaseStudies.map((item) => ({
           slug: item.label,
           count: item._count.label,
         })),
@@ -294,7 +294,7 @@ router.get(
           type: {
             in: [
               "PAGE_VIEW",
-              "BLOG_VIEW",
+              "CASE_STUDY_VIEW",
               "CTA_CLICK",
               "PRICING_CLICK",
               "CONTACT_OPEN",
@@ -338,7 +338,7 @@ router.get(
       dayMap.set(key, {
         date: key,
         pageViews: 0,
-        blogViews: 0,
+        caseStudyViews: 0,
         ctaClicks: 0,
         pricingClicks: 0,
         contactOpens: 0,
@@ -355,7 +355,7 @@ router.get(
       if (!row) return;
 
       if (event.type === "PAGE_VIEW") row.pageViews += 1;
-      if (event.type === "BLOG_VIEW") row.blogViews += 1;
+      if (event.type === "CASE_STUDY_VIEW") row.caseStudyViews += 1;
       if (event.type === "CTA_CLICK") row.ctaClicks += 1;
       if (event.type === "PRICING_CLICK") row.pricingClicks += 1;
       if (event.type === "CONTACT_OPEN") row.contactOpens += 1;

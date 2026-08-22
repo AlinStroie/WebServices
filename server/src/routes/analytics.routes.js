@@ -11,7 +11,7 @@ const router = express.Router();
 
 const minimalEvents = new Set([
   "PAGE_VIEW",
-  "BLOG_VIEW",
+  "CASE_STUDY_VIEW",
   "CTA_CLICK",
   "PRICING_CLICK",
   "CONTACT_OPEN",

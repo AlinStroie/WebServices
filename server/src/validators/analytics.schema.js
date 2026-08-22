@@ -3,7 +3,7 @@ import { z } from "zod";
 export const analyticsSchema = z.object({
   type: z.enum([
     "PAGE_VIEW",
-    "BLOG_VIEW",
+    "CASE_STUDY_VIEW",
     "SCROLL_DEPTH",
     "TIME_ON_PAGE",
     "CTA_CLICK",

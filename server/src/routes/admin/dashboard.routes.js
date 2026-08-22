@@ -16,9 +16,9 @@ router.get(
       totalContacts,
       newContacts,
       repliedContacts,
-      totalPosts,
-      publishedPosts,
-      draftPosts,
+      totalCaseStudies,
+      publishedCaseStudies,
+      draftCaseStudies,
       totalSessions,
       convertedSessions,
       totalEvents,
@@ -34,13 +34,13 @@ router.get(
           status: "REPLIED",
         },
       }),
-      prisma.blogPost.count(),
-      prisma.blogPost.count({
+      prisma.caseStudy.count(),
+      prisma.caseStudy.count({
         where: {
           status: "PUBLISHED",
         },
       }),
-      prisma.blogPost.count({
+      prisma.caseStudy.count({
         where: {
           status: "DRAFT",
         },
@@ -76,7 +76,7 @@ router.get(
       },
     });
 
-    const latestPosts = await prisma.blogPost.findMany({
+    const latestCaseStudies = await prisma.caseStudy.findMany({
       orderBy: {
         createdAt: "desc",
       },
@@ -98,16 +98,16 @@ router.get(
           totalContacts,
           newContacts,
           repliedContacts,
-          totalPosts,
-          publishedPosts,
-          draftPosts,
+          totalCaseStudies,
+          publishedCaseStudies,
+          draftCaseStudies,
           totalSessions,
           convertedSessions,
           totalEvents,
           conversionRate,
         },
         latestContacts,
-        latestPosts,
+        latestCaseStudies,
       },
     });
   })
