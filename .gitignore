@@ -34,3 +34,5 @@ server/coverage
 
 # Playwright MCP scratch output
 .playwright-mcp
+.vercel
+.env*
