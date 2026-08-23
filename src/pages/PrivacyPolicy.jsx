@@ -78,7 +78,7 @@ function PrivacyPolicy() {
         <p>
           Website-ul poate folosi analytics propriu pentru a înțelege cum este
           utilizat site-ul: pagini vizitate, clickuri pe butoane, interacțiuni cu
-          blogul, formularul și sursele de trafic UTM.
+          studiile de caz, formularul și sursele de trafic UTM.
         </p>
         <p>
           Aceste date sunt colectate doar dacă utilizatorul acceptă cookie-urile de

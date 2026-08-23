@@ -36,10 +36,10 @@ function NotFound() {
             </Link>
 
             <Link
-              to="/blog"
+              to="/studii-de-caz"
               className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 text-sm font-semibold text-white/70 transition hover:bg-white hover:text-black"
             >
-              Vezi blogul
+              Vezi studiile de caz
             </Link>
           </div>
         </section>

@@ -41,10 +41,10 @@ function FormSuccess() {
           </Link>
 
           <Link
-            to="/blog"
+            to="/studii-de-caz"
             className="inline-flex items-center justify-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-6 py-3 font-semibold text-white/70 transition hover:bg-white hover:text-black"
           >
-            Citește blogul
+            Vezi studiile de caz
             <ArrowRight size={17} />
           </Link>
         </div>
