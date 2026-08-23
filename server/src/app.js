@@ -7,7 +7,7 @@ import compression from "compression";
 import hpp from "hpp";
 import adminRoutes from "./routes/admin/index.js";
 
-import blogRoutes from "./routes/blog.routes.js";
+import caseStudyRoutes from "./routes/casestudy.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
 
@@ -97,7 +97,7 @@ app.get("/api/health", (req, res) => {
 app.use("/", seoRoutes);
 
 // Rute API
-app.use("/api/blog", blogRoutes);
+app.use("/api/case-studies", caseStudyRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/admin", adminRoutes);

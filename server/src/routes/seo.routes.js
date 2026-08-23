@@ -32,7 +32,7 @@ router.get(
   asyncHandler(async (req, res) => {
     const siteUrl = normalizeSiteUrl(env.CLIENT_URL);
 
-    const posts = await prisma.blogPost.findMany({
+    const caseStudies = await prisma.caseStudy.findMany({
       where: {
         status: "PUBLISHED",
       },
@@ -54,7 +54,7 @@ router.get(
         lastmod: formatDate(new Date()),
       },
       {
-        loc: `${siteUrl}/blog`,
+        loc: `${siteUrl}/studii-de-caz`,
         changefreq: "weekly",
         priority: "0.8",
         lastmod: formatDate(new Date()),
@@ -73,14 +73,14 @@ router.get(
       },
     ];
 
-    const blogPages = posts.map((post) => ({
-      loc: `${siteUrl}/blog/${post.slug}`,
+    const caseStudyPages = caseStudies.map((post) => ({
+      loc: `${siteUrl}/studii-de-caz/${post.slug}`,
       changefreq: "monthly",
       priority: "0.7",
       lastmod: formatDate(post.updatedAt || post.publishedAt),
     }));
 
-    const urls = [...staticPages, ...blogPages];
+    const urls = [...staticPages, ...caseStudyPages];
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">

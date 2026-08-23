@@ -79,7 +79,7 @@ function AdminAnalytics() {
       <div className="flex flex-col justify-between gap-4 md:flex-row md:items-end">
         <PageHeader
           title="Analytics"
-          text="Statistici despre trafic, CTA-uri, blog și conversii."
+          text="Statistici despre trafic, CTA-uri, studii de caz și conversii."
         />
 
         <select
@@ -103,9 +103,9 @@ function AdminAnalytics() {
 
         <StatCard
           icon={<BarChart3 size={20} />}
-          label="Blog views"
-          value={totals.blogViews || 0}
-          helper="Vizualizări articole"
+          label="Case study views"
+          value={totals.caseStudyViews || 0}
+          helper="Vizualizări studii de caz"
         />
 
         <StatCard
@@ -231,7 +231,7 @@ function AdminAnalytics() {
           </ResponsiveContainer>
         </ChartPanel>
 
-        <ChartPanel title="Blog views pe zile">
+        <ChartPanel title="Case study views pe zile">
           <ResponsiveContainer width="100%" height={280}>
             <LineChart data={timeseries}>
               <CartesianGrid
@@ -250,8 +250,8 @@ function AdminAnalytics() {
               <Tooltip content={<CustomTooltip />} />
               <Line
                 type="monotone"
-                dataKey="blogViews"
-                name="Blog views"
+                dataKey="caseStudyViews"
+                name="Case study views"
                 stroke="rgba(255,255,255,0.95)"
                 strokeWidth={2}
                 dot={false}
@@ -269,8 +269,8 @@ function AdminAnalytics() {
         />
 
         <ListPanel
-          title="Top articole"
-          items={data.topBlogPosts || []}
+          title="Top studii de caz"
+          items={data.topCaseStudies || []}
           labelKey="slug"
         />
 

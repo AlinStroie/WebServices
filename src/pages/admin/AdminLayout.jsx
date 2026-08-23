@@ -59,8 +59,8 @@ function AdminLayout() {
             Dashboard
           </AdminNavLink>
 
-          <AdminNavLink to="/admin/blog" icon={<FileText size={18} />}>
-            Blog
+          <AdminNavLink to="/admin/case-studies" icon={<FileText size={18} />}>
+            Studii de caz
           </AdminNavLink>
 
           <AdminNavLink to="/admin/contacts" icon={<Inbox size={18} />}>
@@ -107,7 +107,9 @@ function AdminLayout() {
           <MobileNavLink to="/admin" end>
             Dashboard
           </MobileNavLink>
-          <MobileNavLink to="/admin/blog">Blog</MobileNavLink>
+          <MobileNavLink to="/admin/case-studies">
+            Studii de caz
+          </MobileNavLink>
           <MobileNavLink to="/admin/contacts">Contacte</MobileNavLink>
           <MobileNavLink to="/admin/analytics">Analytics</MobileNavLink>
         </nav>

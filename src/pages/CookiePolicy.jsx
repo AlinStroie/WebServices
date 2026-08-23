@@ -43,8 +43,8 @@ function CookiePolicy() {
       <LegalSection number="03" title="Cookie-uri de analiză">
         <p>
           Cookie-urile și datele de analiză ne ajută să înțelegem cum este folosit
-          site-ul: pagini accesate, clickuri, surse UTM, interacțiuni cu blogul și
-          formularul.
+          site-ul: pagini accesate, clickuri, surse UTM, interacțiuni cu studiile
+          de caz și formularul.
         </p>
         <p>
           Acestea sunt activate doar după ce utilizatorul își exprimă

@@ -3,14 +3,14 @@ import { Link } from "react-router-dom";
 import { Edit3, Plus, Trash2 } from "lucide-react";
 
 import {
-  archiveAdminBlogPost,
-  getAdminBlogPosts,
-  updateAdminBlogPostStatus,
+  archiveAdminCaseStudy,
+  getAdminCaseStudies,
+  updateAdminCaseStudyStatus,
 } from "../../lib/adminApi";
 
 const statuses = ["ALL", "PUBLISHED", "DRAFT", "ARCHIVED"];
 
-function AdminBlog() {
+function AdminCaseStudies() {
   const [items, setItems] = useState([]);
   const [pagination, setPagination] = useState(null);
   const [status, setStatus] = useState("ALL");
@@ -18,12 +18,12 @@ function AdminBlog() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
-  async function loadPosts() {
+  async function loadCaseStudies() {
     setLoading(true);
     setError("");
 
     try {
-      const response = await getAdminBlogPosts({
+      const response = await getAdminCaseStudies({
         status,
         search,
         page: 1,
@@ -33,38 +33,40 @@ function AdminBlog() {
       setItems(response.data.items);
       setPagination(response.data.pagination);
     } catch (err) {
-      setError(err.message || "Nu s-au putut încărca articolele.");
+      setError(err.message || "Nu s-au putut încărca studiile de caz.");
     } finally {
       setLoading(false);
     }
   }
 
   useEffect(() => {
-    loadPosts();
+    loadCaseStudies();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   async function handleStatusChange(id, nextStatus) {
     try {
       setError("");
-      await updateAdminBlogPostStatus(id, nextStatus);
-      await loadPosts();
+      await updateAdminCaseStudyStatus(id, nextStatus);
+      await loadCaseStudies();
     } catch (err) {
       setError(err.message || "Statusul nu a putut fi modificat.");
     }
   }
 
   async function handleArchive(id) {
-    const confirmed = window.confirm("Sigur vrei să arhivezi acest articol?");
+    const confirmed = window.confirm(
+      "Sigur vrei să arhivezi acest studiu de caz?"
+    );
 
     if (!confirmed) return;
 
     try {
       setError("");
-      await archiveAdminBlogPost(id);
-      await loadPosts();
+      await archiveAdminCaseStudy(id);
+      await loadCaseStudies();
     } catch (err) {
-      setError(err.message || "Articolul nu a putut fi arhivat.");
+      setError(err.message || "Studiul de caz nu a putut fi arhivat.");
     }
   }
 
@@ -72,16 +74,16 @@ function AdminBlog() {
     <div>
       <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
         <PageHeader
-          title="Blog"
-          text="Administrează articolele publicate pe website."
+          title="Studii de caz"
+          text="Administrează studiile de caz publicate pe website."
         />
 
         <Link
-          to="/admin/blog/new"
+          to="/admin/case-studies/new"
           className="inline-flex items-center justify-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-semibold text-black transition hover:bg-white/90"
         >
           <Plus size={17} />
-          Articol nou
+          Studiu nou
         </Link>
       </div>
 
@@ -90,7 +92,7 @@ function AdminBlog() {
           value={search}
           onChange={(event) => setSearch(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === "Enter") loadPosts();
+            if (event.key === "Enter") loadCaseStudies();
           }}
           className="min-h-11 flex-1 rounded-2xl border border-white/10 bg-white/[0.035] px-4 text-white outline-none placeholder:text-white/25 focus:border-white/30"
           placeholder="Caută după titlu, slug sau descriere..."
@@ -98,7 +100,7 @@ function AdminBlog() {
 
         <button
           type="button"
-          onClick={loadPosts}
+          onClick={loadCaseStudies}
           className="rounded-2xl bg-white px-5 py-3 font-semibold text-black transition hover:bg-white/90"
         >
           Caută
@@ -130,11 +132,10 @@ function AdminBlog() {
 
       <div className="mt-8 overflow-hidden rounded-[1.8rem] border border-white/10">
         <div className="overflow-x-auto">
-          <table className="w-full min-w-[1000px] text-left text-sm">
+          <table className="w-full min-w-[900px] text-left text-sm">
             <thead className="bg-white/[0.05] text-white/50">
               <tr>
-                <th className="p-4">Articol</th>
-                <th className="p-4">Categorie</th>
+                <th className="p-4">Studiu de caz</th>
                 <th className="p-4">Status</th>
                 <th className="p-4">Featured</th>
                 <th className="p-4">Publicat</th>
@@ -146,14 +147,14 @@ function AdminBlog() {
             <tbody className="divide-y divide-white/10">
               {loading ? (
                 <tr>
-                  <td className="p-4 text-white/40" colSpan={7}>
-                    Se încarcă articolele...
+                  <td className="p-4 text-white/40" colSpan={6}>
+                    Se încarcă studiile de caz...
                   </td>
                 </tr>
               ) : items.length === 0 ? (
                 <tr>
-                  <td className="p-4 text-white/40" colSpan={7}>
-                    Nu există articole pentru filtrul selectat.
+                  <td className="p-4 text-white/40" colSpan={6}>
+                    Nu există studii de caz pentru filtrul selectat.
                   </td>
                 </tr>
               ) : (
@@ -165,15 +166,13 @@ function AdminBlog() {
                       </p>
 
                       <p className="mt-1 text-xs text-white/35">
-                        /blog/{item.slug}
+                        /studii-de-caz/{item.slug}
                       </p>
 
                       <p className="mt-2 line-clamp-2 max-w-md text-xs leading-5 text-white/35">
-                        {item.excerpt}
+                        {item.description}
                       </p>
                     </td>
-
-                    <td className="p-4">{item.category?.name || "-"}</td>
 
                     <td className="p-4">
                       <StatusBadge status={item.status} />
@@ -206,9 +205,9 @@ function AdminBlog() {
                     <td className="p-4">
                       <div className="flex items-center gap-2">
                         <Link
-                          to={`/admin/blog/${item.id}/edit`}
+                          to={`/admin/case-studies/${item.id}/edit`}
                           className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-white/[0.08] text-white/70 transition hover:bg-white hover:text-black"
-                          aria-label="Editează articol"
+                          aria-label="Editează studiul de caz"
                         >
                           <Edit3 size={16} />
                         </Link>
@@ -217,7 +216,7 @@ function AdminBlog() {
                           type="button"
                           onClick={() => handleArchive(item.id)}
                           className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-red-500/10 text-red-200 transition hover:bg-red-500 hover:text-white"
-                          aria-label="Arhivează articol"
+                          aria-label="Arhivează studiul de caz"
                         >
                           <Trash2 size={16} />
                         </button>
@@ -233,7 +232,7 @@ function AdminBlog() {
 
       {pagination && (
         <p className="mt-4 text-sm text-white/35">
-          Total: {pagination.total} articole
+          Total: {pagination.total} studii de caz
         </p>
       )}
     </div>
@@ -272,4 +271,4 @@ function PageHeader({ title, text }) {
   );
 }
 
-export default AdminBlog;
+export default AdminCaseStudies;

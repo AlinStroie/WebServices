@@ -5,8 +5,15 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 import Reveal from "./Reveal";
 import { StaticCardPreview } from "../PortfolioBrowserFrame";
 import { portfolio } from "../../data/portfolio";
-import { caseStudyDetails } from "../../data/caseStudyDetails";
 import useInViewVideo from "../../hooks/useInViewVideo";
+
+// Portfolio project ids that have a real, published case study reachable at
+// /studii-de-caz/:slug (Case Study CMS — see server/prisma/seedCaseStudies.js).
+// Everything else still routes to the generic /project/:id stub. Kept as a
+// small local constant rather than a data fetch here: this only gates a
+// same-page link choice, so it isn't worth the async complexity of calling
+// the case-studies API from inside the homepage's Works grid.
+const CASE_STUDY_SLUGS = new Set(["prolinen"]);
 
 // Featured slice — only the first 3 case studies show here; the rest stay
 // in the data file (still reachable at /project/:id) until real client
@@ -114,7 +121,7 @@ function ProjectThumbnail({ project }) {
   });
   const scale = useTransform(scrollYProgress, [0, 1], [1, 1.13]);
 
-  const hasCaseStudy = Boolean(caseStudyDetails[project.id]);
+  const hasCaseStudy = CASE_STUDY_SLUGS.has(project.id);
   const to = hasCaseStudy
     ? `/studii-de-caz/${project.id}`
     : `/project/${project.id}`;

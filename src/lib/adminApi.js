@@ -93,7 +93,7 @@ export function getAdminAnalyticsTimeseries(days = 30) {
   return adminApiFetch(`/admin/analytics/timeseries?days=${days}`);
 }
 
-export function getAdminBlogPosts(params = {}) {
+export function getAdminCaseStudies(params = {}) {
   const searchParams = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
@@ -102,36 +102,36 @@ export function getAdminBlogPosts(params = {}) {
 
   const query = searchParams.toString();
 
-  return adminApiFetch(`/admin/blog${query ? `?${query}` : ""}`);
+  return adminApiFetch(`/admin/case-studies${query ? `?${query}` : ""}`);
 }
 
-export function getAdminBlogPost(id) {
-  return adminApiFetch(`/admin/blog/${id}`);
+export function getAdminCaseStudy(id) {
+  return adminApiFetch(`/admin/case-studies/${id}`);
 }
 
-export function createAdminBlogPost(payload) {
-  return adminApiFetch("/admin/blog", {
+export function createAdminCaseStudy(payload) {
+  return adminApiFetch("/admin/case-studies", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
-export function updateAdminBlogPost(id, payload) {
-  return adminApiFetch(`/admin/blog/${id}`, {
+export function updateAdminCaseStudy(id, payload) {
+  return adminApiFetch(`/admin/case-studies/${id}`, {
     method: "PATCH",
     body: JSON.stringify(payload),
   });
 }
 
-export function updateAdminBlogPostStatus(id, status) {
-  return adminApiFetch(`/admin/blog/${id}/status`, {
+export function updateAdminCaseStudyStatus(id, status) {
+  return adminApiFetch(`/admin/case-studies/${id}/status`, {
     method: "PATCH",
     body: JSON.stringify({ status }),
   });
 }
 
-export function archiveAdminBlogPost(id) {
-  return adminApiFetch(`/admin/blog/${id}`, {
+export function archiveAdminCaseStudy(id) {
+  return adminApiFetch(`/admin/case-studies/${id}`, {
     method: "DELETE",
   });
 }

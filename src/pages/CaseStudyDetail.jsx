@@ -9,9 +9,9 @@ import ConsentBanner from "../components/replica/ConsentBanner";
 import Reveal from "../components/replica/Reveal";
 import MaskRevealVideo from "../components/replica/MaskRevealVideo";
 import MagneticCta from "../components/replica/MagneticCta";
+import { useEffect, useState } from "react";
 import { portfolio } from "../data/portfolio";
-import { caseStudyDetails } from "../data/caseStudyDetails";
-import { caseStudy as spotlight } from "../data/caseStudy";
+import { apiFetch } from "../lib/api";
 
 /**
  * /studii-de-caz/:slug — full case-study page for real, shipped work.
@@ -25,10 +25,46 @@ import { caseStudy as spotlight } from "../data/caseStudy";
 function CaseStudyDetail() {
   const { slug } = useParams();
   const project = portfolio.find((item) => item.id === slug);
-  const detail = caseStudyDetails[slug];
 
-  if (!project || !detail) {
+  const [detail, setDetail] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+
+    async function loadDetail() {
+      try {
+        const response = await apiFetch(`/case-studies/${slug}`);
+        if (!active) return;
+        setDetail(response.data);
+      } catch {
+        if (!active) return;
+        setNotFound(true);
+      } finally {
+        if (active) setLoading(false);
+      }
+    }
+
+    loadDetail();
+
+    return () => {
+      active = false;
+    };
+  }, [slug]);
+
+  if (!project || notFound) {
     return <Navigate to="/studii-de-caz" replace />;
+  }
+
+  if (loading || !detail) {
+    return (
+      <div className="replica flex min-h-screen items-center justify-center">
+        <p className="text-sm text-[color:var(--color-copy-muted)]">
+          Se încarcă studiul de caz...
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -96,10 +132,10 @@ function CaseStudyDetail() {
               Provocarea
             </h2>
             <p className="measure mt-5 text-[15px] leading-relaxed text-[color:var(--color-copy-muted)]">
-              {detail.challenge.intro}
+              {detail.challengeIntro}
             </p>
             <ul className="mt-6 grid gap-3">
-              {detail.challenge.points.map((point) => (
+              {detail.challengePoints.map((point) => (
                 <li
                   key={point}
                   className="rounded-xl border border-[color:var(--color-divider)] bg-white/60 p-4 text-[15px] leading-relaxed text-[color:var(--color-copy-muted)]"
@@ -208,7 +244,7 @@ function CaseStudyDetail() {
             </p>
 
             <div className="mt-10 grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4">
-              {spotlight.stats.map((stat) => (
+              {detail.stats.map((stat) => (
                 <div key={stat.label} className="grid gap-1">
                   <span className="text-[clamp(2rem,1.5rem+2vw,3rem)] font-bold leading-none tracking-[-0.03em] text-[color:var(--color-ink)]">
                     {stat.value}

@@ -59,7 +59,6 @@ const FOOTER_LINKS = [
   { label: "Avantaje", to: "/#avantaje" },
   { label: "Prețuri", to: "/preturi" },
   { label: "Întrebări frecvente", to: "/#faq" },
-  { label: "Blog", to: "/blog" },
   { label: "Studii de caz", to: "/studii-de-caz" },
   { label: "Consultanță gratuită", to: "/discovery" },
 ];

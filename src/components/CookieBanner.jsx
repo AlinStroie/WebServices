@@ -230,7 +230,7 @@ function CookieBanner() {
 
                     <p className="mt-1 max-w-lg text-sm leading-6 text-white/55">
                       Ne ajută să măsurăm folosirea site-ului: pagini vizitate,
-                      clickuri, interacțiuni cu blogul și formularul. Sunt
+                      clickuri, interacțiuni cu studiile de caz și formularul. Sunt
                       active doar dacă accepți.
                     </p>
 

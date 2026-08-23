@@ -124,8 +124,8 @@ export function trackPageView(path) {
   trackEvent("PAGE_VIEW", { path });
 }
 
-export function trackBlogView(slug) {
-  trackEvent("BLOG_VIEW", {
+export function trackCaseStudyView(slug) {
+  trackEvent("CASE_STUDY_VIEW", {
     label: slug,
     value: slug,
   });
