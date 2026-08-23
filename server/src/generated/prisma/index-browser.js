@@ -266,6 +266,27 @@ exports.Prisma.MediaAssetScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.PortalProjectScalarFieldEnum = {
+  id: 'id',
+  clerkUserId: 'clerkUserId',
+  name: 'name',
+  description: 'description',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.PortalProjectFileScalarFieldEnum = {
+  id: 'id',
+  projectId: 'projectId',
+  fileName: 'fileName',
+  r2Key: 'r2Key',
+  size: 'size',
+  mimeType: 'mimeType',
+  uploadedByClerkId: 'uploadedByClerkId',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -331,6 +352,12 @@ exports.AnalyticsEventType = exports.$Enums.AnalyticsEventType = {
   ERROR: 'ERROR'
 };
 
+exports.PortalProjectStatus = exports.$Enums.PortalProjectStatus = {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  ARCHIVED: 'ARCHIVED'
+};
+
 exports.Prisma.ModelName = {
   AdminUser: 'AdminUser',
   AdminAuditLog: 'AdminAuditLog',
@@ -341,7 +368,9 @@ exports.Prisma.ModelName = {
   PortfolioProject: 'PortfolioProject',
   SiteText: 'SiteText',
   CompanySetting: 'CompanySetting',
-  MediaAsset: 'MediaAsset'
+  MediaAsset: 'MediaAsset',
+  PortalProject: 'PortalProject',
+  PortalProjectFile: 'PortalProjectFile'
 };
 
 /**

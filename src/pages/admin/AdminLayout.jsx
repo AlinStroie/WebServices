@@ -6,6 +6,7 @@ import {
   Inbox,
   LayoutDashboard,
   LogOut,
+  Users,
 } from "lucide-react";
 
 import { adminLogout, getAdminMe } from "../../lib/adminApi";
@@ -63,6 +64,10 @@ function AdminLayout() {
             Studii de caz
           </AdminNavLink>
 
+          <AdminNavLink to="/admin/clients" icon={<Users size={18} />}>
+            Clienți
+          </AdminNavLink>
+
           <AdminNavLink to="/admin/contacts" icon={<Inbox size={18} />}>
             Cereri contact
           </AdminNavLink>
@@ -110,6 +115,7 @@ function AdminLayout() {
           <MobileNavLink to="/admin/case-studies">
             Studii de caz
           </MobileNavLink>
+          <MobileNavLink to="/admin/clients">Clienți</MobileNavLink>
           <MobileNavLink to="/admin/contacts">Contacte</MobileNavLink>
           <MobileNavLink to="/admin/analytics">Analytics</MobileNavLink>
         </nav>

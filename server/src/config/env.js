@@ -25,6 +25,11 @@ const envSchema = z.object({
   ADMIN_PASSWORD: z.string().min(8),
   ADMIN_LOGIN_RATE_LIMIT_MAX: z.coerce.number().default(5),
 
+  // Clerk — autentificare portal client (și, ulterior, admin).
+  CLERK_SECRET_KEY: z.string().min(1),
+  CLERK_PUBLISHABLE_KEY: z.string().min(1).optional(),
+  PORTAL_URL: z.string().url().optional(),
+
   // Emailul firmei.
   COMPANY_EMAIL: z.string().email(),
 

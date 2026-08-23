@@ -288,3 +288,46 @@ model MediaAsset {
 
   createdAt DateTime @default(now())
 }
+
+// Portal client — proiecte vizibile pentru clientul autentificat prin Clerk.
+// clerkUserId leagă proiectul de contul Clerk al clientului (fără tabel User local).
+model PortalProject {
+  id          String   @id @default(cuid())
+  clerkUserId String
+
+  name        String
+  description String?
+  status      PortalProjectStatus @default(ACTIVE)
+
+  files PortalProjectFile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([clerkUserId])
+}
+
+enum PortalProjectStatus {
+  ACTIVE
+  COMPLETED
+  ARCHIVED
+}
+
+// Fișiere per proiect, stocate pe Cloudflare R2 (referință prin cheie obiect).
+model PortalProjectFile {
+  id        String @id @default(cuid())
+  projectId String
+
+  project PortalProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  fileName String
+  r2Key    String
+  size     Int
+  mimeType String
+
+  uploadedByClerkId String
+
+  createdAt DateTime @default(now())
+
+  @@index([projectId])
+}

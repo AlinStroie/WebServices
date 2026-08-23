@@ -63,6 +63,16 @@ export type CompanySetting = $Result.DefaultSelection<Prisma.$CompanySettingPayl
  * 
  */
 export type MediaAsset = $Result.DefaultSelection<Prisma.$MediaAssetPayload>
+/**
+ * Model PortalProject
+ * 
+ */
+export type PortalProject = $Result.DefaultSelection<Prisma.$PortalProjectPayload>
+/**
+ * Model PortalProjectFile
+ * 
+ */
+export type PortalProjectFile = $Result.DefaultSelection<Prisma.$PortalProjectFilePayload>
 
 /**
  * Enums
@@ -115,6 +125,15 @@ export const AdminRole: {
 
 export type AdminRole = (typeof AdminRole)[keyof typeof AdminRole]
 
+
+export const PortalProjectStatus: {
+  ACTIVE: 'ACTIVE',
+  COMPLETED: 'COMPLETED',
+  ARCHIVED: 'ARCHIVED'
+};
+
+export type PortalProjectStatus = (typeof PortalProjectStatus)[keyof typeof PortalProjectStatus]
+
 }
 
 export type CaseStudyStatus = $Enums.CaseStudyStatus
@@ -132,6 +151,10 @@ export const AnalyticsEventType: typeof $Enums.AnalyticsEventType
 export type AdminRole = $Enums.AdminRole
 
 export const AdminRole: typeof $Enums.AdminRole
+
+export type PortalProjectStatus = $Enums.PortalProjectStatus
+
+export const PortalProjectStatus: typeof $Enums.PortalProjectStatus
 
 /**
  * ##  Prisma Client ʲˢ
@@ -350,6 +373,26 @@ export class PrismaClient<
     * ```
     */
   get mediaAsset(): Prisma.MediaAssetDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.portalProject`: Exposes CRUD operations for the **PortalProject** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PortalProjects
+    * const portalProjects = await prisma.portalProject.findMany()
+    * ```
+    */
+  get portalProject(): Prisma.PortalProjectDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.portalProjectFile`: Exposes CRUD operations for the **PortalProjectFile** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more PortalProjectFiles
+    * const portalProjectFiles = await prisma.portalProjectFile.findMany()
+    * ```
+    */
+  get portalProjectFile(): Prisma.PortalProjectFileDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -800,7 +843,9 @@ export namespace Prisma {
     PortfolioProject: 'PortfolioProject',
     SiteText: 'SiteText',
     CompanySetting: 'CompanySetting',
-    MediaAsset: 'MediaAsset'
+    MediaAsset: 'MediaAsset',
+    PortalProject: 'PortalProject',
+    PortalProjectFile: 'PortalProjectFile'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -819,7 +864,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "adminUser" | "adminAuditLog" | "caseStudy" | "contactSubmission" | "analyticsSession" | "analyticsEvent" | "portfolioProject" | "siteText" | "companySetting" | "mediaAsset"
+      modelProps: "adminUser" | "adminAuditLog" | "caseStudy" | "contactSubmission" | "analyticsSession" | "analyticsEvent" | "portfolioProject" | "siteText" | "companySetting" | "mediaAsset" | "portalProject" | "portalProjectFile"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1563,6 +1608,154 @@ export namespace Prisma {
           }
         }
       }
+      PortalProject: {
+        payload: Prisma.$PortalProjectPayload<ExtArgs>
+        fields: Prisma.PortalProjectFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PortalProjectFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PortalProjectFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>
+          }
+          findFirst: {
+            args: Prisma.PortalProjectFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PortalProjectFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>
+          }
+          findMany: {
+            args: Prisma.PortalProjectFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>[]
+          }
+          create: {
+            args: Prisma.PortalProjectCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>
+          }
+          createMany: {
+            args: Prisma.PortalProjectCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PortalProjectCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>[]
+          }
+          delete: {
+            args: Prisma.PortalProjectDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>
+          }
+          update: {
+            args: Prisma.PortalProjectUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>
+          }
+          deleteMany: {
+            args: Prisma.PortalProjectDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PortalProjectUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PortalProjectUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>[]
+          }
+          upsert: {
+            args: Prisma.PortalProjectUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectPayload>
+          }
+          aggregate: {
+            args: Prisma.PortalProjectAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePortalProject>
+          }
+          groupBy: {
+            args: Prisma.PortalProjectGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PortalProjectGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PortalProjectCountArgs<ExtArgs>
+            result: $Utils.Optional<PortalProjectCountAggregateOutputType> | number
+          }
+        }
+      }
+      PortalProjectFile: {
+        payload: Prisma.$PortalProjectFilePayload<ExtArgs>
+        fields: Prisma.PortalProjectFileFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.PortalProjectFileFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.PortalProjectFileFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>
+          }
+          findFirst: {
+            args: Prisma.PortalProjectFileFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.PortalProjectFileFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>
+          }
+          findMany: {
+            args: Prisma.PortalProjectFileFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>[]
+          }
+          create: {
+            args: Prisma.PortalProjectFileCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>
+          }
+          createMany: {
+            args: Prisma.PortalProjectFileCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.PortalProjectFileCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>[]
+          }
+          delete: {
+            args: Prisma.PortalProjectFileDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>
+          }
+          update: {
+            args: Prisma.PortalProjectFileUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>
+          }
+          deleteMany: {
+            args: Prisma.PortalProjectFileDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.PortalProjectFileUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.PortalProjectFileUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>[]
+          }
+          upsert: {
+            args: Prisma.PortalProjectFileUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$PortalProjectFilePayload>
+          }
+          aggregate: {
+            args: Prisma.PortalProjectFileAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregatePortalProjectFile>
+          }
+          groupBy: {
+            args: Prisma.PortalProjectFileGroupByArgs<ExtArgs>
+            result: $Utils.Optional<PortalProjectFileGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.PortalProjectFileCountArgs<ExtArgs>
+            result: $Utils.Optional<PortalProjectFileCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1669,6 +1862,8 @@ export namespace Prisma {
     siteText?: SiteTextOmit
     companySetting?: CompanySettingOmit
     mediaAsset?: MediaAssetOmit
+    portalProject?: PortalProjectOmit
+    portalProjectFile?: PortalProjectFileOmit
   }
 
   /* Types for Logging */
@@ -1772,6 +1967,37 @@ export namespace Prisma {
    */
   export type AnalyticsSessionCountOutputTypeCountEventsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: AnalyticsEventWhereInput
+  }
+
+
+  /**
+   * Count Type PortalProjectCountOutputType
+   */
+
+  export type PortalProjectCountOutputType = {
+    files: number
+  }
+
+  export type PortalProjectCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    files?: boolean | PortalProjectCountOutputTypeCountFilesArgs
+  }
+
+  // Custom InputTypes
+  /**
+   * PortalProjectCountOutputType without action
+   */
+  export type PortalProjectCountOutputTypeDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectCountOutputType
+     */
+    select?: PortalProjectCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * PortalProjectCountOutputType without action
+   */
+  export type PortalProjectCountOutputTypeCountFilesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PortalProjectFileWhereInput
   }
 
 
@@ -12723,6 +12949,2233 @@ export namespace Prisma {
 
 
   /**
+   * Model PortalProject
+   */
+
+  export type AggregatePortalProject = {
+    _count: PortalProjectCountAggregateOutputType | null
+    _min: PortalProjectMinAggregateOutputType | null
+    _max: PortalProjectMaxAggregateOutputType | null
+  }
+
+  export type PortalProjectMinAggregateOutputType = {
+    id: string | null
+    clerkUserId: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.PortalProjectStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PortalProjectMaxAggregateOutputType = {
+    id: string | null
+    clerkUserId: string | null
+    name: string | null
+    description: string | null
+    status: $Enums.PortalProjectStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type PortalProjectCountAggregateOutputType = {
+    id: number
+    clerkUserId: number
+    name: number
+    description: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type PortalProjectMinAggregateInputType = {
+    id?: true
+    clerkUserId?: true
+    name?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PortalProjectMaxAggregateInputType = {
+    id?: true
+    clerkUserId?: true
+    name?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type PortalProjectCountAggregateInputType = {
+    id?: true
+    clerkUserId?: true
+    name?: true
+    description?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type PortalProjectAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PortalProject to aggregate.
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjects to fetch.
+     */
+    orderBy?: PortalProjectOrderByWithRelationInput | PortalProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PortalProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PortalProjects
+    **/
+    _count?: true | PortalProjectCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PortalProjectMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PortalProjectMaxAggregateInputType
+  }
+
+  export type GetPortalProjectAggregateType<T extends PortalProjectAggregateArgs> = {
+        [P in keyof T & keyof AggregatePortalProject]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePortalProject[P]>
+      : GetScalarType<T[P], AggregatePortalProject[P]>
+  }
+
+
+
+
+  export type PortalProjectGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PortalProjectWhereInput
+    orderBy?: PortalProjectOrderByWithAggregationInput | PortalProjectOrderByWithAggregationInput[]
+    by: PortalProjectScalarFieldEnum[] | PortalProjectScalarFieldEnum
+    having?: PortalProjectScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PortalProjectCountAggregateInputType | true
+    _min?: PortalProjectMinAggregateInputType
+    _max?: PortalProjectMaxAggregateInputType
+  }
+
+  export type PortalProjectGroupByOutputType = {
+    id: string
+    clerkUserId: string
+    name: string
+    description: string | null
+    status: $Enums.PortalProjectStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: PortalProjectCountAggregateOutputType | null
+    _min: PortalProjectMinAggregateOutputType | null
+    _max: PortalProjectMaxAggregateOutputType | null
+  }
+
+  type GetPortalProjectGroupByPayload<T extends PortalProjectGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PortalProjectGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PortalProjectGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PortalProjectGroupByOutputType[P]>
+            : GetScalarType<T[P], PortalProjectGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PortalProjectSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clerkUserId?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+    files?: boolean | PortalProject$filesArgs<ExtArgs>
+    _count?: boolean | PortalProjectCountOutputTypeDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["portalProject"]>
+
+  export type PortalProjectSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clerkUserId?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["portalProject"]>
+
+  export type PortalProjectSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    clerkUserId?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["portalProject"]>
+
+  export type PortalProjectSelectScalar = {
+    id?: boolean
+    clerkUserId?: boolean
+    name?: boolean
+    description?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type PortalProjectOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "clerkUserId" | "name" | "description" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["portalProject"]>
+  export type PortalProjectInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    files?: boolean | PortalProject$filesArgs<ExtArgs>
+    _count?: boolean | PortalProjectCountOutputTypeDefaultArgs<ExtArgs>
+  }
+  export type PortalProjectIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type PortalProjectIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+
+  export type $PortalProjectPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PortalProject"
+    objects: {
+      files: Prisma.$PortalProjectFilePayload<ExtArgs>[]
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      clerkUserId: string
+      name: string
+      description: string | null
+      status: $Enums.PortalProjectStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["portalProject"]>
+    composites: {}
+  }
+
+  type PortalProjectGetPayload<S extends boolean | null | undefined | PortalProjectDefaultArgs> = $Result.GetResult<Prisma.$PortalProjectPayload, S>
+
+  type PortalProjectCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PortalProjectFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PortalProjectCountAggregateInputType | true
+    }
+
+  export interface PortalProjectDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PortalProject'], meta: { name: 'PortalProject' } }
+    /**
+     * Find zero or one PortalProject that matches the filter.
+     * @param {PortalProjectFindUniqueArgs} args - Arguments to find a PortalProject
+     * @example
+     * // Get one PortalProject
+     * const portalProject = await prisma.portalProject.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PortalProjectFindUniqueArgs>(args: SelectSubset<T, PortalProjectFindUniqueArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PortalProject that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PortalProjectFindUniqueOrThrowArgs} args - Arguments to find a PortalProject
+     * @example
+     * // Get one PortalProject
+     * const portalProject = await prisma.portalProject.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PortalProjectFindUniqueOrThrowArgs>(args: SelectSubset<T, PortalProjectFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PortalProject that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFindFirstArgs} args - Arguments to find a PortalProject
+     * @example
+     * // Get one PortalProject
+     * const portalProject = await prisma.portalProject.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PortalProjectFindFirstArgs>(args?: SelectSubset<T, PortalProjectFindFirstArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PortalProject that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFindFirstOrThrowArgs} args - Arguments to find a PortalProject
+     * @example
+     * // Get one PortalProject
+     * const portalProject = await prisma.portalProject.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PortalProjectFindFirstOrThrowArgs>(args?: SelectSubset<T, PortalProjectFindFirstOrThrowArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PortalProjects that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PortalProjects
+     * const portalProjects = await prisma.portalProject.findMany()
+     * 
+     * // Get first 10 PortalProjects
+     * const portalProjects = await prisma.portalProject.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const portalProjectWithIdOnly = await prisma.portalProject.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PortalProjectFindManyArgs>(args?: SelectSubset<T, PortalProjectFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PortalProject.
+     * @param {PortalProjectCreateArgs} args - Arguments to create a PortalProject.
+     * @example
+     * // Create one PortalProject
+     * const PortalProject = await prisma.portalProject.create({
+     *   data: {
+     *     // ... data to create a PortalProject
+     *   }
+     * })
+     * 
+     */
+    create<T extends PortalProjectCreateArgs>(args: SelectSubset<T, PortalProjectCreateArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PortalProjects.
+     * @param {PortalProjectCreateManyArgs} args - Arguments to create many PortalProjects.
+     * @example
+     * // Create many PortalProjects
+     * const portalProject = await prisma.portalProject.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PortalProjectCreateManyArgs>(args?: SelectSubset<T, PortalProjectCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PortalProjects and returns the data saved in the database.
+     * @param {PortalProjectCreateManyAndReturnArgs} args - Arguments to create many PortalProjects.
+     * @example
+     * // Create many PortalProjects
+     * const portalProject = await prisma.portalProject.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PortalProjects and only return the `id`
+     * const portalProjectWithIdOnly = await prisma.portalProject.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PortalProjectCreateManyAndReturnArgs>(args?: SelectSubset<T, PortalProjectCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PortalProject.
+     * @param {PortalProjectDeleteArgs} args - Arguments to delete one PortalProject.
+     * @example
+     * // Delete one PortalProject
+     * const PortalProject = await prisma.portalProject.delete({
+     *   where: {
+     *     // ... filter to delete one PortalProject
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PortalProjectDeleteArgs>(args: SelectSubset<T, PortalProjectDeleteArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PortalProject.
+     * @param {PortalProjectUpdateArgs} args - Arguments to update one PortalProject.
+     * @example
+     * // Update one PortalProject
+     * const portalProject = await prisma.portalProject.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PortalProjectUpdateArgs>(args: SelectSubset<T, PortalProjectUpdateArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PortalProjects.
+     * @param {PortalProjectDeleteManyArgs} args - Arguments to filter PortalProjects to delete.
+     * @example
+     * // Delete a few PortalProjects
+     * const { count } = await prisma.portalProject.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PortalProjectDeleteManyArgs>(args?: SelectSubset<T, PortalProjectDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PortalProjects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PortalProjects
+     * const portalProject = await prisma.portalProject.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PortalProjectUpdateManyArgs>(args: SelectSubset<T, PortalProjectUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PortalProjects and returns the data updated in the database.
+     * @param {PortalProjectUpdateManyAndReturnArgs} args - Arguments to update many PortalProjects.
+     * @example
+     * // Update many PortalProjects
+     * const portalProject = await prisma.portalProject.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PortalProjects and only return the `id`
+     * const portalProjectWithIdOnly = await prisma.portalProject.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PortalProjectUpdateManyAndReturnArgs>(args: SelectSubset<T, PortalProjectUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PortalProject.
+     * @param {PortalProjectUpsertArgs} args - Arguments to update or create a PortalProject.
+     * @example
+     * // Update or create a PortalProject
+     * const portalProject = await prisma.portalProject.upsert({
+     *   create: {
+     *     // ... data to create a PortalProject
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PortalProject we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PortalProjectUpsertArgs>(args: SelectSubset<T, PortalProjectUpsertArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PortalProjects.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectCountArgs} args - Arguments to filter PortalProjects to count.
+     * @example
+     * // Count the number of PortalProjects
+     * const count = await prisma.portalProject.count({
+     *   where: {
+     *     // ... the filter for the PortalProjects we want to count
+     *   }
+     * })
+    **/
+    count<T extends PortalProjectCountArgs>(
+      args?: Subset<T, PortalProjectCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PortalProjectCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PortalProject.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PortalProjectAggregateArgs>(args: Subset<T, PortalProjectAggregateArgs>): Prisma.PrismaPromise<GetPortalProjectAggregateType<T>>
+
+    /**
+     * Group by PortalProject.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PortalProjectGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PortalProjectGroupByArgs['orderBy'] }
+        : { orderBy?: PortalProjectGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PortalProjectGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPortalProjectGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PortalProject model
+   */
+  readonly fields: PortalProjectFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PortalProject.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PortalProjectClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    files<T extends PortalProject$filesArgs<ExtArgs> = {}>(args?: Subset<T, PortalProject$filesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PortalProject model
+   */
+  interface PortalProjectFieldRefs {
+    readonly id: FieldRef<"PortalProject", 'String'>
+    readonly clerkUserId: FieldRef<"PortalProject", 'String'>
+    readonly name: FieldRef<"PortalProject", 'String'>
+    readonly description: FieldRef<"PortalProject", 'String'>
+    readonly status: FieldRef<"PortalProject", 'PortalProjectStatus'>
+    readonly createdAt: FieldRef<"PortalProject", 'DateTime'>
+    readonly updatedAt: FieldRef<"PortalProject", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PortalProject findUnique
+   */
+  export type PortalProjectFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProject to fetch.
+     */
+    where: PortalProjectWhereUniqueInput
+  }
+
+  /**
+   * PortalProject findUniqueOrThrow
+   */
+  export type PortalProjectFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProject to fetch.
+     */
+    where: PortalProjectWhereUniqueInput
+  }
+
+  /**
+   * PortalProject findFirst
+   */
+  export type PortalProjectFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProject to fetch.
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjects to fetch.
+     */
+    orderBy?: PortalProjectOrderByWithRelationInput | PortalProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PortalProjects.
+     */
+    cursor?: PortalProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PortalProjects.
+     */
+    distinct?: PortalProjectScalarFieldEnum | PortalProjectScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProject findFirstOrThrow
+   */
+  export type PortalProjectFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProject to fetch.
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjects to fetch.
+     */
+    orderBy?: PortalProjectOrderByWithRelationInput | PortalProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PortalProjects.
+     */
+    cursor?: PortalProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjects.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PortalProjects.
+     */
+    distinct?: PortalProjectScalarFieldEnum | PortalProjectScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProject findMany
+   */
+  export type PortalProjectFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProjects to fetch.
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjects to fetch.
+     */
+    orderBy?: PortalProjectOrderByWithRelationInput | PortalProjectOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PortalProjects.
+     */
+    cursor?: PortalProjectWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjects from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjects.
+     */
+    skip?: number
+    distinct?: PortalProjectScalarFieldEnum | PortalProjectScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProject create
+   */
+  export type PortalProjectCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PortalProject.
+     */
+    data: XOR<PortalProjectCreateInput, PortalProjectUncheckedCreateInput>
+  }
+
+  /**
+   * PortalProject createMany
+   */
+  export type PortalProjectCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PortalProjects.
+     */
+    data: PortalProjectCreateManyInput | PortalProjectCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PortalProject createManyAndReturn
+   */
+  export type PortalProjectCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * The data used to create many PortalProjects.
+     */
+    data: PortalProjectCreateManyInput | PortalProjectCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PortalProject update
+   */
+  export type PortalProjectUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PortalProject.
+     */
+    data: XOR<PortalProjectUpdateInput, PortalProjectUncheckedUpdateInput>
+    /**
+     * Choose, which PortalProject to update.
+     */
+    where: PortalProjectWhereUniqueInput
+  }
+
+  /**
+   * PortalProject updateMany
+   */
+  export type PortalProjectUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PortalProjects.
+     */
+    data: XOR<PortalProjectUpdateManyMutationInput, PortalProjectUncheckedUpdateManyInput>
+    /**
+     * Filter which PortalProjects to update
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * Limit how many PortalProjects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PortalProject updateManyAndReturn
+   */
+  export type PortalProjectUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * The data used to update PortalProjects.
+     */
+    data: XOR<PortalProjectUpdateManyMutationInput, PortalProjectUncheckedUpdateManyInput>
+    /**
+     * Filter which PortalProjects to update
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * Limit how many PortalProjects to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PortalProject upsert
+   */
+  export type PortalProjectUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PortalProject to update in case it exists.
+     */
+    where: PortalProjectWhereUniqueInput
+    /**
+     * In case the PortalProject found by the `where` argument doesn't exist, create a new PortalProject with this data.
+     */
+    create: XOR<PortalProjectCreateInput, PortalProjectUncheckedCreateInput>
+    /**
+     * In case the PortalProject was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PortalProjectUpdateInput, PortalProjectUncheckedUpdateInput>
+  }
+
+  /**
+   * PortalProject delete
+   */
+  export type PortalProjectDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+    /**
+     * Filter which PortalProject to delete.
+     */
+    where: PortalProjectWhereUniqueInput
+  }
+
+  /**
+   * PortalProject deleteMany
+   */
+  export type PortalProjectDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PortalProjects to delete
+     */
+    where?: PortalProjectWhereInput
+    /**
+     * Limit how many PortalProjects to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PortalProject.files
+   */
+  export type PortalProject$filesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    where?: PortalProjectFileWhereInput
+    orderBy?: PortalProjectFileOrderByWithRelationInput | PortalProjectFileOrderByWithRelationInput[]
+    cursor?: PortalProjectFileWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: PortalProjectFileScalarFieldEnum | PortalProjectFileScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProject without action
+   */
+  export type PortalProjectDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProject
+     */
+    select?: PortalProjectSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProject
+     */
+    omit?: PortalProjectOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model PortalProjectFile
+   */
+
+  export type AggregatePortalProjectFile = {
+    _count: PortalProjectFileCountAggregateOutputType | null
+    _avg: PortalProjectFileAvgAggregateOutputType | null
+    _sum: PortalProjectFileSumAggregateOutputType | null
+    _min: PortalProjectFileMinAggregateOutputType | null
+    _max: PortalProjectFileMaxAggregateOutputType | null
+  }
+
+  export type PortalProjectFileAvgAggregateOutputType = {
+    size: number | null
+  }
+
+  export type PortalProjectFileSumAggregateOutputType = {
+    size: number | null
+  }
+
+  export type PortalProjectFileMinAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    fileName: string | null
+    r2Key: string | null
+    size: number | null
+    mimeType: string | null
+    uploadedByClerkId: string | null
+    createdAt: Date | null
+  }
+
+  export type PortalProjectFileMaxAggregateOutputType = {
+    id: string | null
+    projectId: string | null
+    fileName: string | null
+    r2Key: string | null
+    size: number | null
+    mimeType: string | null
+    uploadedByClerkId: string | null
+    createdAt: Date | null
+  }
+
+  export type PortalProjectFileCountAggregateOutputType = {
+    id: number
+    projectId: number
+    fileName: number
+    r2Key: number
+    size: number
+    mimeType: number
+    uploadedByClerkId: number
+    createdAt: number
+    _all: number
+  }
+
+
+  export type PortalProjectFileAvgAggregateInputType = {
+    size?: true
+  }
+
+  export type PortalProjectFileSumAggregateInputType = {
+    size?: true
+  }
+
+  export type PortalProjectFileMinAggregateInputType = {
+    id?: true
+    projectId?: true
+    fileName?: true
+    r2Key?: true
+    size?: true
+    mimeType?: true
+    uploadedByClerkId?: true
+    createdAt?: true
+  }
+
+  export type PortalProjectFileMaxAggregateInputType = {
+    id?: true
+    projectId?: true
+    fileName?: true
+    r2Key?: true
+    size?: true
+    mimeType?: true
+    uploadedByClerkId?: true
+    createdAt?: true
+  }
+
+  export type PortalProjectFileCountAggregateInputType = {
+    id?: true
+    projectId?: true
+    fileName?: true
+    r2Key?: true
+    size?: true
+    mimeType?: true
+    uploadedByClerkId?: true
+    createdAt?: true
+    _all?: true
+  }
+
+  export type PortalProjectFileAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PortalProjectFile to aggregate.
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjectFiles to fetch.
+     */
+    orderBy?: PortalProjectFileOrderByWithRelationInput | PortalProjectFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: PortalProjectFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjectFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjectFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned PortalProjectFiles
+    **/
+    _count?: true | PortalProjectFileCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: PortalProjectFileAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: PortalProjectFileSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: PortalProjectFileMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: PortalProjectFileMaxAggregateInputType
+  }
+
+  export type GetPortalProjectFileAggregateType<T extends PortalProjectFileAggregateArgs> = {
+        [P in keyof T & keyof AggregatePortalProjectFile]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregatePortalProjectFile[P]>
+      : GetScalarType<T[P], AggregatePortalProjectFile[P]>
+  }
+
+
+
+
+  export type PortalProjectFileGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: PortalProjectFileWhereInput
+    orderBy?: PortalProjectFileOrderByWithAggregationInput | PortalProjectFileOrderByWithAggregationInput[]
+    by: PortalProjectFileScalarFieldEnum[] | PortalProjectFileScalarFieldEnum
+    having?: PortalProjectFileScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: PortalProjectFileCountAggregateInputType | true
+    _avg?: PortalProjectFileAvgAggregateInputType
+    _sum?: PortalProjectFileSumAggregateInputType
+    _min?: PortalProjectFileMinAggregateInputType
+    _max?: PortalProjectFileMaxAggregateInputType
+  }
+
+  export type PortalProjectFileGroupByOutputType = {
+    id: string
+    projectId: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt: Date
+    _count: PortalProjectFileCountAggregateOutputType | null
+    _avg: PortalProjectFileAvgAggregateOutputType | null
+    _sum: PortalProjectFileSumAggregateOutputType | null
+    _min: PortalProjectFileMinAggregateOutputType | null
+    _max: PortalProjectFileMaxAggregateOutputType | null
+  }
+
+  type GetPortalProjectFileGroupByPayload<T extends PortalProjectFileGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<PortalProjectFileGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof PortalProjectFileGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], PortalProjectFileGroupByOutputType[P]>
+            : GetScalarType<T[P], PortalProjectFileGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type PortalProjectFileSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    fileName?: boolean
+    r2Key?: boolean
+    size?: boolean
+    mimeType?: boolean
+    uploadedByClerkId?: boolean
+    createdAt?: boolean
+    project?: boolean | PortalProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["portalProjectFile"]>
+
+  export type PortalProjectFileSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    fileName?: boolean
+    r2Key?: boolean
+    size?: boolean
+    mimeType?: boolean
+    uploadedByClerkId?: boolean
+    createdAt?: boolean
+    project?: boolean | PortalProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["portalProjectFile"]>
+
+  export type PortalProjectFileSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    projectId?: boolean
+    fileName?: boolean
+    r2Key?: boolean
+    size?: boolean
+    mimeType?: boolean
+    uploadedByClerkId?: boolean
+    createdAt?: boolean
+    project?: boolean | PortalProjectDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["portalProjectFile"]>
+
+  export type PortalProjectFileSelectScalar = {
+    id?: boolean
+    projectId?: boolean
+    fileName?: boolean
+    r2Key?: boolean
+    size?: boolean
+    mimeType?: boolean
+    uploadedByClerkId?: boolean
+    createdAt?: boolean
+  }
+
+  export type PortalProjectFileOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "projectId" | "fileName" | "r2Key" | "size" | "mimeType" | "uploadedByClerkId" | "createdAt", ExtArgs["result"]["portalProjectFile"]>
+  export type PortalProjectFileInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | PortalProjectDefaultArgs<ExtArgs>
+  }
+  export type PortalProjectFileIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | PortalProjectDefaultArgs<ExtArgs>
+  }
+  export type PortalProjectFileIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    project?: boolean | PortalProjectDefaultArgs<ExtArgs>
+  }
+
+  export type $PortalProjectFilePayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "PortalProjectFile"
+    objects: {
+      project: Prisma.$PortalProjectPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      projectId: string
+      fileName: string
+      r2Key: string
+      size: number
+      mimeType: string
+      uploadedByClerkId: string
+      createdAt: Date
+    }, ExtArgs["result"]["portalProjectFile"]>
+    composites: {}
+  }
+
+  type PortalProjectFileGetPayload<S extends boolean | null | undefined | PortalProjectFileDefaultArgs> = $Result.GetResult<Prisma.$PortalProjectFilePayload, S>
+
+  type PortalProjectFileCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<PortalProjectFileFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: PortalProjectFileCountAggregateInputType | true
+    }
+
+  export interface PortalProjectFileDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['PortalProjectFile'], meta: { name: 'PortalProjectFile' } }
+    /**
+     * Find zero or one PortalProjectFile that matches the filter.
+     * @param {PortalProjectFileFindUniqueArgs} args - Arguments to find a PortalProjectFile
+     * @example
+     * // Get one PortalProjectFile
+     * const portalProjectFile = await prisma.portalProjectFile.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends PortalProjectFileFindUniqueArgs>(args: SelectSubset<T, PortalProjectFileFindUniqueArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one PortalProjectFile that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {PortalProjectFileFindUniqueOrThrowArgs} args - Arguments to find a PortalProjectFile
+     * @example
+     * // Get one PortalProjectFile
+     * const portalProjectFile = await prisma.portalProjectFile.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends PortalProjectFileFindUniqueOrThrowArgs>(args: SelectSubset<T, PortalProjectFileFindUniqueOrThrowArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PortalProjectFile that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileFindFirstArgs} args - Arguments to find a PortalProjectFile
+     * @example
+     * // Get one PortalProjectFile
+     * const portalProjectFile = await prisma.portalProjectFile.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends PortalProjectFileFindFirstArgs>(args?: SelectSubset<T, PortalProjectFileFindFirstArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first PortalProjectFile that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileFindFirstOrThrowArgs} args - Arguments to find a PortalProjectFile
+     * @example
+     * // Get one PortalProjectFile
+     * const portalProjectFile = await prisma.portalProjectFile.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends PortalProjectFileFindFirstOrThrowArgs>(args?: SelectSubset<T, PortalProjectFileFindFirstOrThrowArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more PortalProjectFiles that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all PortalProjectFiles
+     * const portalProjectFiles = await prisma.portalProjectFile.findMany()
+     * 
+     * // Get first 10 PortalProjectFiles
+     * const portalProjectFiles = await prisma.portalProjectFile.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const portalProjectFileWithIdOnly = await prisma.portalProjectFile.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends PortalProjectFileFindManyArgs>(args?: SelectSubset<T, PortalProjectFileFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a PortalProjectFile.
+     * @param {PortalProjectFileCreateArgs} args - Arguments to create a PortalProjectFile.
+     * @example
+     * // Create one PortalProjectFile
+     * const PortalProjectFile = await prisma.portalProjectFile.create({
+     *   data: {
+     *     // ... data to create a PortalProjectFile
+     *   }
+     * })
+     * 
+     */
+    create<T extends PortalProjectFileCreateArgs>(args: SelectSubset<T, PortalProjectFileCreateArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many PortalProjectFiles.
+     * @param {PortalProjectFileCreateManyArgs} args - Arguments to create many PortalProjectFiles.
+     * @example
+     * // Create many PortalProjectFiles
+     * const portalProjectFile = await prisma.portalProjectFile.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends PortalProjectFileCreateManyArgs>(args?: SelectSubset<T, PortalProjectFileCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many PortalProjectFiles and returns the data saved in the database.
+     * @param {PortalProjectFileCreateManyAndReturnArgs} args - Arguments to create many PortalProjectFiles.
+     * @example
+     * // Create many PortalProjectFiles
+     * const portalProjectFile = await prisma.portalProjectFile.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many PortalProjectFiles and only return the `id`
+     * const portalProjectFileWithIdOnly = await prisma.portalProjectFile.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends PortalProjectFileCreateManyAndReturnArgs>(args?: SelectSubset<T, PortalProjectFileCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a PortalProjectFile.
+     * @param {PortalProjectFileDeleteArgs} args - Arguments to delete one PortalProjectFile.
+     * @example
+     * // Delete one PortalProjectFile
+     * const PortalProjectFile = await prisma.portalProjectFile.delete({
+     *   where: {
+     *     // ... filter to delete one PortalProjectFile
+     *   }
+     * })
+     * 
+     */
+    delete<T extends PortalProjectFileDeleteArgs>(args: SelectSubset<T, PortalProjectFileDeleteArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one PortalProjectFile.
+     * @param {PortalProjectFileUpdateArgs} args - Arguments to update one PortalProjectFile.
+     * @example
+     * // Update one PortalProjectFile
+     * const portalProjectFile = await prisma.portalProjectFile.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends PortalProjectFileUpdateArgs>(args: SelectSubset<T, PortalProjectFileUpdateArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more PortalProjectFiles.
+     * @param {PortalProjectFileDeleteManyArgs} args - Arguments to filter PortalProjectFiles to delete.
+     * @example
+     * // Delete a few PortalProjectFiles
+     * const { count } = await prisma.portalProjectFile.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends PortalProjectFileDeleteManyArgs>(args?: SelectSubset<T, PortalProjectFileDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PortalProjectFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many PortalProjectFiles
+     * const portalProjectFile = await prisma.portalProjectFile.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends PortalProjectFileUpdateManyArgs>(args: SelectSubset<T, PortalProjectFileUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more PortalProjectFiles and returns the data updated in the database.
+     * @param {PortalProjectFileUpdateManyAndReturnArgs} args - Arguments to update many PortalProjectFiles.
+     * @example
+     * // Update many PortalProjectFiles
+     * const portalProjectFile = await prisma.portalProjectFile.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more PortalProjectFiles and only return the `id`
+     * const portalProjectFileWithIdOnly = await prisma.portalProjectFile.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends PortalProjectFileUpdateManyAndReturnArgs>(args: SelectSubset<T, PortalProjectFileUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one PortalProjectFile.
+     * @param {PortalProjectFileUpsertArgs} args - Arguments to update or create a PortalProjectFile.
+     * @example
+     * // Update or create a PortalProjectFile
+     * const portalProjectFile = await prisma.portalProjectFile.upsert({
+     *   create: {
+     *     // ... data to create a PortalProjectFile
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the PortalProjectFile we want to update
+     *   }
+     * })
+     */
+    upsert<T extends PortalProjectFileUpsertArgs>(args: SelectSubset<T, PortalProjectFileUpsertArgs<ExtArgs>>): Prisma__PortalProjectFileClient<$Result.GetResult<Prisma.$PortalProjectFilePayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of PortalProjectFiles.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileCountArgs} args - Arguments to filter PortalProjectFiles to count.
+     * @example
+     * // Count the number of PortalProjectFiles
+     * const count = await prisma.portalProjectFile.count({
+     *   where: {
+     *     // ... the filter for the PortalProjectFiles we want to count
+     *   }
+     * })
+    **/
+    count<T extends PortalProjectFileCountArgs>(
+      args?: Subset<T, PortalProjectFileCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], PortalProjectFileCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a PortalProjectFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends PortalProjectFileAggregateArgs>(args: Subset<T, PortalProjectFileAggregateArgs>): Prisma.PrismaPromise<GetPortalProjectFileAggregateType<T>>
+
+    /**
+     * Group by PortalProjectFile.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {PortalProjectFileGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends PortalProjectFileGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: PortalProjectFileGroupByArgs['orderBy'] }
+        : { orderBy?: PortalProjectFileGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, PortalProjectFileGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetPortalProjectFileGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the PortalProjectFile model
+   */
+  readonly fields: PortalProjectFileFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for PortalProjectFile.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__PortalProjectFileClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    project<T extends PortalProjectDefaultArgs<ExtArgs> = {}>(args?: Subset<T, PortalProjectDefaultArgs<ExtArgs>>): Prisma__PortalProjectClient<$Result.GetResult<Prisma.$PortalProjectPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the PortalProjectFile model
+   */
+  interface PortalProjectFileFieldRefs {
+    readonly id: FieldRef<"PortalProjectFile", 'String'>
+    readonly projectId: FieldRef<"PortalProjectFile", 'String'>
+    readonly fileName: FieldRef<"PortalProjectFile", 'String'>
+    readonly r2Key: FieldRef<"PortalProjectFile", 'String'>
+    readonly size: FieldRef<"PortalProjectFile", 'Int'>
+    readonly mimeType: FieldRef<"PortalProjectFile", 'String'>
+    readonly uploadedByClerkId: FieldRef<"PortalProjectFile", 'String'>
+    readonly createdAt: FieldRef<"PortalProjectFile", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * PortalProjectFile findUnique
+   */
+  export type PortalProjectFileFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProjectFile to fetch.
+     */
+    where: PortalProjectFileWhereUniqueInput
+  }
+
+  /**
+   * PortalProjectFile findUniqueOrThrow
+   */
+  export type PortalProjectFileFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProjectFile to fetch.
+     */
+    where: PortalProjectFileWhereUniqueInput
+  }
+
+  /**
+   * PortalProjectFile findFirst
+   */
+  export type PortalProjectFileFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProjectFile to fetch.
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjectFiles to fetch.
+     */
+    orderBy?: PortalProjectFileOrderByWithRelationInput | PortalProjectFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PortalProjectFiles.
+     */
+    cursor?: PortalProjectFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjectFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjectFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PortalProjectFiles.
+     */
+    distinct?: PortalProjectFileScalarFieldEnum | PortalProjectFileScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProjectFile findFirstOrThrow
+   */
+  export type PortalProjectFileFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProjectFile to fetch.
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjectFiles to fetch.
+     */
+    orderBy?: PortalProjectFileOrderByWithRelationInput | PortalProjectFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for PortalProjectFiles.
+     */
+    cursor?: PortalProjectFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjectFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjectFiles.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of PortalProjectFiles.
+     */
+    distinct?: PortalProjectFileScalarFieldEnum | PortalProjectFileScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProjectFile findMany
+   */
+  export type PortalProjectFileFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * Filter, which PortalProjectFiles to fetch.
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of PortalProjectFiles to fetch.
+     */
+    orderBy?: PortalProjectFileOrderByWithRelationInput | PortalProjectFileOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing PortalProjectFiles.
+     */
+    cursor?: PortalProjectFileWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` PortalProjectFiles from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` PortalProjectFiles.
+     */
+    skip?: number
+    distinct?: PortalProjectFileScalarFieldEnum | PortalProjectFileScalarFieldEnum[]
+  }
+
+  /**
+   * PortalProjectFile create
+   */
+  export type PortalProjectFileCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * The data needed to create a PortalProjectFile.
+     */
+    data: XOR<PortalProjectFileCreateInput, PortalProjectFileUncheckedCreateInput>
+  }
+
+  /**
+   * PortalProjectFile createMany
+   */
+  export type PortalProjectFileCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many PortalProjectFiles.
+     */
+    data: PortalProjectFileCreateManyInput | PortalProjectFileCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * PortalProjectFile createManyAndReturn
+   */
+  export type PortalProjectFileCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * The data used to create many PortalProjectFiles.
+     */
+    data: PortalProjectFileCreateManyInput | PortalProjectFileCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PortalProjectFile update
+   */
+  export type PortalProjectFileUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * The data needed to update a PortalProjectFile.
+     */
+    data: XOR<PortalProjectFileUpdateInput, PortalProjectFileUncheckedUpdateInput>
+    /**
+     * Choose, which PortalProjectFile to update.
+     */
+    where: PortalProjectFileWhereUniqueInput
+  }
+
+  /**
+   * PortalProjectFile updateMany
+   */
+  export type PortalProjectFileUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update PortalProjectFiles.
+     */
+    data: XOR<PortalProjectFileUpdateManyMutationInput, PortalProjectFileUncheckedUpdateManyInput>
+    /**
+     * Filter which PortalProjectFiles to update
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * Limit how many PortalProjectFiles to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * PortalProjectFile updateManyAndReturn
+   */
+  export type PortalProjectFileUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * The data used to update PortalProjectFiles.
+     */
+    data: XOR<PortalProjectFileUpdateManyMutationInput, PortalProjectFileUncheckedUpdateManyInput>
+    /**
+     * Filter which PortalProjectFiles to update
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * Limit how many PortalProjectFiles to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * PortalProjectFile upsert
+   */
+  export type PortalProjectFileUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * The filter to search for the PortalProjectFile to update in case it exists.
+     */
+    where: PortalProjectFileWhereUniqueInput
+    /**
+     * In case the PortalProjectFile found by the `where` argument doesn't exist, create a new PortalProjectFile with this data.
+     */
+    create: XOR<PortalProjectFileCreateInput, PortalProjectFileUncheckedCreateInput>
+    /**
+     * In case the PortalProjectFile was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<PortalProjectFileUpdateInput, PortalProjectFileUncheckedUpdateInput>
+  }
+
+  /**
+   * PortalProjectFile delete
+   */
+  export type PortalProjectFileDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+    /**
+     * Filter which PortalProjectFile to delete.
+     */
+    where: PortalProjectFileWhereUniqueInput
+  }
+
+  /**
+   * PortalProjectFile deleteMany
+   */
+  export type PortalProjectFileDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which PortalProjectFiles to delete
+     */
+    where?: PortalProjectFileWhereInput
+    /**
+     * Limit how many PortalProjectFiles to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * PortalProjectFile without action
+   */
+  export type PortalProjectFileDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the PortalProjectFile
+     */
+    select?: PortalProjectFileSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the PortalProjectFile
+     */
+    omit?: PortalProjectFileOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: PortalProjectFileInclude<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -12911,6 +15364,33 @@ export namespace Prisma {
   export type MediaAssetScalarFieldEnum = (typeof MediaAssetScalarFieldEnum)[keyof typeof MediaAssetScalarFieldEnum]
 
 
+  export const PortalProjectScalarFieldEnum: {
+    id: 'id',
+    clerkUserId: 'clerkUserId',
+    name: 'name',
+    description: 'description',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type PortalProjectScalarFieldEnum = (typeof PortalProjectScalarFieldEnum)[keyof typeof PortalProjectScalarFieldEnum]
+
+
+  export const PortalProjectFileScalarFieldEnum: {
+    id: 'id',
+    projectId: 'projectId',
+    fileName: 'fileName',
+    r2Key: 'r2Key',
+    size: 'size',
+    mimeType: 'mimeType',
+    uploadedByClerkId: 'uploadedByClerkId',
+    createdAt: 'createdAt'
+  };
+
+  export type PortalProjectFileScalarFieldEnum = (typeof PortalProjectFileScalarFieldEnum)[keyof typeof PortalProjectFileScalarFieldEnum]
+
+
   export const SortOrder: {
     asc: 'asc',
     desc: 'desc'
@@ -13080,6 +15560,20 @@ export namespace Prisma {
    * Reference to a field of type 'Int[]'
    */
   export type ListIntFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Int[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'PortalProjectStatus'
+   */
+  export type EnumPortalProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PortalProjectStatus'>
+    
+
+
+  /**
+   * Reference to a field of type 'PortalProjectStatus[]'
+   */
+  export type ListEnumPortalProjectStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'PortalProjectStatus[]'>
     
 
 
@@ -13951,6 +16445,143 @@ export namespace Prisma {
     alt?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
     type?: StringNullableWithAggregatesFilter<"MediaAsset"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MediaAsset"> | Date | string
+  }
+
+  export type PortalProjectWhereInput = {
+    AND?: PortalProjectWhereInput | PortalProjectWhereInput[]
+    OR?: PortalProjectWhereInput[]
+    NOT?: PortalProjectWhereInput | PortalProjectWhereInput[]
+    id?: StringFilter<"PortalProject"> | string
+    clerkUserId?: StringFilter<"PortalProject"> | string
+    name?: StringFilter<"PortalProject"> | string
+    description?: StringNullableFilter<"PortalProject"> | string | null
+    status?: EnumPortalProjectStatusFilter<"PortalProject"> | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFilter<"PortalProject"> | Date | string
+    updatedAt?: DateTimeFilter<"PortalProject"> | Date | string
+    files?: PortalProjectFileListRelationFilter
+  }
+
+  export type PortalProjectOrderByWithRelationInput = {
+    id?: SortOrder
+    clerkUserId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    files?: PortalProjectFileOrderByRelationAggregateInput
+  }
+
+  export type PortalProjectWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PortalProjectWhereInput | PortalProjectWhereInput[]
+    OR?: PortalProjectWhereInput[]
+    NOT?: PortalProjectWhereInput | PortalProjectWhereInput[]
+    clerkUserId?: StringFilter<"PortalProject"> | string
+    name?: StringFilter<"PortalProject"> | string
+    description?: StringNullableFilter<"PortalProject"> | string | null
+    status?: EnumPortalProjectStatusFilter<"PortalProject"> | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFilter<"PortalProject"> | Date | string
+    updatedAt?: DateTimeFilter<"PortalProject"> | Date | string
+    files?: PortalProjectFileListRelationFilter
+  }, "id">
+
+  export type PortalProjectOrderByWithAggregationInput = {
+    id?: SortOrder
+    clerkUserId?: SortOrder
+    name?: SortOrder
+    description?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: PortalProjectCountOrderByAggregateInput
+    _max?: PortalProjectMaxOrderByAggregateInput
+    _min?: PortalProjectMinOrderByAggregateInput
+  }
+
+  export type PortalProjectScalarWhereWithAggregatesInput = {
+    AND?: PortalProjectScalarWhereWithAggregatesInput | PortalProjectScalarWhereWithAggregatesInput[]
+    OR?: PortalProjectScalarWhereWithAggregatesInput[]
+    NOT?: PortalProjectScalarWhereWithAggregatesInput | PortalProjectScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PortalProject"> | string
+    clerkUserId?: StringWithAggregatesFilter<"PortalProject"> | string
+    name?: StringWithAggregatesFilter<"PortalProject"> | string
+    description?: StringNullableWithAggregatesFilter<"PortalProject"> | string | null
+    status?: EnumPortalProjectStatusWithAggregatesFilter<"PortalProject"> | $Enums.PortalProjectStatus
+    createdAt?: DateTimeWithAggregatesFilter<"PortalProject"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"PortalProject"> | Date | string
+  }
+
+  export type PortalProjectFileWhereInput = {
+    AND?: PortalProjectFileWhereInput | PortalProjectFileWhereInput[]
+    OR?: PortalProjectFileWhereInput[]
+    NOT?: PortalProjectFileWhereInput | PortalProjectFileWhereInput[]
+    id?: StringFilter<"PortalProjectFile"> | string
+    projectId?: StringFilter<"PortalProjectFile"> | string
+    fileName?: StringFilter<"PortalProjectFile"> | string
+    r2Key?: StringFilter<"PortalProjectFile"> | string
+    size?: IntFilter<"PortalProjectFile"> | number
+    mimeType?: StringFilter<"PortalProjectFile"> | string
+    uploadedByClerkId?: StringFilter<"PortalProjectFile"> | string
+    createdAt?: DateTimeFilter<"PortalProjectFile"> | Date | string
+    project?: XOR<PortalProjectScalarRelationFilter, PortalProjectWhereInput>
+  }
+
+  export type PortalProjectFileOrderByWithRelationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    fileName?: SortOrder
+    r2Key?: SortOrder
+    size?: SortOrder
+    mimeType?: SortOrder
+    uploadedByClerkId?: SortOrder
+    createdAt?: SortOrder
+    project?: PortalProjectOrderByWithRelationInput
+  }
+
+  export type PortalProjectFileWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: PortalProjectFileWhereInput | PortalProjectFileWhereInput[]
+    OR?: PortalProjectFileWhereInput[]
+    NOT?: PortalProjectFileWhereInput | PortalProjectFileWhereInput[]
+    projectId?: StringFilter<"PortalProjectFile"> | string
+    fileName?: StringFilter<"PortalProjectFile"> | string
+    r2Key?: StringFilter<"PortalProjectFile"> | string
+    size?: IntFilter<"PortalProjectFile"> | number
+    mimeType?: StringFilter<"PortalProjectFile"> | string
+    uploadedByClerkId?: StringFilter<"PortalProjectFile"> | string
+    createdAt?: DateTimeFilter<"PortalProjectFile"> | Date | string
+    project?: XOR<PortalProjectScalarRelationFilter, PortalProjectWhereInput>
+  }, "id">
+
+  export type PortalProjectFileOrderByWithAggregationInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    fileName?: SortOrder
+    r2Key?: SortOrder
+    size?: SortOrder
+    mimeType?: SortOrder
+    uploadedByClerkId?: SortOrder
+    createdAt?: SortOrder
+    _count?: PortalProjectFileCountOrderByAggregateInput
+    _avg?: PortalProjectFileAvgOrderByAggregateInput
+    _max?: PortalProjectFileMaxOrderByAggregateInput
+    _min?: PortalProjectFileMinOrderByAggregateInput
+    _sum?: PortalProjectFileSumOrderByAggregateInput
+  }
+
+  export type PortalProjectFileScalarWhereWithAggregatesInput = {
+    AND?: PortalProjectFileScalarWhereWithAggregatesInput | PortalProjectFileScalarWhereWithAggregatesInput[]
+    OR?: PortalProjectFileScalarWhereWithAggregatesInput[]
+    NOT?: PortalProjectFileScalarWhereWithAggregatesInput | PortalProjectFileScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"PortalProjectFile"> | string
+    projectId?: StringWithAggregatesFilter<"PortalProjectFile"> | string
+    fileName?: StringWithAggregatesFilter<"PortalProjectFile"> | string
+    r2Key?: StringWithAggregatesFilter<"PortalProjectFile"> | string
+    size?: IntWithAggregatesFilter<"PortalProjectFile"> | number
+    mimeType?: StringWithAggregatesFilter<"PortalProjectFile"> | string
+    uploadedByClerkId?: StringWithAggregatesFilter<"PortalProjectFile"> | string
+    createdAt?: DateTimeWithAggregatesFilter<"PortalProjectFile"> | Date | string
   }
 
   export type AdminUserCreateInput = {
@@ -14971,6 +17602,156 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type PortalProjectCreateInput = {
+    id?: string
+    clerkUserId: string
+    name: string
+    description?: string | null
+    status?: $Enums.PortalProjectStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    files?: PortalProjectFileCreateNestedManyWithoutProjectInput
+  }
+
+  export type PortalProjectUncheckedCreateInput = {
+    id?: string
+    clerkUserId: string
+    name: string
+    description?: string | null
+    status?: $Enums.PortalProjectStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    files?: PortalProjectFileUncheckedCreateNestedManyWithoutProjectInput
+  }
+
+  export type PortalProjectUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clerkUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPortalProjectStatusFieldUpdateOperationsInput | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    files?: PortalProjectFileUpdateManyWithoutProjectNestedInput
+  }
+
+  export type PortalProjectUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clerkUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPortalProjectStatusFieldUpdateOperationsInput | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    files?: PortalProjectFileUncheckedUpdateManyWithoutProjectNestedInput
+  }
+
+  export type PortalProjectCreateManyInput = {
+    id?: string
+    clerkUserId: string
+    name: string
+    description?: string | null
+    status?: $Enums.PortalProjectStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PortalProjectUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clerkUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPortalProjectStatusFieldUpdateOperationsInput | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clerkUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPortalProjectStatusFieldUpdateOperationsInput | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectFileCreateInput = {
+    id?: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt?: Date | string
+    project: PortalProjectCreateNestedOneWithoutFilesInput
+  }
+
+  export type PortalProjectFileUncheckedCreateInput = {
+    id?: string
+    projectId: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt?: Date | string
+  }
+
+  export type PortalProjectFileUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    project?: PortalProjectUpdateOneRequiredWithoutFilesNestedInput
+  }
+
+  export type PortalProjectFileUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectFileCreateManyInput = {
+    id?: string
+    projectId: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt?: Date | string
+  }
+
+  export type PortalProjectFileUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectFileUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    projectId?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -15744,6 +18525,109 @@ export namespace Prisma {
     createdAt?: SortOrder
   }
 
+  export type EnumPortalProjectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PortalProjectStatus | EnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPortalProjectStatusFilter<$PrismaModel> | $Enums.PortalProjectStatus
+  }
+
+  export type PortalProjectFileListRelationFilter = {
+    every?: PortalProjectFileWhereInput
+    some?: PortalProjectFileWhereInput
+    none?: PortalProjectFileWhereInput
+  }
+
+  export type PortalProjectFileOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type PortalProjectCountOrderByAggregateInput = {
+    id?: SortOrder
+    clerkUserId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PortalProjectMaxOrderByAggregateInput = {
+    id?: SortOrder
+    clerkUserId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type PortalProjectMinOrderByAggregateInput = {
+    id?: SortOrder
+    clerkUserId?: SortOrder
+    name?: SortOrder
+    description?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumPortalProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PortalProjectStatus | EnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPortalProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.PortalProjectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPortalProjectStatusFilter<$PrismaModel>
+    _max?: NestedEnumPortalProjectStatusFilter<$PrismaModel>
+  }
+
+  export type PortalProjectScalarRelationFilter = {
+    is?: PortalProjectWhereInput
+    isNot?: PortalProjectWhereInput
+  }
+
+  export type PortalProjectFileCountOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    fileName?: SortOrder
+    r2Key?: SortOrder
+    size?: SortOrder
+    mimeType?: SortOrder
+    uploadedByClerkId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PortalProjectFileAvgOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
+  export type PortalProjectFileMaxOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    fileName?: SortOrder
+    r2Key?: SortOrder
+    size?: SortOrder
+    mimeType?: SortOrder
+    uploadedByClerkId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PortalProjectFileMinOrderByAggregateInput = {
+    id?: SortOrder
+    projectId?: SortOrder
+    fileName?: SortOrder
+    r2Key?: SortOrder
+    size?: SortOrder
+    mimeType?: SortOrder
+    uploadedByClerkId?: SortOrder
+    createdAt?: SortOrder
+  }
+
+  export type PortalProjectFileSumOrderByAggregateInput = {
+    size?: SortOrder
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -15842,6 +18726,66 @@ export namespace Prisma {
     decrement?: number
     multiply?: number
     divide?: number
+  }
+
+  export type PortalProjectFileCreateNestedManyWithoutProjectInput = {
+    create?: XOR<PortalProjectFileCreateWithoutProjectInput, PortalProjectFileUncheckedCreateWithoutProjectInput> | PortalProjectFileCreateWithoutProjectInput[] | PortalProjectFileUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PortalProjectFileCreateOrConnectWithoutProjectInput | PortalProjectFileCreateOrConnectWithoutProjectInput[]
+    createMany?: PortalProjectFileCreateManyProjectInputEnvelope
+    connect?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+  }
+
+  export type PortalProjectFileUncheckedCreateNestedManyWithoutProjectInput = {
+    create?: XOR<PortalProjectFileCreateWithoutProjectInput, PortalProjectFileUncheckedCreateWithoutProjectInput> | PortalProjectFileCreateWithoutProjectInput[] | PortalProjectFileUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PortalProjectFileCreateOrConnectWithoutProjectInput | PortalProjectFileCreateOrConnectWithoutProjectInput[]
+    createMany?: PortalProjectFileCreateManyProjectInputEnvelope
+    connect?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+  }
+
+  export type EnumPortalProjectStatusFieldUpdateOperationsInput = {
+    set?: $Enums.PortalProjectStatus
+  }
+
+  export type PortalProjectFileUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<PortalProjectFileCreateWithoutProjectInput, PortalProjectFileUncheckedCreateWithoutProjectInput> | PortalProjectFileCreateWithoutProjectInput[] | PortalProjectFileUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PortalProjectFileCreateOrConnectWithoutProjectInput | PortalProjectFileCreateOrConnectWithoutProjectInput[]
+    upsert?: PortalProjectFileUpsertWithWhereUniqueWithoutProjectInput | PortalProjectFileUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: PortalProjectFileCreateManyProjectInputEnvelope
+    set?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    disconnect?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    delete?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    connect?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    update?: PortalProjectFileUpdateWithWhereUniqueWithoutProjectInput | PortalProjectFileUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: PortalProjectFileUpdateManyWithWhereWithoutProjectInput | PortalProjectFileUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: PortalProjectFileScalarWhereInput | PortalProjectFileScalarWhereInput[]
+  }
+
+  export type PortalProjectFileUncheckedUpdateManyWithoutProjectNestedInput = {
+    create?: XOR<PortalProjectFileCreateWithoutProjectInput, PortalProjectFileUncheckedCreateWithoutProjectInput> | PortalProjectFileCreateWithoutProjectInput[] | PortalProjectFileUncheckedCreateWithoutProjectInput[]
+    connectOrCreate?: PortalProjectFileCreateOrConnectWithoutProjectInput | PortalProjectFileCreateOrConnectWithoutProjectInput[]
+    upsert?: PortalProjectFileUpsertWithWhereUniqueWithoutProjectInput | PortalProjectFileUpsertWithWhereUniqueWithoutProjectInput[]
+    createMany?: PortalProjectFileCreateManyProjectInputEnvelope
+    set?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    disconnect?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    delete?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    connect?: PortalProjectFileWhereUniqueInput | PortalProjectFileWhereUniqueInput[]
+    update?: PortalProjectFileUpdateWithWhereUniqueWithoutProjectInput | PortalProjectFileUpdateWithWhereUniqueWithoutProjectInput[]
+    updateMany?: PortalProjectFileUpdateManyWithWhereWithoutProjectInput | PortalProjectFileUpdateManyWithWhereWithoutProjectInput[]
+    deleteMany?: PortalProjectFileScalarWhereInput | PortalProjectFileScalarWhereInput[]
+  }
+
+  export type PortalProjectCreateNestedOneWithoutFilesInput = {
+    create?: XOR<PortalProjectCreateWithoutFilesInput, PortalProjectUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: PortalProjectCreateOrConnectWithoutFilesInput
+    connect?: PortalProjectWhereUniqueInput
+  }
+
+  export type PortalProjectUpdateOneRequiredWithoutFilesNestedInput = {
+    create?: XOR<PortalProjectCreateWithoutFilesInput, PortalProjectUncheckedCreateWithoutFilesInput>
+    connectOrCreate?: PortalProjectCreateOrConnectWithoutFilesInput
+    upsert?: PortalProjectUpsertWithoutFilesInput
+    connect?: PortalProjectWhereUniqueInput
+    update?: XOR<XOR<PortalProjectUpdateToOneWithWhereWithoutFilesInput, PortalProjectUpdateWithoutFilesInput>, PortalProjectUncheckedUpdateWithoutFilesInput>
   }
 
   export type NestedStringFilter<$PrismaModel = never> = {
@@ -16132,6 +19076,23 @@ export namespace Prisma {
     not?: NestedFloatFilter<$PrismaModel> | number
   }
 
+  export type NestedEnumPortalProjectStatusFilter<$PrismaModel = never> = {
+    equals?: $Enums.PortalProjectStatus | EnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPortalProjectStatusFilter<$PrismaModel> | $Enums.PortalProjectStatus
+  }
+
+  export type NestedEnumPortalProjectStatusWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.PortalProjectStatus | EnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    in?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    notIn?: $Enums.PortalProjectStatus[] | ListEnumPortalProjectStatusFieldRefInput<$PrismaModel>
+    not?: NestedEnumPortalProjectStatusWithAggregatesFilter<$PrismaModel> | $Enums.PortalProjectStatus
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumPortalProjectStatusFilter<$PrismaModel>
+    _max?: NestedEnumPortalProjectStatusFilter<$PrismaModel>
+  }
+
   export type AnalyticsEventCreateWithoutSessionInput = {
     id?: string
     type: $Enums.AnalyticsEventType
@@ -16292,6 +19253,122 @@ export namespace Prisma {
     convertedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   }
 
+  export type PortalProjectFileCreateWithoutProjectInput = {
+    id?: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt?: Date | string
+  }
+
+  export type PortalProjectFileUncheckedCreateWithoutProjectInput = {
+    id?: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt?: Date | string
+  }
+
+  export type PortalProjectFileCreateOrConnectWithoutProjectInput = {
+    where: PortalProjectFileWhereUniqueInput
+    create: XOR<PortalProjectFileCreateWithoutProjectInput, PortalProjectFileUncheckedCreateWithoutProjectInput>
+  }
+
+  export type PortalProjectFileCreateManyProjectInputEnvelope = {
+    data: PortalProjectFileCreateManyProjectInput | PortalProjectFileCreateManyProjectInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type PortalProjectFileUpsertWithWhereUniqueWithoutProjectInput = {
+    where: PortalProjectFileWhereUniqueInput
+    update: XOR<PortalProjectFileUpdateWithoutProjectInput, PortalProjectFileUncheckedUpdateWithoutProjectInput>
+    create: XOR<PortalProjectFileCreateWithoutProjectInput, PortalProjectFileUncheckedCreateWithoutProjectInput>
+  }
+
+  export type PortalProjectFileUpdateWithWhereUniqueWithoutProjectInput = {
+    where: PortalProjectFileWhereUniqueInput
+    data: XOR<PortalProjectFileUpdateWithoutProjectInput, PortalProjectFileUncheckedUpdateWithoutProjectInput>
+  }
+
+  export type PortalProjectFileUpdateManyWithWhereWithoutProjectInput = {
+    where: PortalProjectFileScalarWhereInput
+    data: XOR<PortalProjectFileUpdateManyMutationInput, PortalProjectFileUncheckedUpdateManyWithoutProjectInput>
+  }
+
+  export type PortalProjectFileScalarWhereInput = {
+    AND?: PortalProjectFileScalarWhereInput | PortalProjectFileScalarWhereInput[]
+    OR?: PortalProjectFileScalarWhereInput[]
+    NOT?: PortalProjectFileScalarWhereInput | PortalProjectFileScalarWhereInput[]
+    id?: StringFilter<"PortalProjectFile"> | string
+    projectId?: StringFilter<"PortalProjectFile"> | string
+    fileName?: StringFilter<"PortalProjectFile"> | string
+    r2Key?: StringFilter<"PortalProjectFile"> | string
+    size?: IntFilter<"PortalProjectFile"> | number
+    mimeType?: StringFilter<"PortalProjectFile"> | string
+    uploadedByClerkId?: StringFilter<"PortalProjectFile"> | string
+    createdAt?: DateTimeFilter<"PortalProjectFile"> | Date | string
+  }
+
+  export type PortalProjectCreateWithoutFilesInput = {
+    id?: string
+    clerkUserId: string
+    name: string
+    description?: string | null
+    status?: $Enums.PortalProjectStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PortalProjectUncheckedCreateWithoutFilesInput = {
+    id?: string
+    clerkUserId: string
+    name: string
+    description?: string | null
+    status?: $Enums.PortalProjectStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type PortalProjectCreateOrConnectWithoutFilesInput = {
+    where: PortalProjectWhereUniqueInput
+    create: XOR<PortalProjectCreateWithoutFilesInput, PortalProjectUncheckedCreateWithoutFilesInput>
+  }
+
+  export type PortalProjectUpsertWithoutFilesInput = {
+    update: XOR<PortalProjectUpdateWithoutFilesInput, PortalProjectUncheckedUpdateWithoutFilesInput>
+    create: XOR<PortalProjectCreateWithoutFilesInput, PortalProjectUncheckedCreateWithoutFilesInput>
+    where?: PortalProjectWhereInput
+  }
+
+  export type PortalProjectUpdateToOneWithWhereWithoutFilesInput = {
+    where?: PortalProjectWhereInput
+    data: XOR<PortalProjectUpdateWithoutFilesInput, PortalProjectUncheckedUpdateWithoutFilesInput>
+  }
+
+  export type PortalProjectUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clerkUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPortalProjectStatusFieldUpdateOperationsInput | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectUncheckedUpdateWithoutFilesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    clerkUserId?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumPortalProjectStatusFieldUpdateOperationsInput | $Enums.PortalProjectStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type AnalyticsEventCreateManySessionInput = {
     id?: string
     type: $Enums.AnalyticsEventType
@@ -16329,6 +19406,46 @@ export namespace Prisma {
     label?: NullableStringFieldUpdateOperationsInput | string | null
     value?: NullableStringFieldUpdateOperationsInput | string | null
     metadata?: NullableJsonNullValueInput | InputJsonValue
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectFileCreateManyProjectInput = {
+    id?: string
+    fileName: string
+    r2Key: string
+    size: number
+    mimeType: string
+    uploadedByClerkId: string
+    createdAt?: Date | string
+  }
+
+  export type PortalProjectFileUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectFileUncheckedUpdateWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type PortalProjectFileUncheckedUpdateManyWithoutProjectInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    fileName?: StringFieldUpdateOperationsInput | string
+    r2Key?: StringFieldUpdateOperationsInput | string
+    size?: IntFieldUpdateOperationsInput | number
+    mimeType?: StringFieldUpdateOperationsInput | string
+    uploadedByClerkId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 

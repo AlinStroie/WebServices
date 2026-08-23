@@ -36,3 +36,8 @@ server/coverage
 .playwright-mcp
 .vercel
 .env*
+
+# AI agent tooling scaffolding auto-installed by Vercel Clerk integration
+portal/.agents/
+portal/.claude/
+portal/skills-lock.json

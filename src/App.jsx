@@ -39,6 +39,7 @@ const AdminCaseStudies = lazy(() =>
 const AdminCaseStudyEditor = lazy(() =>
   import("./pages/admin/AdminCaseStudyEditor")
 );
+const AdminClients = lazy(() => import("./pages/admin/AdminClients"));
 
 import ScrollToTop from "./components/ScrollToTop";
 import AnalyticsTracker from "./components/AnalyticsTracker";
@@ -90,6 +91,7 @@ function App() {
             <Route path="contacts" element={<AdminContacts />} />
             <Route path="contacts/:id" element={<AdminContactDetails />} />
             <Route path="analytics" element={<AdminAnalytics />} />
+            <Route path="clients" element={<AdminClients />} />
           </Route>
 
           <Route path="*" element={<NotFound />} />

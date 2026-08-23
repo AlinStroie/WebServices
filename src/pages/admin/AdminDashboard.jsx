@@ -6,14 +6,17 @@ import { getAdminDashboard } from "../../lib/adminApi";
 function AdminDashboard() {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     getAdminDashboard()
       .then((response) => setData(response.data))
+      .catch(() => setError("Nu am putut încărca datele dashboard-ului."))
       .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <p className="text-white/50">Se încarcă...</p>;
+  if (error || !data) return <p className="text-white/50">{error || "Nu am putut încărca datele."}</p>;
 
   const stats = data.stats;
 

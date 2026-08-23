@@ -135,3 +135,21 @@ export function archiveAdminCaseStudy(id) {
     method: "DELETE",
   });
 }
+
+export function getAdminClients() {
+  return adminApiFetch("/admin/clients");
+}
+
+export function inviteAdminClient(payload) {
+  return adminApiFetch("/admin/clients/invite", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+export function createAdminClientProject(clerkUserId, payload) {
+  return adminApiFetch(`/admin/clients/${clerkUserId}/projects`, {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
