@@ -1,0 +1,18 @@
+# A Squared Studio
+
+> Agenție web design din Brașov, România. Creăm site-uri de prezentare,
+> landing page-uri și portofolii responsive pentru afaceri care vor o
+> imagine profesională online, cu SEO de bază și mentenanță inclusă.
+
+## Pagini principale
+
+- [Acasă](https://asquaredstudio.ro/): prezentare servicii, procesul de lucru și proiecte recente.
+- [Prețuri](https://asquaredstudio.ro/preturi): pachete și tarife pentru site-uri de prezentare.
+- [Studii de caz](https://asquaredstudio.ro/studii-de-caz): proiecte finalizate, cu detalii despre obiective și rezultate.
+- [Programează o consultație](https://asquaredstudio.ro/discovery): formular de contact pentru un proiect nou.
+
+## Legal
+
+- [Politica de confidențialitate](https://asquaredstudio.ro/privacy)
+- [Politica de cookie-uri](https://asquaredstudio.ro/cookies)
+- [Termeni și condiții](https://asquaredstudio.ro/terms)
