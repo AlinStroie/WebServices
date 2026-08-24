@@ -5,11 +5,13 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import compression from "compression";
 import hpp from "hpp";
+import { clerkMiddleware } from "@clerk/express";
 import adminRoutes from "./routes/admin/index.js";
 
 import caseStudyRoutes from "./routes/casestudy.routes.js";
 import contactRoutes from "./routes/contact.routes.js";
 import analyticsRoutes from "./routes/analytics.routes.js";
+import portalRoutes from "./routes/portal/index.js";
 
 import { env, isProduction } from "./config/env.js";
 import { globalLimiter } from "./middleware/rateLimiters.js";
@@ -28,14 +30,17 @@ app.use(
   })
 );
 
-// Permitem frontendul pe 5173 și 5174
+// Permitem frontendul pe 5173/5174 și portalul client pe 5175
 const allowedOrigins = [
   env.CLIENT_URL,
+  env.PORTAL_URL,
   "https://asquaredstudio.ro",
   "https://www.asquaredstudio.ro",
+  "https://portal.asquaredstudio.ro",
   "http://localhost:5173",
   "http://localhost:5174",
-];
+  "http://localhost:5175",
+].filter(Boolean);
 
 app.use(
   cors({
@@ -57,6 +62,9 @@ app.use(compression());
 
 // Cookie parser
 app.use(cookieParser());
+
+// Clerk: atașează req.auth() pe toate rutele
+app.use(clerkMiddleware());
 
 // JSON body
 app.use(express.json({ limit: "1mb" }));
@@ -101,6 +109,7 @@ app.use("/api/case-studies", caseStudyRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/analytics", analyticsRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/portal", portalRoutes);
 
 // 404
 app.use(notFound);
