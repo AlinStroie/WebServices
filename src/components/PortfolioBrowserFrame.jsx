@@ -43,7 +43,7 @@ function getProjectPreviewImage(project = {}) {
     fingerprint.includes("medical") ||
     fingerprint.includes("cabinet")
   ) {
-    return `${PREVIEW_IMAGE_BASE_PATH}/movea-preview.png`;
+    return `${PREVIEW_IMAGE_BASE_PATH}/movea-preview.webp`;
   }
 
   if (
@@ -52,7 +52,7 @@ function getProjectPreviewImage(project = {}) {
     fingerprint.includes("salon") ||
     fingerprint.includes("frumusete")
   ) {
-    return `${PREVIEW_IMAGE_BASE_PATH}/luna-beauty-studio-preview.png`;
+    return `${PREVIEW_IMAGE_BASE_PATH}/luna-beauty-studio-preview.webp`;
   }
 
   if (
@@ -62,7 +62,7 @@ function getProjectPreviewImage(project = {}) {
     fingerprint.includes("logistica") ||
     fingerprint.includes("flota")
   ) {
-    return `${PREVIEW_IMAGE_BASE_PATH}/atlas-freight-preview.png`;
+    return `${PREVIEW_IMAGE_BASE_PATH}/atlas-freight-preview.webp`;
   }
 
   if (
@@ -72,7 +72,7 @@ function getProjectPreviewImage(project = {}) {
     fingerprint.includes("restaurant") ||
     fingerprint.includes("asian")
   ) {
-    return `${PREVIEW_IMAGE_BASE_PATH}/hieu-bowl-preview.png`;
+    return `${PREVIEW_IMAGE_BASE_PATH}/hieu-bowl-preview.webp`;
   }
 
   if (
@@ -83,7 +83,7 @@ function getProjectPreviewImage(project = {}) {
     fingerprint.includes("portofoliu") ||
     fingerprint.includes("designer")
   ) {
-    return `${PREVIEW_IMAGE_BASE_PATH}/andrei-crisan-design-preview.png`;
+    return `${PREVIEW_IMAGE_BASE_PATH}/andrei-crisan-design-preview.webp`;
   }
 
   if (
@@ -94,7 +94,7 @@ function getProjectPreviewImage(project = {}) {
     fingerprint.includes("ecommerce") ||
     fingerprint.includes("streetwear")
   ) {
-    return `${PREVIEW_IMAGE_BASE_PATH}/vlom-cust-preview.png`;
+    return `${PREVIEW_IMAGE_BASE_PATH}/vlom-cust-preview.webp`;
   }
 
   return null;

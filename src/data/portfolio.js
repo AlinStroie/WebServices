@@ -155,7 +155,7 @@ export const portfolio = [
       "Buton „Cere o ofertă” repetat la fiecare secțiune relevantă",
     ],
     video: "/showcase/prolinen.webm",
-    poster: "/showcase/prolinen-poster.jpg",
+    poster: "/showcase/prolinen-poster.webp",
     liveUrl: "https://prolinen-horeca.vercel.app/",
   }),
   createProject({
@@ -174,7 +174,7 @@ export const portfolio = [
     ],
     miniSite: beautyMiniSite,
     video: "/showcase/beauty.webm",
-    poster: "/showcase/beauty-poster.jpg",
+    poster: "/showcase/beauty-poster.webp",
   }),
   createProject({
     id: "transport",
@@ -191,7 +191,7 @@ export const portfolio = [
     ],
     miniSite: transportMiniSite,
     video: "/showcase/transport.webm",
-    poster: "/showcase/transport-poster.jpg",
+    poster: "/showcase/transport-poster.webp",
   }),
   createProject({
     id: "restaurant",
@@ -208,7 +208,7 @@ export const portfolio = [
     ],
     miniSite: restaurantMiniSite,
     video: "/showcase/restaurant.webm",
-    poster: "/showcase/restaurant-poster.jpg",
+    poster: "/showcase/restaurant-poster.webp",
   }),
   createProject({
     id: "personal",
@@ -225,7 +225,7 @@ export const portfolio = [
     ],
     miniSite: personalMiniSite,
     video: "/showcase/personal.webm",
-    poster: "/showcase/personal-poster.jpg",
+    poster: "/showcase/personal-poster.webp",
   }),
   createProject({
     id: "shop",
@@ -242,6 +242,6 @@ export const portfolio = [
     ],
     miniSite: shopMiniSite,
     video: "/showcase/shop.webm",
-    poster: "/showcase/shop-poster.jpg",
+    poster: "/showcase/shop-poster.webp",
   }),
 ];
