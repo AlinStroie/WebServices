@@ -24,6 +24,18 @@
     <link rel="icon" type="image/png" href="/src/assets/logo_wtb.png" />
     <link rel="canonical" href="https://asquaredstudio.ro/" />
 
+    <!-- The video's poster (not the video itself) is what paints as LCP —
+         it needs to win the race against the 1.6MB video file, so it gets
+         its own high-priority preload ahead of it. Without this the two
+         compete for bandwidth and the ~18 KiB poster was arriving late. -->
+    <link
+      rel="preload"
+      as="image"
+      href="/hero/hero-poster.webp"
+      type="image/webp"
+      fetchpriority="high"
+    />
+
     <!-- Hero video is the first thing the user sees; without this the file
          only starts downloading once React mounts and the in-view observer
          fires, which is well after HTML parse. Preloading here starts the

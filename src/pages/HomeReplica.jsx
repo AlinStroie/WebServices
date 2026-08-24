@@ -1,19 +1,28 @@
+import { lazy, Suspense } from "react";
+
 import SEO from "../components/SEO";
 
 import Nav from "../components/replica/Nav";
 import SectionRail from "../components/replica/SectionRail";
 import Hero from "../components/replica/Hero";
 import ProblemStatement from "../components/replica/ProblemStatement";
-import ServiceCards from "../components/replica/ServiceCards";
-import VideoShowcase from "../components/replica/VideoShowcase";
-import CaseStudy from "../components/replica/CaseStudy";
-import Marquee from "../components/replica/Marquee";
-import WhyUs from "../components/replica/WhyUs";
-import Works from "../components/replica/Works";
-import Timeline from "../components/replica/Timeline";
-import Testimonials from "../components/replica/Testimonials";
-import Faqs from "../components/replica/Faqs";
-import SiteFooter from "../components/replica/SiteFooter";
+
+// Everything below is off-screen on first paint (scrolled well past the
+// pinned hero) — lazy-loading it keeps it out of the bundle Home needs for
+// its initial render, which was ~86 KiB of "unused JS" on that first load
+// per PageSpeed. fallback={null} matches the pattern App.jsx already uses
+// for route-level code-splitting: nothing renders until the chunk lands,
+// no loading-state flash.
+const ServiceCards = lazy(() => import("../components/replica/ServiceCards"));
+const VideoShowcase = lazy(() => import("../components/replica/VideoShowcase"));
+const CaseStudy = lazy(() => import("../components/replica/CaseStudy"));
+const Marquee = lazy(() => import("../components/replica/Marquee"));
+const WhyUs = lazy(() => import("../components/replica/WhyUs"));
+const Works = lazy(() => import("../components/replica/Works"));
+const Timeline = lazy(() => import("../components/replica/Timeline"));
+const Testimonials = lazy(() => import("../components/replica/Testimonials"));
+const Faqs = lazy(() => import("../components/replica/Faqs"));
+const SiteFooter = lazy(() => import("../components/replica/SiteFooter"));
 
 import BackToTop from "../components/replica/BackToTop";
 import ConsentBanner from "../components/replica/ConsentBanner";
@@ -52,26 +61,30 @@ function HomeReplica() {
 
         <ProblemStatement />
 
-        <ServiceCards />
+        <Suspense fallback={null}>
+          <ServiceCards />
 
-        <VideoShowcase />
+          <VideoShowcase />
 
-        <CaseStudy />
+          <CaseStudy />
 
-        <Marquee />
+          <Marquee />
 
-        <WhyUs />
+          <WhyUs />
 
-        <Works />
+          <Works />
 
-        <Timeline />
+          <Timeline />
 
-        <Testimonials />
+          <Testimonials />
 
-        <Faqs />
+          <Faqs />
+        </Suspense>
       </main>
 
-      <SiteFooter />
+      <Suspense fallback={null}>
+        <SiteFooter />
+      </Suspense>
 
       <BackToTop />
 
