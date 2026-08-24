@@ -33,7 +33,7 @@ function LegalInfo() {
 
             <p>
               Pentru solicitări legate de datele personale, ne poți contacta la:
-              asquared.studio@outlook.com.
+              contact@asquaredstudio.ro.
             </p>
           </div>
         </div>

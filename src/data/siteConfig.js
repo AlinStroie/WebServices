@@ -9,7 +9,7 @@ export const siteConfig = {
   },
 
   contact: {
-    email: "asquared.studio@outlook.com",
+    email: "contact@asquaredstudio.ro",
     phone: "+40 729 818 039",
     whatsapp: "+40 729 818 039",
     location: "Brașov, România",
