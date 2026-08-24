@@ -127,7 +127,11 @@ function ProjectThumbnail({ project }) {
     : `/project/${project.id}`;
 
   return (
-    <Link to={to} className="relative block">
+    <Link
+      to={to}
+      className="relative block"
+      aria-label={`Vezi proiectul ${project.title}`}
+    >
       <div
         ref={windowRef}
         className="relative z-10 aspect-[1.6/1] w-full overflow-hidden rounded-xl border border-white/15 bg-white/60 backdrop-blur-md md:rounded-3xl"

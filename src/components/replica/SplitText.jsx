@@ -59,7 +59,11 @@ function SplitText({ text, className = "", stagger = 0.06, delay = 0 }) {
   let wordIndex = 0;
 
   return (
-    <span className={className} aria-label={plain.replace(/\n/g, " ")}>
+    <span
+      className={className}
+      role="text"
+      aria-label={plain.replace(/\n/g, " ")}
+    >
       {lines.map((line, li) => (
         <span key={li} className="block" aria-hidden="true">
           {parse(line).map((piece) => {
