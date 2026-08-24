@@ -93,20 +93,23 @@
     </script>
 
     <style>
+      /* Skeleton placeholder for the gap between HTML parse and React's
+         first paint. Bone-shaped blocks roughly tracing the Hero's glass
+         panel (eyebrow / headline / subtitle / CTA row) so the swap to
+         real content doesn't jump. Hidden as soon as React has painted —
+         see main.jsx — so it's never gated on fonts or video like the old
+         spinner was, which is what made LCP take as long as 4.5s on
+         mobile. */
       #initial-loader {
         position: fixed;
         inset: 0;
         z-index: 99999;
         display: flex;
         align-items: center;
-        justify-content: center;
-        background:
-          radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.08), transparent 34%),
-          #030303;
-        color: white;
+        background: #030303;
         transition:
-          opacity 0.45s ease,
-          visibility 0.45s ease;
+          opacity 0.3s ease,
+          visibility 0.3s ease;
       }
 
       #initial-loader.loader-hidden {
@@ -114,58 +117,83 @@
         visibility: hidden;
       }
 
-      .loader-card {
+      .skeleton-panel {
         display: flex;
         flex-direction: column;
-        align-items: center;
-        gap: 18px;
+        gap: 14px;
+        width: min(420px, 84vw);
+        margin-left: max(24px, 6vw);
       }
 
-      .loader-logo {
-        position: relative;
+      .skeleton-block {
+        border-radius: 8px;
+        background: linear-gradient(
+          90deg,
+          rgba(255, 255, 255, 0.06) 25%,
+          rgba(255, 255, 255, 0.14) 37%,
+          rgba(255, 255, 255, 0.06) 63%
+        );
+        background-size: 400% 100%;
+        animation: skeleton-shimmer 1.6s ease-in-out infinite;
+      }
+
+      .skeleton-eyebrow {
+        width: 130px;
+        height: 12px;
+        border-radius: 999px;
+      }
+
+      .skeleton-title {
+        height: 30px;
+      }
+
+      .skeleton-title--wide {
+        width: 100%;
+      }
+
+      .skeleton-title--narrow {
+        width: 65%;
+      }
+
+      .skeleton-subtitle {
+        height: 13px;
+      }
+
+      .skeleton-subtitle--a {
+        width: 90%;
+      }
+
+      .skeleton-subtitle--b {
+        width: 60%;
+        margin-bottom: 8px;
+      }
+
+      .skeleton-cta-row {
         display: flex;
-        justify-content: center;
-        align-items: center;
-        width: 120px;
-        height: 120px;
+        gap: 12px;
       }
 
-      /* Same brand blue / accent green as the rest of the site
-         (--color-brand / --color-accent in src/index.css) — the loader is
-         the first thing painted, before that stylesheet is parsed, so the
-         values are inlined here rather than referenced. */
-      .loader-ring {
-        position: absolute;
-        inset: 0;
-        border-radius: 9999px;
-        border: 2px solid rgba(44, 44, 243, 0.25);
-        border-top-color: #10b981;
-        animation: loader-spin 0.9s linear infinite;
+      .skeleton-cta {
+        width: 150px;
+        height: 46px;
+        border-radius: 999px;
       }
 
-      .loader-logo img {
-        width: 64px;
-        height: auto;
-        position: relative;
-        z-index: 1;
+      .skeleton-cta--ghost {
+        width: 130px;
       }
 
-      @keyframes loader-spin {
-        to {
-          transform: rotate(360deg);
+      @keyframes skeleton-shimmer {
+        0% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
         }
       }
 
-      .loader-text {
-        font-family: Inter, system-ui, sans-serif;
-        font-size: 15px;
-        font-weight: 500;
-        letter-spacing: 0.02em;
-        color: rgba(255, 255, 255, 0.55);
-      }
-
       @media (prefers-reduced-motion: reduce) {
-        .loader-ring {
+        .skeleton-block {
           animation: none;
         }
       }
@@ -174,12 +202,16 @@
 
   <body>
     <div id="initial-loader">
-      <div class="loader-card">
-        <div class="loader-logo">
-          <div class="loader-ring" aria-hidden="true"></div>
-          <img src="/src/assets/logo_wtb.png" alt="Logo" />
+      <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-block skeleton-eyebrow"></div>
+        <div class="skeleton-block skeleton-title skeleton-title--wide"></div>
+        <div class="skeleton-block skeleton-title skeleton-title--narrow"></div>
+        <div class="skeleton-block skeleton-subtitle skeleton-subtitle--a"></div>
+        <div class="skeleton-block skeleton-subtitle skeleton-subtitle--b"></div>
+        <div class="skeleton-cta-row">
+          <div class="skeleton-block skeleton-cta"></div>
+          <div class="skeleton-block skeleton-cta skeleton-cta--ghost"></div>
         </div>
-        <div class="loader-text">Se încarcă experiența...</div>
       </div>
     </div>
 

@@ -90,7 +90,6 @@ function Hero() {
       >
         <video
           ref={videoRef}
-          data-hero-video
           className="absolute inset-0 h-full w-full object-cover"
           src="/hero/hero-video.mp4"
           muted
