@@ -1,5 +1,5 @@
 export const siteConfig = {
-  siteUrl: "",
+  siteUrl: "https://asquaredstudio.ro",
 
   brand: {
     name: "A Squared Studio",

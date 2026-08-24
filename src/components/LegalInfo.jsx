@@ -33,7 +33,7 @@ function LegalInfo() {
 
             <p>
               Pentru solicitări legate de datele personale, ne poți contacta la:
-              contact@webnova.ro.
+              asquared.studio@outlook.com.
             </p>
           </div>
         </div>

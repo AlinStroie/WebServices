@@ -1,6 +1,14 @@
 {
   "rewrites": [
     {
+      "source": "/sitemap.xml",
+      "destination": "https://api.asquaredstudio.ro/sitemap.xml"
+    },
+    {
+      "source": "/robots.txt",
+      "destination": "https://api.asquaredstudio.ro/robots.txt"
+    },
+    {
       "source": "/(.*)",
       "destination": "/index.html"
     }

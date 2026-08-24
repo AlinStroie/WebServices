@@ -60,13 +60,19 @@ router.get(
         lastmod: formatDate(new Date()),
       },
       {
-        loc: `${siteUrl}/politica-de-confidentialitate`,
+        loc: `${siteUrl}/preturi`,
+        changefreq: "monthly",
+        priority: "0.6",
+        lastmod: formatDate(new Date()),
+      },
+      {
+        loc: `${siteUrl}/privacy`,
         changefreq: "yearly",
         priority: "0.3",
         lastmod: formatDate(new Date()),
       },
       {
-        loc: `${siteUrl}/politica-cookies`,
+        loc: `${siteUrl}/cookies`,
         changefreq: "yearly",
         priority: "0.3",
         lastmod: formatDate(new Date()),
