@@ -686,6 +686,26 @@ body {
   to { opacity: 1; }
 }
 
+/* Shared loading placeholder for lazy-loaded images (SkeletonImage.jsx) —
+   neutral gray so it reads as "loading" against both the dark showcase
+   tiles and the white browser-chrome preview cards. */
+@keyframes skeleton-shimmer {
+  0% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, #e2e2e2 25%, #f2f2f2 37%, #e2e2e2 63%);
+  background-size: 400% 100%;
+  animation: skeleton-shimmer 1.6s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton-shimmer {
+    animation: none;
+  }
+}
+
 .slideout-menu {
   display: flex;
   flex-direction: column;

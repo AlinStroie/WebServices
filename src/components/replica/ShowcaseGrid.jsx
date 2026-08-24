@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 
 import { showcaseTiles } from "../../data/showcaseGrid";
+import SkeletonImage from "../SkeletonImage";
 
 /**
  * The collage that fills the right side of the ProblemStatement section,
@@ -35,13 +36,12 @@ const rows = [
 function SiteThumb({ tile, large = false }) {
   if (tile.src) {
     return (
-      <img
+      <SkeletonImage
         src={tile.src}
         alt={tile.label}
-        className="h-full w-full rounded-lg object-cover"
+        className="rounded-lg"
+        imgClassName="rounded-lg object-cover"
         draggable="false"
-        loading="lazy"
-        decoding="async"
       />
     );
   }

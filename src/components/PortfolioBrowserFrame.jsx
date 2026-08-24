@@ -1,5 +1,6 @@
 import { useMemo, useState } from "react";
 import { MiniSiteRenderer } from "./minisites";
+import SkeletonImage from "./SkeletonImage";
 
 const PREVIEW_IMAGE_BASE_PATH = "/images/portfolio-previews";
 
@@ -113,10 +114,10 @@ export function StaticCardPreview({ project }) {
   }
 
   return (
-    <img
+    <SkeletonImage
       src={previewImage}
       alt={`Preview ${project?.title || "project"}`}
-      className="h-full w-full object-cover object-top"
+      imgClassName="object-cover object-top"
       draggable={false}
       onError={() => setImageFailed(true)}
     />
