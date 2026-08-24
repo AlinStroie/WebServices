@@ -22,7 +22,7 @@ function App() {
         path="/sign-in/*"
         element={
           <div className="flex min-h-screen items-center justify-center bg-black">
-            <SignIn routing="path" path="/sign-in" />
+            <SignIn routing="path" path="/sign-in" fallbackRedirectUrl="/" />
           </div>
         }
       />
