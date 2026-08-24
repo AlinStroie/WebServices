@@ -360,16 +360,26 @@ function Timeline() {
   // Applying the measured lead-in changes the section's height, which the
   // ResizeObserver picks up and re-measures from — one extra pass, then it
   // settles (the second pass computes the same lead-in, and React bails on
-  // an unchanged state value).
+  // an unchanged state value). That second pass's getBoundingClientRect
+  // reads land in the same tick as the height change that triggered it,
+  // forcing a synchronous reflow (flagged by Lighthouse) — deferring the
+  // re-measure to the next animation frame lets the browser settle the
+  // layout from the state update first, so the read doesn't have to force
+  // it. Same two-pass result, just not synchronous with its own write.
   useEffect(() => {
     measure();
 
-    const observer = new ResizeObserver(measure);
+    let raf = 0;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(measure);
+    });
     if (sectionRef.current) observer.observe(sectionRef.current);
     window.addEventListener("resize", measure);
     document.fonts?.ready?.then(measure);
 
     return () => {
+      cancelAnimationFrame(raf);
       observer.disconnect();
       window.removeEventListener("resize", measure);
     };
