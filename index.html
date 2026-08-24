@@ -183,6 +183,21 @@
         width: 130px;
       }
 
+      /* Real text, not another shimmer block — Chrome's First Contentful
+         Paint only counts actual text/image/svg content, not background
+         colors. Without this, the skeleton (all gradient divs) painted
+         nothing FCP could count, pushing FCP out to whenever React's real
+         Hero text landed instead of firing immediately like the old
+         spinner+label loader did. */
+      .skeleton-brand {
+        font-family: Inter, system-ui, sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+        color: rgba(255, 255, 255, 0.82);
+        margin-bottom: 4px;
+      }
+
       @keyframes skeleton-shimmer {
         0% {
           background-position: 100% 50%;
@@ -203,6 +218,7 @@
   <body>
     <div id="initial-loader">
       <div class="skeleton-panel" aria-hidden="true">
+        <div class="skeleton-brand">A² Studio</div>
         <div class="skeleton-block skeleton-eyebrow"></div>
         <div class="skeleton-block skeleton-title skeleton-title--wide"></div>
         <div class="skeleton-block skeleton-title skeleton-title--narrow"></div>
