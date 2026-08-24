@@ -48,7 +48,7 @@ function CaseStudies() {
     <div className="replica relative min-h-screen">
       <SEO
         title="Studii de caz"
-        description="Studiile de caz A Squared Studio — obiectiv, proces și rezultate concrete pentru fiecare proiect livrat."
+        description="Studiile de caz A Squared Studio — proiecte de web design livrate pentru afaceri din Brașov și din toată România, cu obiectiv, proces și rezultate concrete."
       />
 
       <Nav />

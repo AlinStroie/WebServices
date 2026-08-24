@@ -18,8 +18,8 @@ function PricingPage() {
   return (
     <div className="replica relative min-h-screen">
       <SEO
-        title="Prețuri"
-        description="Pachete și prețuri pentru site-uri de prezentare A Squared Studio."
+        title="Prețuri site web Brașov"
+        description="Pachete și prețuri pentru site-uri de prezentare, landing page-uri și portofolii — A Squared Studio, agenție web design din Brașov, cu clienți din toată România."
       />
 
       <Nav />

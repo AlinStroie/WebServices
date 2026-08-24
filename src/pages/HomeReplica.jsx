@@ -1,7 +1,4 @@
-import { useMemo } from "react";
-
 import SEO from "../components/SEO";
-import { siteConfig } from "../data/siteConfig";
 
 import Nav from "../components/replica/Nav";
 import SectionRail from "../components/replica/SectionRail";
@@ -43,33 +40,9 @@ import ConsentBanner from "../components/replica/ConsentBanner";
  * back is a one-line change to the "/" route in App.jsx.
  */
 function HomeReplica() {
-  const structuredData = useMemo(
-    () => [
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: siteConfig.brand.name,
-        description: siteConfig.seo.description,
-      },
-      {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        name: siteConfig.brand.name,
-        email: siteConfig.contact.email,
-        telephone: siteConfig.contact.phone,
-        address: {
-          "@type": "PostalAddress",
-          addressLocality: siteConfig.contact.location,
-        },
-        sameAs: Object.values(siteConfig.social).filter(Boolean),
-      },
-    ],
-    []
-  );
-
   return (
     <div className="replica relative min-h-screen">
-      <SEO structuredData={structuredData} />
+      <SEO />
 
       <Nav />
       <SectionRail />

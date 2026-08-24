@@ -41,6 +41,7 @@ function SEO({
   path,
   image,
   structuredData,
+  noindex = false,
 }) {
   const pageDescription = description || siteConfig.seo.description;
 
@@ -73,7 +74,12 @@ function SEO({
       "content",
       siteConfig.seo.keywords
     );
-    upsertMeta('meta[name="robots"]', { name: "robots" }, "content", "index, follow");
+    upsertMeta(
+      'meta[name="robots"]',
+      { name: "robots" },
+      "content",
+      noindex ? "noindex, nofollow" : "index, follow"
+    );
 
     upsertMeta(
       'meta[property="og:title"]',
@@ -131,7 +137,7 @@ function SEO({
       script.textContent = JSON.stringify(schema);
       document.head.appendChild(script);
     });
-  }, [fullTitle, pageDescription, path, image, structuredData, type]);
+  }, [fullTitle, pageDescription, path, image, structuredData, type, noindex]);
 
   return null;
 }

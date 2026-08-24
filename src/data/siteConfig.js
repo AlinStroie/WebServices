@@ -40,7 +40,7 @@ export const siteConfig = {
   },
 
   seo: {
-    defaultTitle: "A Squared Studio",
+    defaultTitle: "A Squared Studio — Agenție Web Design Brașov & România",
     titleTemplate: "%s | A Squared Studio",
     description:
       "Agenție de web design din Brașov — echipa noastră construiește site-uri de prezentare, landing page-uri și magazine online care transformă vizitatorii în clienți.",
