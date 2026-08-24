@@ -4,8 +4,8 @@ import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion
 
 import Reveal from "./Reveal";
 import { StaticCardPreview } from "../PortfolioBrowserFrame";
+import SkeletonImage from "../SkeletonImage";
 import { portfolio } from "../../data/portfolio";
-import useInViewVideo from "../../hooks/useInViewVideo";
 
 // Portfolio project ids that have a real, published case study reachable at
 // /studii-de-caz/:slug (Case Study CMS — see server/prisma/seedCaseStudies.js).
@@ -112,7 +112,6 @@ function Works() {
 
 function ProjectThumbnail({ project }) {
   const windowRef = useRef(null);
-  const videoRef = useInViewVideo();
   const reduceMotion = useReducedMotion();
 
   const { scrollYProgress } = useScroll({
@@ -140,16 +139,12 @@ function ProjectThumbnail({ project }) {
           className="h-full w-full origin-center will-change-transform"
           style={{ scale: reduceMotion ? 1 : scale }}
         >
-          {project.video ? (
-            <video
-              ref={videoRef}
-              className="h-full w-full object-cover object-top"
-              src={project.video}
-              poster={project.poster}
-              muted
-              loop
-              playsInline
-              preload="metadata"
+          {project.poster ? (
+            <SkeletonImage
+              src={project.poster}
+              alt={project.title}
+              imgClassName="object-cover object-top"
+              draggable={false}
             />
           ) : (
             <StaticCardPreview project={project} />
