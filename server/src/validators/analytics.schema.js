@@ -18,7 +18,10 @@ export const analyticsSchema = z.object({
     "ERROR",
   ]),
 
-  sessionId: z.string().trim().min(8).max(120),
+  // Frontend-ul generează sessionId cu crypto.randomUUID() (lib/analytics.js)
+  // — validăm exact acel format, nu orice string, ca să nu accepte valori
+  // arbitrare drept "sessionId".
+  sessionId: z.string().uuid(),
 
   path: z.string().trim().max(300).optional(),
   label: z.string().trim().max(160).optional(),

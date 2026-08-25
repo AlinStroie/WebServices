@@ -1,4 +1,15 @@
 {
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' https://www.googletagmanager.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:; connect-src 'self' https://api.asquaredstudio.ro https://*.google-analytics.com https://*.analytics.google.com https://www.googletagmanager.com; frame-src 'none'; object-src 'none'; base-uri 'self'; frame-ancestors 'self';"
+        }
+      ]
+    }
+  ],
   "rewrites": [
     {
       "source": "/sitemap.xml",
