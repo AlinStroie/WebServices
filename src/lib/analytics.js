@@ -1,4 +1,5 @@
 import { SESSION_KEY, UTM_KEY, hasAnalyticsConsent } from "./cookieConsent";
+import { trackGaEvent } from "./googleAnalytics";
 
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
@@ -78,6 +79,16 @@ export function trackEvent(type, payload = {}) {
 
     metadata: payload.metadata,
   };
+
+  // Oglindim spre GA4 din același punct unic gated de consimțământ —
+  // orice eveniment nou adăugat mai jos (trackX) ajunge automat și în GA,
+  // fără cod suplimentar de wiring.
+  trackGaEvent(type, {
+    label: payload.label,
+    value: payload.value,
+    path: body.path,
+    metadata: payload.metadata,
+  });
 
   const url = `${API_BASE}/analytics/event`;
 

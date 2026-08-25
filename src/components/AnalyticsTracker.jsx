@@ -9,7 +9,7 @@ import {
   trackPricingView,
   trackError,
 } from "../lib/analytics";
-import { loadGoogleAnalytics, trackGaPageView } from "../lib/googleAnalytics";
+import { loadGoogleAnalytics } from "../lib/googleAnalytics";
 
 function getClosestLink(target) {
   if (!target) return null;
@@ -70,8 +70,9 @@ function AnalyticsTracker() {
       loadGoogleAnalytics();
       // Consimțământul poate fi acordat fără schimbare de rută (din banner),
       // deci efectul de mai jos (legat de location) nu retrimite page_view —
-      // îl trimitem explicit aici pentru pagina curentă.
-      trackGaPageView(window.location.pathname + window.location.search);
+      // îl trimitem explicit aici pentru pagina curentă. trackPageView oglindește
+      // automat și spre GA (vezi trackEvent din lib/analytics.js).
+      trackPageView(window.location.pathname + window.location.search);
     }
 
     handleConsentUpdate();
@@ -92,7 +93,6 @@ function AnalyticsTracker() {
 
     trackPageView(path);
     loadGoogleAnalytics();
-    trackGaPageView(path);
 
     function handleScroll() {
       if (!hasAnalyticsConsent()) return;

@@ -36,14 +36,40 @@ export function loadGoogleAnalytics() {
   loaded = true;
 }
 
-export function trackGaPageView(path) {
+// Numele evenimentelor interne (din trackEvent, lib/analytics.js) mapate la
+// nume de evenimente GA4. CONTACT_SUCCESS -> generate_lead e evenimentul
+// standard GA4 recomandat pentru lead-uri — ăsta trebuie marcat drept "Key
+// event" în GA4 (Admin → Events), e conversia reală de urmărit.
+const GA_EVENT_NAME_MAP = {
+  PAGE_VIEW: "page_view",
+  CONTACT_SUCCESS: "generate_lead",
+};
+
+export function trackGaEvent(type, { label, value, path, metadata } = {}) {
   if (!loaded || !hasAnalyticsConsent() || typeof window.gtag !== "function") {
     return;
   }
 
-  window.gtag("event", "page_view", {
-    page_path: path,
-    page_title: document.title,
-    page_location: window.location.href,
-  });
+  const eventName = GA_EVENT_NAME_MAP[type] || type.toLowerCase();
+
+  const params = {};
+
+  if (path !== undefined) {
+    params.page_path = path;
+    params.page_title = document.title;
+    params.page_location = window.location.href;
+  }
+
+  if (label !== undefined) params.label = label;
+  if (value !== undefined) params.detail = value;
+
+  if (metadata !== undefined) {
+    try {
+      params.metadata = JSON.stringify(metadata);
+    } catch {
+      // Ignorăm — metadata nu trebuie să strice trimiterea evenimentului.
+    }
+  }
+
+  window.gtag("event", eventName, params);
 }
