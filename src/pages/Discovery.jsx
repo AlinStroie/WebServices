@@ -79,14 +79,16 @@ function OptionButton({ Icon, label, hint, active, onClick }) {
       aria-pressed={active}
       className={`group flex w-full items-center gap-4 rounded-2xl border-[1.5px] px-5 py-4 text-left transition-all duration-200 hover:-translate-y-px hover:shadow-[0_8px_24px_rgba(0,0,0,0.06)] ${
         active
-          ? "-translate-y-px border-[#111] bg-[#111] text-white"
-          : "border-black/[0.07] bg-white hover:border-black/15 hover:bg-[#f5f5f5]"
+          ? "-translate-y-px border-[color:var(--color-ink)] bg-[color:var(--color-ink)] text-white"
+          : "border-[color:var(--color-divider)] bg-white hover:border-[color:var(--color-ink)]/25 hover:bg-[color:var(--color-ink)]/[0.03]"
       }`}
     >
       {Icon && (
         <span
           className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors duration-200 ${
-            active ? "bg-white/15 text-white" : "bg-black/[0.04] text-[#111]"
+            active
+              ? "bg-white/15 text-white"
+              : "bg-[color:var(--color-ink)]/[0.05] text-[color:var(--color-ink)]"
           }`}
         >
           <Icon size={17} />
@@ -96,12 +98,47 @@ function OptionButton({ Icon, label, hint, active, onClick }) {
       <span className="flex flex-1 flex-col gap-0.5">
         <span className="text-[15px] font-medium">{label}</span>
         <span
-          className={`text-[13px] ${active ? "text-white/65" : "text-[#999]"}`}
+          className={`text-[13px] ${
+            active ? "text-white/65" : "text-[color:var(--color-copy-muted)]"
+          }`}
         >
           {hint}
         </span>
       </span>
     </button>
+  );
+}
+
+function FloatingField({
+  id,
+  label,
+  as = "input",
+  value,
+  onChange,
+  ...rest
+}) {
+  const Tag = as;
+
+  return (
+    <div className="relative">
+      <Tag
+        id={id}
+        placeholder=" "
+        value={value}
+        onChange={onChange}
+        className={`peer w-full rounded-2xl border-[1.5px] border-[color:var(--color-divider)] px-5 pb-2.5 pt-6 text-[15px] text-[color:var(--color-ink)] outline-none transition-colors duration-200 focus:border-[color:var(--color-ink)] ${
+          as === "textarea" ? "resize-y" : ""
+        }`}
+        {...rest}
+      />
+
+      <label
+        htmlFor={id}
+        className="pointer-events-none absolute left-5 top-4 text-[15px] text-[color:var(--color-copy-muted)] transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] peer-focus:top-2.5 peer-focus:text-[11px] peer-focus:font-medium peer-focus:text-[color:var(--color-ink)] peer-[:not(:placeholder-shown)]:top-2.5 peer-[:not(:placeholder-shown)]:text-[11px] peer-[:not(:placeholder-shown)]:font-medium peer-[:not(:placeholder-shown)]:text-[color:var(--color-ink)]"
+      >
+        {label}
+      </label>
+    </div>
   );
 }
 
@@ -184,7 +221,7 @@ function Discovery() {
       };
 
   return (
-    <div className="min-h-dvh bg-white text-[#111]">
+    <div className="replica min-h-dvh grad-white">
       <SEO
         title="Consultanță gratuită"
         description="Discuție gratuită de 15 minute despre proiectul tău web. Durează sub 2 minute să completezi."
@@ -194,9 +231,9 @@ function Discovery() {
         <div className="flex items-center justify-between">
           <Link
             to="/"
-            className="flex items-center gap-3 text-[15px] font-semibold"
+            className="flex items-center gap-3 text-[15px] font-semibold text-[color:var(--color-ink)]"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#111] text-white">
+            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--color-ink)] text-white">
               <LogoMark className="h-5 w-5" />
             </span>
             A Squared Studio
@@ -206,7 +243,7 @@ function Discovery() {
             <button
               type="button"
               onClick={() => advance(step - 1)}
-              className="flex items-center gap-2 text-sm text-[#999] transition-colors hover:text-[#111]"
+              className="flex items-center gap-2 text-sm text-[color:var(--color-copy-muted)] transition-colors hover:text-[color:var(--color-ink)]"
             >
               <ArrowLeft size={15} />
               Înapoi
@@ -220,13 +257,13 @@ function Discovery() {
 
         {status !== "done" && (
           <div className="mt-10 flex items-center gap-4">
-            <span className="whitespace-nowrap text-xs font-medium tracking-[0.05em] text-[#999]">
+            <span className="whitespace-nowrap text-xs font-medium tracking-[0.05em] text-[color:var(--color-copy-muted)]">
               Pas {shownStep + 1}
             </span>
 
-            <div className="h-0.5 flex-1 rounded-sm bg-black/[0.08]">
+            <div className="h-0.5 flex-1 rounded-sm bg-[color:var(--color-divider)]">
               <div
-                className="h-full rounded-sm bg-[#111]"
+                className="h-full rounded-sm bg-[color:var(--color-ink)]"
                 style={{
                   width: `${fillPercent}%`,
                   transition: "width 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
@@ -234,7 +271,7 @@ function Discovery() {
               />
             </div>
 
-            <span className="whitespace-nowrap text-xs font-medium text-[#999]">
+            <span className="whitespace-nowrap text-xs font-medium text-[color:var(--color-copy-muted)]">
               {shownStep + 1} / {TOTAL_STEPS}
             </span>
           </div>
@@ -255,10 +292,10 @@ function Discovery() {
               {step === 0 && (
                 <>
                   <header className="text-center">
-                    <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em]">
+                    <h2 className="display text-2xl text-[color:var(--color-ink)]">
                       Ce cauți?
                     </h2>
-                    <p className="mt-3 text-[15px] leading-relaxed text-[#999]">
+                    <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--color-copy-muted)]">
                       Durează sub 2 minute. Fără spam, fără obligații.
                     </p>
                   </header>
@@ -281,10 +318,10 @@ function Discovery() {
               {step === 1 && (
                 <>
                   <header className="text-center">
-                    <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em]">
+                    <h2 className="display text-2xl text-[color:var(--color-ink)]">
                       Ce buget ai în minte?
                     </h2>
-                    <p className="mt-3 text-[15px] leading-relaxed text-[#999]">
+                    <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--color-copy-muted)]">
                       Nu există răspuns greșit. Ne ajută să propunem scopul
                       potrivit.
                     </p>
@@ -307,10 +344,10 @@ function Discovery() {
               {step === 2 && (
                 <>
                   <header className="text-center">
-                    <h2 className="text-2xl font-semibold leading-tight tracking-[-0.02em]">
+                    <h2 className="display text-2xl text-[color:var(--color-ink)]">
                       Aproape gata — unde îți trimitem răspunsul?
                     </h2>
-                    <p className="mt-3 text-[15px] leading-relaxed text-[#999]">
+                    <p className="mt-3 text-[15px] leading-relaxed text-[color:var(--color-copy-muted)]">
                       Revenim cu o propunere concretă, de obicei în aceeași zi.
                     </p>
                   </header>
@@ -329,48 +366,52 @@ function Discovery() {
                       className="hidden"
                     />
 
-                    <input
+                    <FloatingField
+                      id="discovery-name"
+                      label="Numele tău"
                       required
                       minLength={2}
-                      placeholder="Numele tău"
                       value={form.name}
                       onChange={(event) =>
                         setForm((c) => ({ ...c, name: event.target.value }))
                       }
-                      className="w-full rounded-2xl border-[1.5px] border-black/[0.07] px-5 py-4 text-[15px] outline-none transition-colors duration-200 placeholder:text-[#999] focus:border-[#111]"
                     />
 
-                    <input
-                      required
+                    <FloatingField
+                      id="discovery-email"
+                      label="Email"
                       type="email"
-                      placeholder="email@firma.ro"
+                      required
                       value={form.email}
                       onChange={(event) =>
                         setForm((c) => ({ ...c, email: event.target.value }))
                       }
-                      className="w-full rounded-2xl border-[1.5px] border-black/[0.07] px-5 py-4 text-[15px] outline-none transition-colors duration-200 placeholder:text-[#999] focus:border-[#111]"
                     />
 
-                    <textarea
+                    <FloatingField
+                      id="discovery-detail"
+                      label="Pe scurt, despre ce e vorba? (opțional)"
+                      as="textarea"
                       rows={3}
-                      placeholder="Pe scurt, despre ce e vorba? (opțional)"
                       value={form.detail}
                       onChange={(event) =>
                         setForm((c) => ({ ...c, detail: event.target.value }))
                       }
-                      className="w-full resize-y rounded-2xl border-[1.5px] border-black/[0.07] px-5 py-4 text-[15px] outline-none transition-colors duration-200 placeholder:text-[#999] focus:border-[#111]"
                     />
 
-                    <label className="flex items-start gap-3 py-1 text-[13px] text-[#666]">
+                    <label className="flex items-start gap-3 py-1 text-[13px] text-[color:var(--color-copy-muted)]">
                       <input
                         type="checkbox"
                         checked={gdpr}
                         onChange={(event) => setGdpr(event.target.checked)}
-                        className="mt-0.5"
+                        className="mt-0.5 accent-[color:var(--color-accent)]"
                       />
                       <span>
                         Sunt de acord cu prelucrarea datelor.{" "}
-                        <a href="/privacy" className="underline">
+                        <a
+                          href="/privacy"
+                          className="text-[color:var(--color-ink)] underline underline-offset-4"
+                        >
                           Politica de confidențialitate
                         </a>
                       </span>
@@ -385,7 +426,7 @@ function Discovery() {
                     <button
                       type="submit"
                       disabled={status === "sending"}
-                      className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-[#111] px-6 py-4 text-[15px] font-medium text-white transition-transform duration-200 hover:-translate-y-px disabled:opacity-60"
+                      className="mt-2 flex items-center justify-center gap-2 rounded-2xl bg-[color:var(--color-ink)] px-6 py-4 text-[15px] font-medium text-white transition-transform duration-200 hover:-translate-y-px disabled:opacity-60"
                     >
                       {status === "sending" && (
                         <Loader2 size={16} className="animate-spin" />
@@ -398,22 +439,22 @@ function Discovery() {
 
               {step === 3 && (
                 <div className="flex flex-col items-center gap-5 text-center">
-                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[#111] text-white">
+                  <span className="flex h-16 w-16 items-center justify-center rounded-full bg-[color:var(--color-accent)] text-white">
                     <Check size={28} />
                   </span>
 
-                  <h2 className="text-2xl font-semibold tracking-[-0.02em]">
+                  <h2 className="display text-2xl text-[color:var(--color-ink)]">
                     Am primit cererea
                   </h2>
 
-                  <p className="max-w-[36ch] text-[15px] leading-relaxed text-[#999]">
+                  <p className="max-w-[36ch] text-[15px] leading-relaxed text-[color:var(--color-copy-muted)]">
                     Revenim pe email cu o propunere concretă pentru proiectul
                     tău, de obicei în aceeași zi lucrătoare.
                   </p>
 
                   <Link
                     to="/"
-                    className="mt-3 flex items-center gap-2 rounded-2xl border-[1.5px] border-black/[0.07] px-6 py-3.5 text-[15px] font-medium transition-colors duration-200 hover:bg-[#f5f5f5]"
+                    className="mt-3 flex items-center gap-2 rounded-2xl border-[1.5px] border-[color:var(--color-divider)] px-6 py-3.5 text-[15px] font-medium text-[color:var(--color-ink)] transition-colors duration-200 hover:bg-[color:var(--color-ink)]/[0.04]"
                   >
                     <Sparkles size={16} />
                     Înapoi la site
@@ -424,8 +465,14 @@ function Discovery() {
           </AnimatePresence>
         </div>
 
-        <p className="text-center text-xs text-[#999]">
-          Preferi email direct? {siteConfig.contact.email}
+        <p className="text-center text-xs text-[color:var(--color-copy-muted)]">
+          Preferi email direct?{" "}
+          <a
+            href={`mailto:${siteConfig.contact.email}`}
+            className="font-medium text-[color:var(--color-ink)] underline underline-offset-4 transition-colors duration-200 hover:text-[color:var(--color-accent)]"
+          >
+            {siteConfig.contact.email}
+          </a>
         </p>
       </div>
     </div>
