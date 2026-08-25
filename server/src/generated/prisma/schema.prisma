@@ -132,6 +132,11 @@ model ContactSubmission {
   gdprAccepted Boolean       @default(false)
   status       ContactStatus @default(NEW)
 
+  // Flag manual, setat de admin când solicitarea se finalizează printr-un
+  // contract de prestări servicii — exclude cererea de la auto-ștergerea
+  // pe bază de retenție (vezi Politica de confidențialitate, secțiunea 8).
+  contractSigned Boolean @default(false)
+
   // Contextul paginii de unde a venit cererea.
   sourcePage String?
   userAgent  String?

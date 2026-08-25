@@ -178,6 +178,7 @@ exports.Prisma.ContactSubmissionScalarFieldEnum = {
   message: 'message',
   gdprAccepted: 'gdprAccepted',
   status: 'status',
+  contractSigned: 'contractSigned',
   sourcePage: 'sourcePage',
   userAgent: 'userAgent',
   ipAddress: 'ipAddress',

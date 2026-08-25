@@ -10,7 +10,7 @@ export const pricing = [
       "O pagină unică, construită pentru a genera o singură acțiune clară — și cât mai des posibil.",
     features: [
       "Copywriting orientat spre conversie, nu doar design frumos",
-      "Optimizare Core Web Vitals — scor Lighthouse 95-100",
+      "Optimizare Core Web Vitals pentru viteză de încărcare de top",
       "Structură tehnică SEO completă, gata de trafic plătit și organic",
       "Ecran de încărcare cu animație de brand, la nivel de agenție",
       "Acces în portalul de client pentru fișierele finale",
@@ -31,7 +31,7 @@ export const pricing = [
     features: [
       "Până la 8 pagini, fiecare construită custom pentru brandul tău",
       "SEO tehnic avansat: date structurate, sitemap, indexare Google rapidă",
-      "Performanță de top: Core Web Vitals în verde, încărcare sub 2 secunde",
+      "Performanță de top: Core Web Vitals optimizate, încărcare rapidă pe orice dispozitiv",
       "Securitate implementată din start: SSL, hardening, protecție formulare",
       "Portal client dedicat — vezi statusul proiectului live, oricând",
       "CMS ușor: acasă, blog și o zonă editabilă, fără cod",
@@ -96,7 +96,7 @@ export const pricingIncludes = [
     items: [
       "Construcție React personalizată, cod curat, fără șabloane reciclate",
       "Dezvoltare responsive, mobile-first, testată pe device-uri reale",
-      "Țintă de performanță Lighthouse 95-100 — Core Web Vitals în verde",
+      "Optimizare de performanță maximă — Core Web Vitals construite din start",
     ],
   },
   {

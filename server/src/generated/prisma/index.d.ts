@@ -5301,6 +5301,7 @@ export namespace Prisma {
     message: string | null
     gdprAccepted: boolean | null
     status: $Enums.ContactStatus | null
+    contractSigned: boolean | null
     sourcePage: string | null
     userAgent: string | null
     ipAddress: string | null
@@ -5326,6 +5327,7 @@ export namespace Prisma {
     message: string | null
     gdprAccepted: boolean | null
     status: $Enums.ContactStatus | null
+    contractSigned: boolean | null
     sourcePage: string | null
     userAgent: string | null
     ipAddress: string | null
@@ -5351,6 +5353,7 @@ export namespace Prisma {
     message: number
     gdprAccepted: number
     status: number
+    contractSigned: number
     sourcePage: number
     userAgent: number
     ipAddress: number
@@ -5378,6 +5381,7 @@ export namespace Prisma {
     message?: true
     gdprAccepted?: true
     status?: true
+    contractSigned?: true
     sourcePage?: true
     userAgent?: true
     ipAddress?: true
@@ -5403,6 +5407,7 @@ export namespace Prisma {
     message?: true
     gdprAccepted?: true
     status?: true
+    contractSigned?: true
     sourcePage?: true
     userAgent?: true
     ipAddress?: true
@@ -5428,6 +5433,7 @@ export namespace Prisma {
     message?: true
     gdprAccepted?: true
     status?: true
+    contractSigned?: true
     sourcePage?: true
     userAgent?: true
     ipAddress?: true
@@ -5526,6 +5532,7 @@ export namespace Prisma {
     message: string
     gdprAccepted: boolean
     status: $Enums.ContactStatus
+    contractSigned: boolean
     sourcePage: string | null
     userAgent: string | null
     ipAddress: string | null
@@ -5568,6 +5575,7 @@ export namespace Prisma {
     message?: boolean
     gdprAccepted?: boolean
     status?: boolean
+    contractSigned?: boolean
     sourcePage?: boolean
     userAgent?: boolean
     ipAddress?: boolean
@@ -5593,6 +5601,7 @@ export namespace Prisma {
     message?: boolean
     gdprAccepted?: boolean
     status?: boolean
+    contractSigned?: boolean
     sourcePage?: boolean
     userAgent?: boolean
     ipAddress?: boolean
@@ -5618,6 +5627,7 @@ export namespace Prisma {
     message?: boolean
     gdprAccepted?: boolean
     status?: boolean
+    contractSigned?: boolean
     sourcePage?: boolean
     userAgent?: boolean
     ipAddress?: boolean
@@ -5643,6 +5653,7 @@ export namespace Prisma {
     message?: boolean
     gdprAccepted?: boolean
     status?: boolean
+    contractSigned?: boolean
     sourcePage?: boolean
     userAgent?: boolean
     ipAddress?: boolean
@@ -5659,7 +5670,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type ContactSubmissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "selectedPlan" | "message" | "gdprAccepted" | "status" | "sourcePage" | "userAgent" | "ipAddress" | "sessionId" | "utmSource" | "utmMedium" | "utmCampaign" | "utmContent" | "utmTerm" | "consentAnalytics" | "emailSent" | "emailError" | "createdAt" | "updatedAt", ExtArgs["result"]["contactSubmission"]>
+  export type ContactSubmissionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "phone" | "selectedPlan" | "message" | "gdprAccepted" | "status" | "contractSigned" | "sourcePage" | "userAgent" | "ipAddress" | "sessionId" | "utmSource" | "utmMedium" | "utmCampaign" | "utmContent" | "utmTerm" | "consentAnalytics" | "emailSent" | "emailError" | "createdAt" | "updatedAt", ExtArgs["result"]["contactSubmission"]>
 
   export type $ContactSubmissionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "ContactSubmission"
@@ -5673,6 +5684,7 @@ export namespace Prisma {
       message: string
       gdprAccepted: boolean
       status: $Enums.ContactStatus
+      contractSigned: boolean
       sourcePage: string | null
       userAgent: string | null
       ipAddress: string | null
@@ -6118,6 +6130,7 @@ export namespace Prisma {
     readonly message: FieldRef<"ContactSubmission", 'String'>
     readonly gdprAccepted: FieldRef<"ContactSubmission", 'Boolean'>
     readonly status: FieldRef<"ContactSubmission", 'ContactStatus'>
+    readonly contractSigned: FieldRef<"ContactSubmission", 'Boolean'>
     readonly sourcePage: FieldRef<"ContactSubmission", 'String'>
     readonly userAgent: FieldRef<"ContactSubmission", 'String'>
     readonly ipAddress: FieldRef<"ContactSubmission", 'String'>
@@ -15255,6 +15268,7 @@ export namespace Prisma {
     message: 'message',
     gdprAccepted: 'gdprAccepted',
     status: 'status',
+    contractSigned: 'contractSigned',
     sourcePage: 'sourcePage',
     userAgent: 'userAgent',
     ipAddress: 'ipAddress',
@@ -15882,6 +15896,7 @@ export namespace Prisma {
     message?: StringFilter<"ContactSubmission"> | string
     gdprAccepted?: BoolFilter<"ContactSubmission"> | boolean
     status?: EnumContactStatusFilter<"ContactSubmission"> | $Enums.ContactStatus
+    contractSigned?: BoolFilter<"ContactSubmission"> | boolean
     sourcePage?: StringNullableFilter<"ContactSubmission"> | string | null
     userAgent?: StringNullableFilter<"ContactSubmission"> | string | null
     ipAddress?: StringNullableFilter<"ContactSubmission"> | string | null
@@ -15907,6 +15922,7 @@ export namespace Prisma {
     message?: SortOrder
     gdprAccepted?: SortOrder
     status?: SortOrder
+    contractSigned?: SortOrder
     sourcePage?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
     ipAddress?: SortOrderInput | SortOrder
@@ -15935,6 +15951,7 @@ export namespace Prisma {
     message?: StringFilter<"ContactSubmission"> | string
     gdprAccepted?: BoolFilter<"ContactSubmission"> | boolean
     status?: EnumContactStatusFilter<"ContactSubmission"> | $Enums.ContactStatus
+    contractSigned?: BoolFilter<"ContactSubmission"> | boolean
     sourcePage?: StringNullableFilter<"ContactSubmission"> | string | null
     userAgent?: StringNullableFilter<"ContactSubmission"> | string | null
     ipAddress?: StringNullableFilter<"ContactSubmission"> | string | null
@@ -15960,6 +15977,7 @@ export namespace Prisma {
     message?: SortOrder
     gdprAccepted?: SortOrder
     status?: SortOrder
+    contractSigned?: SortOrder
     sourcePage?: SortOrderInput | SortOrder
     userAgent?: SortOrderInput | SortOrder
     ipAddress?: SortOrderInput | SortOrder
@@ -15991,6 +16009,7 @@ export namespace Prisma {
     message?: StringWithAggregatesFilter<"ContactSubmission"> | string
     gdprAccepted?: BoolWithAggregatesFilter<"ContactSubmission"> | boolean
     status?: EnumContactStatusWithAggregatesFilter<"ContactSubmission"> | $Enums.ContactStatus
+    contractSigned?: BoolWithAggregatesFilter<"ContactSubmission"> | boolean
     sourcePage?: StringNullableWithAggregatesFilter<"ContactSubmission"> | string | null
     userAgent?: StringNullableWithAggregatesFilter<"ContactSubmission"> | string | null
     ipAddress?: StringNullableWithAggregatesFilter<"ContactSubmission"> | string | null
@@ -16929,6 +16948,7 @@ export namespace Prisma {
     message: string
     gdprAccepted?: boolean
     status?: $Enums.ContactStatus
+    contractSigned?: boolean
     sourcePage?: string | null
     userAgent?: string | null
     ipAddress?: string | null
@@ -16954,6 +16974,7 @@ export namespace Prisma {
     message: string
     gdprAccepted?: boolean
     status?: $Enums.ContactStatus
+    contractSigned?: boolean
     sourcePage?: string | null
     userAgent?: string | null
     ipAddress?: string | null
@@ -16979,6 +17000,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     gdprAccepted?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumContactStatusFieldUpdateOperationsInput | $Enums.ContactStatus
+    contractSigned?: BoolFieldUpdateOperationsInput | boolean
     sourcePage?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17004,6 +17026,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     gdprAccepted?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumContactStatusFieldUpdateOperationsInput | $Enums.ContactStatus
+    contractSigned?: BoolFieldUpdateOperationsInput | boolean
     sourcePage?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17029,6 +17052,7 @@ export namespace Prisma {
     message: string
     gdprAccepted?: boolean
     status?: $Enums.ContactStatus
+    contractSigned?: boolean
     sourcePage?: string | null
     userAgent?: string | null
     ipAddress?: string | null
@@ -17054,6 +17078,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     gdprAccepted?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumContactStatusFieldUpdateOperationsInput | $Enums.ContactStatus
+    contractSigned?: BoolFieldUpdateOperationsInput | boolean
     sourcePage?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -17079,6 +17104,7 @@ export namespace Prisma {
     message?: StringFieldUpdateOperationsInput | string
     gdprAccepted?: BoolFieldUpdateOperationsInput | boolean
     status?: EnumContactStatusFieldUpdateOperationsInput | $Enums.ContactStatus
+    contractSigned?: BoolFieldUpdateOperationsInput | boolean
     sourcePage?: NullableStringFieldUpdateOperationsInput | string | null
     userAgent?: NullableStringFieldUpdateOperationsInput | string | null
     ipAddress?: NullableStringFieldUpdateOperationsInput | string | null
@@ -18168,6 +18194,7 @@ export namespace Prisma {
     message?: SortOrder
     gdprAccepted?: SortOrder
     status?: SortOrder
+    contractSigned?: SortOrder
     sourcePage?: SortOrder
     userAgent?: SortOrder
     ipAddress?: SortOrder
@@ -18193,6 +18220,7 @@ export namespace Prisma {
     message?: SortOrder
     gdprAccepted?: SortOrder
     status?: SortOrder
+    contractSigned?: SortOrder
     sourcePage?: SortOrder
     userAgent?: SortOrder
     ipAddress?: SortOrder
@@ -18218,6 +18246,7 @@ export namespace Prisma {
     message?: SortOrder
     gdprAccepted?: SortOrder
     status?: SortOrder
+    contractSigned?: SortOrder
     sourcePage?: SortOrder
     userAgent?: SortOrder
     ipAddress?: SortOrder

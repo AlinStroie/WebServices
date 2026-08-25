@@ -85,6 +85,19 @@ export function updateAdminContactStatus(id, status) {
   });
 }
 
+export function updateAdminContactContractSigned(id, contractSigned) {
+  return adminApiFetch(`/admin/contact-submissions/${id}/contract-signed`, {
+    method: "PATCH",
+    body: JSON.stringify({ contractSigned }),
+  });
+}
+
+export function deleteAdminContact(id) {
+  return adminApiFetch(`/admin/contact-submissions/${id}`, {
+    method: "DELETE",
+  });
+}
+
 export function getAdminAnalytics(days = 30) {
   return adminApiFetch(`/admin/analytics/overview?days=${days}`);
 }

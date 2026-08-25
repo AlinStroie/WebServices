@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   ArrowLeft,
   Check,
   Copy,
   Mail,
   Phone,
+  Trash2,
   User,
 } from "lucide-react";
 
 import {
+  deleteAdminContact,
   getAdminContact,
+  updateAdminContactContractSigned,
   updateAdminContactStatus,
 } from "../../lib/adminApi";
 
@@ -18,10 +21,13 @@ const statuses = ["NEW", "READ", "REPLIED", "ARCHIVED"];
 
 function AdminContactDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [submission, setSubmission] = useState(null);
   const [loading, setLoading] = useState(true);
   const [savingStatus, setSavingStatus] = useState(false);
+  const [savingContract, setSavingContract] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [error, setError] = useState("");
   const [copied, setCopied] = useState("");
 
@@ -54,6 +60,39 @@ function AdminContactDetails() {
       setError(err.message || "Statusul nu a putut fi modificat.");
     } finally {
       setSavingStatus(false);
+    }
+  }
+
+  async function handleContractSignedChange(nextValue) {
+    try {
+      setSavingContract(true);
+      setError("");
+
+      const response = await updateAdminContactContractSigned(id, nextValue);
+      setSubmission(response.data);
+    } catch (err) {
+      setError(err.message || "Nu am putut actualiza statusul contractului.");
+    } finally {
+      setSavingContract(false);
+    }
+  }
+
+  async function handleDelete() {
+    const confirmed = window.confirm(
+      "Sigur vrei să ștergi definitiv această cerere? Acțiunea nu poate fi anulată."
+    );
+
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      setError("");
+
+      await deleteAdminContact(id);
+      navigate("/admin/contacts");
+    } catch (err) {
+      setError(err.message || "Cererea nu a putut fi ștearsă.");
+      setDeleting(false);
     }
   }
 
@@ -123,8 +162,43 @@ function AdminContactDetails() {
               </option>
             ))}
           </select>
+
+          <label className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/25 px-4 py-3 text-sm text-white/70">
+            <input
+              type="checkbox"
+              checked={Boolean(submission.contractSigned)}
+              disabled={savingContract}
+              onChange={(event) =>
+                handleContractSignedChange(event.target.checked)
+              }
+              className="h-4 w-4 accent-emerald-400"
+            />
+            Contract semnat
+          </label>
+
+          <button
+            type="button"
+            onClick={handleDelete}
+            disabled={deleting}
+            className="inline-flex items-center gap-2 rounded-2xl border border-red-400/20 bg-red-400/10 px-4 py-3 text-sm font-medium text-red-100 transition hover:bg-red-400/20 disabled:opacity-50"
+          >
+            <Trash2 size={16} />
+            Șterge
+          </button>
         </div>
       </div>
+
+      {submission.contractSigned ? (
+        <p className="mt-4 text-sm text-emerald-300/80">
+          Contract semnat — exclusă din ștergerea automată pe bază de
+          retenție (3 luni).
+        </p>
+      ) : (
+        <p className="mt-4 text-sm text-white/35">
+          Fără contract semnat — se șterge automat la 3 luni de la ultima
+          actualizare, dacă nu se marchează contractul ca semnat.
+        </p>
+      )}
 
       {error && (
         <div className="mt-6 rounded-2xl border border-red-400/20 bg-red-400/10 p-4 text-sm text-red-100">

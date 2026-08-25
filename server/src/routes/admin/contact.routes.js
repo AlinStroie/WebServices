@@ -5,7 +5,10 @@ import { createAuditLog } from "../../lib/auditLog.js";
 import { validate } from "../../middleware/validate.js";
 import { asyncHandler } from "../../middleware/asyncHandler.js";
 import { requireAdmin } from "../../middleware/requireAdmin.js";
-import { updateContactStatusSchema } from "../../validators/admin/contact.schema.js";
+import {
+  updateContactStatusSchema,
+  updateContractSignedSchema,
+} from "../../validators/admin/contact.schema.js";
 
 const router = express.Router();
 
@@ -74,6 +77,7 @@ router.get(
           phone: true,
           selectedPlan: true,
           status: true,
+          contractSigned: true,
           sourcePage: true,
           utmSource: true,
           utmMedium: true,
@@ -174,6 +178,103 @@ router.patch(
     return res.json({
       success: true,
       data: updated,
+    });
+  })
+);
+
+// PATCH /api/admin/contact-submissions/:id/contract-signed
+router.patch(
+  "/:id/contract-signed",
+  validate(updateContractSignedSchema),
+  asyncHandler(async (req, res) => {
+    const { contractSigned } = req.validatedBody;
+
+    const existing = await prisma.contactSubmission.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      select: {
+        id: true,
+        contractSigned: true,
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "Cererea nu a fost găsită.",
+      });
+    }
+
+    const updated = await prisma.contactSubmission.update({
+      where: {
+        id: req.params.id,
+      },
+      data: {
+        contractSigned,
+      },
+    });
+
+    await createAuditLog({
+      req,
+      action: "CONTACT_CONTRACT_SIGNED_UPDATED",
+      entity: "ContactSubmission",
+      entityId: updated.id,
+      metadata: {
+        from: existing.contractSigned,
+        to: contractSigned,
+      },
+    });
+
+    return res.json({
+      success: true,
+      data: updated,
+    });
+  })
+);
+
+// DELETE /api/admin/contact-submissions/:id
+router.delete(
+  "/:id",
+  asyncHandler(async (req, res) => {
+    const existing = await prisma.contactSubmission.findUnique({
+      where: {
+        id: req.params.id,
+      },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    if (!existing) {
+      return res.status(404).json({
+        success: false,
+        message: "Cererea nu a fost găsită.",
+      });
+    }
+
+    await prisma.contactSubmission.delete({
+      where: {
+        id: req.params.id,
+      },
+    });
+
+    await createAuditLog({
+      req,
+      action: "CONTACT_SUBMISSION_DELETED",
+      entity: "ContactSubmission",
+      entityId: existing.id,
+      metadata: {
+        email: existing.email,
+      },
+    });
+
+    return res.json({
+      success: true,
+      data: {
+        id: existing.id,
+      },
     });
   })
 );
