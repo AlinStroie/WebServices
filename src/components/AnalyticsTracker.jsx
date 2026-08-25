@@ -66,12 +66,20 @@ function AnalyticsTracker() {
   const pricingViewedRef = useRef(false);
 
   useEffect(() => {
-    loadGoogleAnalytics();
+    function handleConsentUpdate() {
+      loadGoogleAnalytics();
+      // Consimțământul poate fi acordat fără schimbare de rută (din banner),
+      // deci efectul de mai jos (legat de location) nu retrimite page_view —
+      // îl trimitem explicit aici pentru pagina curentă.
+      trackGaPageView(window.location.pathname + window.location.search);
+    }
 
-    window.addEventListener("cookie-consent-updated", loadGoogleAnalytics);
+    handleConsentUpdate();
+
+    window.addEventListener("cookie-consent-updated", handleConsentUpdate);
 
     return () => {
-      window.removeEventListener("cookie-consent-updated", loadGoogleAnalytics);
+      window.removeEventListener("cookie-consent-updated", handleConsentUpdate);
     };
   }, []);
 
