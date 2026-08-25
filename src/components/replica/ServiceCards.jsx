@@ -1,39 +1,271 @@
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, animate, motion, useInView, useReducedMotion } from "framer-motion";
+import { ChevronDown, Play } from "lucide-react";
+
 import Reveal from "./Reveal";
 import MagneticCta from "./MagneticCta";
 import { usps } from "../../data/usps";
 
 /**
- * Benefits section — rebuilt 1:1 on dixieraizpacheco.com's own "step-card"
- * section (verified by reading its live computed styles, not just
- * screenshots): 380px-min-height cards, 34px bold white titles, a breathing
- * halo behind card 1 (`.replica-halo-glow`, shared with Pricing's
- * best-value card — see index.css), and a -4px hover lift with an
- * under-shadow.
- *
- * Top and closing headings both use `.title-gradient` (reference's shared
- * `.gradient-text`) but at reference's own two sizes: the top headline is
- * `.text-heading-md` (clamp 40-64px), the closing one is a flat 50px bold —
- * smaller and non-responsive on their site too, not a scaled-down top title.
+ * "De ce noi" — feature-tabs pattern (Meta's Ray-Ban Display page is the
+ * reference): a click-to-expand accordion on the left drives a synced media
+ * panel on the right, sticky on desktop so it stays in view while you work
+ * down the list. First and last items are framed as future video slots (a
+ * play-button affordance), the two middle ones as future screenshots — same
+ * split the reference uses — but every panel today is a built, no-real-
+ * asset-needed placeholder that's still suggestive of the real thing
+ * (a conversion funnel, a Google result card, a Lighthouse gauge, a chat
+ * thread), not a grey box.
  */
 const titleClass =
   "display title-gradient max-w-4xl text-[clamp(2.25rem,5.2vw,4rem)]";
-// 50px flat on the reference desktop too, but unlike the reference this
-// needs to survive down to a 320px viewport — clamp() down to it instead
-// of holding the literal px value, which was oversizing/wrapping badly
-// on phones.
 const closingTitleClass =
   "title-gradient max-w-5xl text-[clamp(1.75rem,1.1rem+3.2vw,3.125rem)] font-bold leading-tight";
 
+// First and last are framed as video slots (play-button affordance); the
+// two middle ones as screenshots — mirrors the reference's own split.
+const IS_VIDEO_SLOT = [true, false, false, true];
+
+function AnimatedStat({ value, suffix = "", className = "" }) {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const reduceMotion = useReducedMotion();
+  const [display, setDisplay] = useState(reduceMotion ? value : 0);
+
+  useEffect(() => {
+    if (!inView || reduceMotion) return;
+
+    const controls = animate(0, value, {
+      duration: 1.4,
+      ease: [0.33, 1, 0.68, 1],
+      onUpdate: (latest) => setDisplay(Math.round(latest)),
+    });
+
+    return () => controls.stop();
+  }, [inView, value, reduceMotion]);
+
+  return (
+    <span
+      ref={ref}
+      className={`font-bold leading-none tracking-[-0.03em] text-white ${className}`}
+    >
+      {display}
+      {suffix}
+    </span>
+  );
+}
+
+const BAR_HEIGHTS = [28, 44, 36, 62, 84];
+
+function ConversionWidget({ usp }) {
+  return (
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex h-40 items-end justify-center gap-3">
+        {BAR_HEIGHTS.map((height, index) => (
+          <motion.div
+            key={index}
+            initial={{ height: 0 }}
+            animate={{ height: `${height}%` }}
+            transition={{ duration: 0.8, delay: index * 0.08, ease: [0.33, 1, 0.68, 1] }}
+            className={`w-8 rounded-t-lg sm:w-10 ${
+              index === BAR_HEIGHTS.length - 1
+                ? "bg-[color:var(--color-accent)]"
+                : "bg-white/15"
+            }`}
+          />
+        ))}
+      </div>
+
+      <div className="flex items-end justify-between border-t border-white/10 pt-5">
+        <div>
+          <AnimatedStat value={usp.stat} suffix={usp.suffix} className="text-4xl" />
+          <p className="mt-1 text-xs text-[#8491ab]">{usp.statLabel}</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function SeoWidget({ usp }) {
+  return (
+    <div className="flex h-full flex-col justify-between">
+      <div className="rounded-xl bg-white p-4 shadow-lg">
+        <div className="flex items-center gap-2 text-xs text-[#1a0dab]">
+          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-[9px] font-bold text-white">
+            A²
+          </span>
+          asquaredstudio.ro
+        </div>
+        <p className="mt-1.5 text-base font-medium text-[#1a0dab]">
+          A Squared Studio — Agenție Web Design
+        </p>
+        <div className="mt-2 space-y-1.5">
+          <div className="h-2 w-full rounded-full bg-slate-200" />
+          <div className="h-2 w-4/5 rounded-full bg-slate-200" />
+        </div>
+        <span className="mt-3 inline-flex items-center rounded-full bg-emerald-50 px-2.5 py-1 text-[11px] font-semibold text-emerald-700">
+          Rezultatul #1
+        </span>
+      </div>
+
+      <div className="border-t border-white/10 pt-5">
+        <AnimatedStat value={usp.stat} suffix={usp.suffix} className="text-4xl" />
+        <p className="mt-1 text-xs text-[#8491ab]">{usp.statLabel}</p>
+      </div>
+    </div>
+  );
+}
+
+function SpeedWidget({ usp }) {
+  const circumference = 2 * Math.PI * 54;
+  const filled = circumference * (usp.stat / 100);
+
+  return (
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-1 items-center justify-center">
+        <div className="relative flex h-36 w-36 items-center justify-center">
+          <svg viewBox="0 0 120 120" className="h-full w-full -rotate-90">
+            <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(255,255,255,0.1)" strokeWidth="10" />
+            <motion.circle
+              cx="60"
+              cy="60"
+              r="54"
+              fill="none"
+              stroke="#10b981"
+              strokeWidth="10"
+              strokeLinecap="round"
+              strokeDasharray={circumference}
+              initial={{ strokeDashoffset: circumference }}
+              whileInView={{ strokeDashoffset: circumference - filled }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: [0.33, 1, 0.68, 1] }}
+            />
+          </svg>
+          <span className="absolute text-3xl font-bold text-white">
+            {usp.stat}
+            {usp.suffix}
+          </span>
+        </div>
+      </div>
+
+      <div className="border-t border-white/10 pt-5 text-center">
+        <p className="text-xs text-[#8491ab]">{usp.statLabel}</p>
+      </div>
+    </div>
+  );
+}
+
+function TeamWidget({ usp }) {
+  return (
+    <div className="flex h-full flex-col justify-between">
+      <div className="flex flex-col gap-2.5">
+        <div className="max-w-[80%] rounded-2xl rounded-tl-sm bg-white/10 px-4 py-2.5 text-sm text-white">
+          Putem muta CTA-ul mai sus?
+        </div>
+        <div className="ml-auto max-w-[80%] rounded-2xl rounded-tr-sm bg-[color:var(--color-accent)] px-4 py-2.5 text-sm text-white">
+          Gata, e live. Verifică acum ↗
+        </div>
+        <div className="flex items-center gap-1.5 pl-1 text-xs text-[#8491ab]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[color:var(--color-accent)]" />
+          echipa răspunde direct
+        </div>
+      </div>
+
+      <div className="border-t border-white/10 pt-5">
+        <AnimatedStat value={usp.stat} suffix={usp.suffix} className="text-4xl" />
+        <p className="mt-1 text-xs text-[#8491ab]">{usp.statLabel}</p>
+      </div>
+    </div>
+  );
+}
+
+const WIDGETS = [ConversionWidget, SeoWidget, SpeedWidget, TeamWidget];
+
+function AccordionItem({ usp, index, isActive, onSelect }) {
+  return (
+    <div className="border-b border-white/10">
+      <button
+        type="button"
+        onClick={() => onSelect(index)}
+        aria-expanded={isActive}
+        className="flex w-full items-center justify-between gap-4 py-6 text-left"
+      >
+        <span
+          className={`text-xl font-bold transition-colors sm:text-2xl ${
+            isActive ? "text-white" : "text-white/50"
+          }`}
+        >
+          {usp.title}
+        </span>
+
+        <ChevronDown
+          size={20}
+          className={`shrink-0 text-white/40 transition-transform duration-300 ${
+            isActive ? "rotate-180 text-white" : ""
+          }`}
+        />
+      </button>
+
+      {/* CSS grid-rows 0fr->1fr trick — animates to the content's real
+          height without measuring it in JS, and never clips at a wrong
+          guessed value. */}
+      <div
+        className="grid transition-[grid-template-rows] duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]"
+        style={{ gridTemplateRows: isActive ? "1fr" : "0fr" }}
+      >
+        <div className="overflow-hidden">
+          <p className="max-w-lg pb-6 text-[15px] leading-relaxed text-[color:var(--color-copy-on-dark)]">
+            {usp.text}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MediaPanel({ activeIndex }) {
+  const usp = usps[activeIndex];
+  const Widget = WIDGETS[activeIndex];
+  const isVideoSlot = IS_VIDEO_SLOT[activeIndex];
+
+  return (
+    <div className="order-first lg:sticky lg:top-32 lg:order-2">
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-[1.5rem] border border-white/10 bg-[#171b27] p-6 sm:p-8">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={usp.title}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.4, ease: [0.33, 1, 0.68, 1] }}
+            className="h-full"
+          >
+            <Widget usp={usp} />
+          </motion.div>
+        </AnimatePresence>
+
+        {isVideoSlot && (
+          <span className="pointer-events-none absolute right-6 top-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/10 backdrop-blur-md sm:right-8 sm:top-8">
+            <Play size={16} className="ml-0.5 fill-white text-white" />
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function ServiceCards() {
+  const [activeIndex, setActiveIndex] = useState(0);
+
   return (
     <section
-      id="servicii"
+      id="de-ce-noi"
       className="grad-dark isolate w-full px-6 py-32 sm:px-8 lg:py-40"
     >
       <div className="mx-auto w-full max-w-[1366px]">
         <div className="flex flex-col items-center gap-4 text-center lg:gap-8">
           <p className="eyebrow text-[color:var(--color-copy-subtle-on-dark)]">
-            Web design de nivel agenție, în România
+            De ce noi
           </p>
 
           <h2 className={titleClass}>
@@ -44,60 +276,24 @@ function ServiceCards() {
           </h2>
         </div>
 
-        {/* Below md: a horizontal scroll-snap carousel (cards slide in from
-            the side) instead of stacking full-width — the highlighted
-            card's glow bleeding into the card below it was a symptom of
-            that stack, not just the glow's own size.
+        <div className="mt-16 grid gap-10 lg:grid-cols-2 lg:items-start lg:gap-16">
+          <MediaPanel activeIndex={activeIndex} />
 
-            overflow-y-hidden is required, not decorative: setting only
-            overflow-x makes the browser compute overflow-y as `auto` too
-            (a CSS rule — one axis can't stay `visible` once the other
-            isn't), and each card's Reveal entrance transform (y: 100 -> 0)
-            counts toward that axis's scrollable overflow. Left implicit,
-            the row grew its own vertical scroll range for that transform
-            and clipped the resting card against it.
-
-            Any non-`visible` overflow value (hidden OR auto) also clips
-            painted content that spills past the box — including the first
-            card's blurred glow — regardless of whether anything actually
-            needs to scroll. There's no CSS overflow value that scrolls one
-            axis while leaving the other's paint unclipped, so instead the
-            clip boundary is pushed well past the glow with generous
-            vertical padding (py-9), and a matching negative margin
-            (-my-6) pulls the row's own footprint back in so that extra
-            padding doesn't also widen the gap to the sections above/below. */}
-        <div className="-mx-6 mt-20 flex snap-x snap-mandatory gap-4 overflow-x-auto overflow-y-hidden px-6 py-9 -my-6 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden sm:-mx-8 sm:px-8 md:mx-auto md:my-0 md:grid md:max-w-5xl md:snap-none md:gap-8 md:overflow-visible md:px-0 md:py-0 md:grid-cols-3">
-          {usps.map((usp, index) => {
-            const highlighted = index === 0;
-
-            return (
-              <Reveal
+          <div>
+            {usps.map((usp, index) => (
+              <AccordionItem
                 key={usp.title}
-                delay={index * 0.05}
-                className="w-[82%] max-w-[21rem] shrink-0 snap-center md:w-auto md:max-w-none md:shrink"
-              >
-                <div
-                  className={`relative h-full ${
-                    highlighted ? "replica-halo-glow" : ""
-                  }`}
-                >
-                  <div className="relative flex h-full min-h-[23.75rem] flex-col gap-4 overflow-hidden rounded-2xl border border-[#36425d] bg-[#171b27] p-8 transition-[translate,box-shadow,border-color] duration-500 ease-out hover:-translate-y-1 hover:border-[#4c5a73] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.4)]">
-                    <h3 className="text-[34px] font-bold leading-tight text-white">
-                      {usp.title}
-                    </h3>
-
-                    <p className="text-[18px] leading-tight text-[#babad0]">
-                      {usp.text}
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
-            );
-          })}
+                usp={usp}
+                index={index}
+                isActive={index === activeIndex}
+                onSelect={setActiveIndex}
+              />
+            ))}
+          </div>
         </div>
 
         <Reveal
-          className="mt-20 flex flex-col items-center gap-8 text-center"
+          className="mt-24 flex flex-col items-center gap-8 text-center"
           delay={0.15}
         >
           <h3 className={closingTitleClass}>

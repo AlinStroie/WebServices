@@ -6,7 +6,8 @@
 
 ## Pagini principale
 
-- [Acasă](https://asquaredstudio.ro/): prezentare servicii, procesul de lucru și proiecte recente.
+- [Acasă](https://asquaredstudio.ro/): de ce noi, procesul de lucru și proiecte recente.
+- [Servicii](https://asquaredstudio.ro/servicii): tipurile de site-uri și proiecte oferite, cu beneficii concrete.
 - [Prețuri](https://asquaredstudio.ro/preturi): pachete și tarife pentru site-uri de prezentare.
 - [Studii de caz](https://asquaredstudio.ro/studii-de-caz): proiecte finalizate, cu detalii despre obiective și rezultate.
 - [Programează o consultație](https://asquaredstudio.ro/discovery): formular de contact pentru un proiect nou.

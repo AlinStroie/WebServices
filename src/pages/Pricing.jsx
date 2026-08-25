@@ -5,6 +5,7 @@ import PricingHero from "../components/replica/PricingHero";
 import PricingSection from "../components/replica/Pricing";
 import SiteFooter from "../components/replica/SiteFooter";
 import BackToTop from "../components/replica/BackToTop";
+import WhatsAppButton from "../components/replica/WhatsAppButton";
 import ConsentBanner from "../components/replica/ConsentBanner";
 
 /**
@@ -33,6 +34,7 @@ function PricingPage() {
       <SiteFooter />
 
       <BackToTop />
+      <WhatsAppButton />
 
       <ConsentBanner />
     </div>

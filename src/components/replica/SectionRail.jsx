@@ -28,7 +28,7 @@ import {
  */
 const ITEMS = [
   { id: "hero", label: "Acasă", Icon: Compass },
-  { id: "servicii", label: "Servicii", Icon: Shapes },
+  { id: "de-ce-noi", label: "De ce noi", Icon: Shapes },
   { id: "studiu-caz", label: "Studiu de caz", Icon: Sparkles },
   { id: "avantaje", label: "Avantaje", Icon: Award },
   { id: "lucrari", label: "Lucrări", Icon: Frame },

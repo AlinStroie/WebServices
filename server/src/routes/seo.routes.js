@@ -52,10 +52,23 @@ router.get(
         changefreq: "monthly",
         priority: "1.0",
         lastmod: formatDate(new Date()),
+        video: {
+          thumbnailLoc: `${siteUrl}/hero/hero-poster.webp`,
+          title: "A Squared Studio — Agenție Web Design Brașov",
+          description:
+            "Prezentare A Squared Studio: site-uri web personalizate, construite pentru conversii, viteză și rezultate reale.",
+          contentLoc: `${siteUrl}/hero/hero-video.mp4`,
+        },
       },
       {
         loc: `${siteUrl}/studii-de-caz`,
         changefreq: "weekly",
+        priority: "0.8",
+        lastmod: formatDate(new Date()),
+      },
+      {
+        loc: `${siteUrl}/servicii`,
+        changefreq: "monthly",
         priority: "0.8",
         lastmod: formatDate(new Date()),
       },
@@ -66,6 +79,12 @@ router.get(
         lastmod: formatDate(new Date()),
       },
       {
+        loc: `${siteUrl}/discovery`,
+        changefreq: "monthly",
+        priority: "0.5",
+        lastmod: formatDate(new Date()),
+      },
+      {
         loc: `${siteUrl}/privacy`,
         changefreq: "yearly",
         priority: "0.3",
@@ -73,6 +92,12 @@ router.get(
       },
       {
         loc: `${siteUrl}/cookies`,
+        changefreq: "yearly",
+        priority: "0.3",
+        lastmod: formatDate(new Date()),
+      },
+      {
+        loc: `${siteUrl}/terms`,
         changefreq: "yearly",
         priority: "0.3",
         lastmod: formatDate(new Date()),
@@ -89,14 +114,24 @@ router.get(
     const urls = [...staticPages, ...caseStudyPages];
 
     const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
 ${urls
   .map(
     (url) => `  <url>
     <loc>${escapeXml(url.loc)}</loc>
     <lastmod>${url.lastmod}</lastmod>
     <changefreq>${url.changefreq}</changefreq>
-    <priority>${url.priority}</priority>
+    <priority>${url.priority}</priority>${
+      url.video
+        ? `
+    <video:video>
+      <video:thumbnail_loc>${escapeXml(url.video.thumbnailLoc)}</video:thumbnail_loc>
+      <video:title>${escapeXml(url.video.title)}</video:title>
+      <video:description>${escapeXml(url.video.description)}</video:description>
+      <video:content_loc>${escapeXml(url.video.contentLoc)}</video:content_loc>
+    </video:video>`
+        : ""
+    }
   </url>`
   )
   .join("\n")}

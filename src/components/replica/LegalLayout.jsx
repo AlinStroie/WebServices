@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import Nav from "./Nav";
 import SiteFooter from "./SiteFooter";
 import BackToTop from "./BackToTop";
+import WhatsAppButton from "./WhatsAppButton";
 import ConsentBanner from "./ConsentBanner";
 
 /**
@@ -88,6 +89,7 @@ function LegalLayout({ eyebrow = "Legal", title, updated, intro, currentPath, ch
 
       <SiteFooter />
       <BackToTop />
+      <WhatsAppButton />
       <ConsentBanner />
     </div>
   );

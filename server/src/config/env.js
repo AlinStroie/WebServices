@@ -52,6 +52,11 @@ const envSchema = z.object({
 
   // Rate limit pentru analytics.
   ANALYTICS_RATE_LIMIT_MAX: z.coerce.number().default(120),
+
+  // Recenzii Google live (opțional — fără ele, ruta /api/reviews răspunde
+  // gol și frontend-ul cade pe testimonialele placeholder existente).
+  GOOGLE_PLACES_API_KEY: z.string().min(1).optional(),
+  GOOGLE_PLACE_ID: z.string().min(1).optional(),
 });
 
 // Verificăm process.env față de schema de mai sus.

@@ -18,6 +18,7 @@ import { globalLimiter } from "./middleware/rateLimiters.js";
 import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import seoRoutes from "./routes/seo.routes.js";
+import reviewsRoutes from "./routes/reviews.routes.js";
 
 export const app = express();
 
@@ -108,6 +109,7 @@ app.use("/", seoRoutes);
 app.use("/api/case-studies", caseStudyRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/analytics", analyticsRoutes);
+app.use("/api/reviews", reviewsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/portal", portalRoutes);
 

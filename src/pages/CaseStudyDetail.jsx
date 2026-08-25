@@ -5,6 +5,7 @@ import SEO from "../components/SEO";
 import Nav from "../components/replica/Nav";
 import SiteFooter from "../components/replica/SiteFooter";
 import BackToTop from "../components/replica/BackToTop";
+import WhatsAppButton from "../components/replica/WhatsAppButton";
 import ConsentBanner from "../components/replica/ConsentBanner";
 import Reveal from "../components/replica/Reveal";
 import MaskRevealVideo from "../components/replica/MaskRevealVideo";
@@ -276,6 +277,7 @@ function CaseStudyDetail() {
 
       <SiteFooter />
       <BackToTop />
+      <WhatsAppButton />
       <ConsentBanner />
     </div>
   );

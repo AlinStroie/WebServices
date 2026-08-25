@@ -53,7 +53,8 @@ function LinkedinIcon({ size = 16 }) {
 // plus real standalone routes. No fabricated pages.
 const FOOTER_LINKS = [
   { label: "Acasă", to: "/#hero" },
-  { label: "Servicii", to: "/#servicii" },
+  { label: "De ce noi", to: "/#de-ce-noi" },
+  { label: "Servicii", to: "/servicii" },
   { label: "Lucrări", to: "/#lucrari" },
   { label: "Proces", to: "/#proces" },
   { label: "Avantaje", to: "/#avantaje" },

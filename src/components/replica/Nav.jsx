@@ -11,7 +11,8 @@ import MagneticCta from "./MagneticCta";
 // section anchor — `to` vs `href` is what tells the renderers below which
 // kind of link to build.
 const NAV_LINKS = [
-  { label: "Servicii", href: "#servicii" },
+  { label: "De ce noi", href: "#de-ce-noi" },
+  { label: "Servicii", to: "/servicii" },
   { label: "Lucrări", href: "#lucrari" },
   { label: "Proces", href: "#proces" },
   { label: "Prețuri", to: "/preturi" },

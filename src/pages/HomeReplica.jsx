@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 
 import SEO from "../components/SEO";
+import { siteConfig } from "../data/siteConfig";
 
 import Nav from "../components/replica/Nav";
 import SectionRail from "../components/replica/SectionRail";
@@ -25,6 +26,7 @@ const Faqs = lazy(() => import("../components/replica/Faqs"));
 const SiteFooter = lazy(() => import("../components/replica/SiteFooter"));
 
 import BackToTop from "../components/replica/BackToTop";
+import WhatsAppButton from "../components/replica/WhatsAppButton";
 import ConsentBanner from "../components/replica/ConsentBanner";
 
 /**
@@ -51,7 +53,18 @@ import ConsentBanner from "../components/replica/ConsentBanner";
 function HomeReplica() {
   return (
     <div className="replica relative min-h-screen">
-      <SEO />
+      <SEO
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "VideoObject",
+          name: "A Squared Studio — Agenție Web Design Brașov",
+          description:
+            "Prezentare A Squared Studio: site-uri web personalizate, construite pentru conversii, viteză și rezultate reale.",
+          thumbnailUrl: [`${siteConfig.siteUrl}/hero/hero-poster.webp`],
+          uploadDate: "2026-08-18",
+          contentUrl: `${siteConfig.siteUrl}/hero/hero-video.mp4`,
+        }}
+      />
 
       <Nav />
       <SectionRail />
@@ -87,6 +100,7 @@ function HomeReplica() {
       </Suspense>
 
       <BackToTop />
+      <WhatsAppButton />
 
       <ConsentBanner />
     </div>

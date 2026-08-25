@@ -16,6 +16,7 @@ import Home from "./pages/HomeReplica";
 const FormSuccess = lazy(() => import("./pages/FormSuccess"));
 const Discovery = lazy(() => import("./pages/Discovery"));
 const Pricing = lazy(() => import("./pages/Pricing"));
+const Servicii = lazy(() => import("./pages/Servicii"));
 const CaseStudies = lazy(() => import("./pages/CaseStudies"));
 const CaseStudyDetail = lazy(() => import("./pages/CaseStudyDetail"));
 const ProjectDetail = lazy(() => import("./pages/ProjectDetail"));
@@ -56,6 +57,7 @@ function App() {
 
           <Route path="/discovery" element={<Discovery />} />
           <Route path="/preturi" element={<Pricing />} />
+          <Route path="/servicii" element={<Servicii />} />
           <Route path="/studii-de-caz" element={<CaseStudies />} />
           <Route path="/studii-de-caz/:slug" element={<CaseStudyDetail />} />
           <Route path="/project/:slug" element={<ProjectDetail />} />

@@ -1,8 +1,69 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { Star } from "lucide-react";
 
 import { testimonials } from "../../data/testimonials";
 import useIsMobile from "../../hooks/useIsMobile";
+import useGoogleReviews from "../../hooks/useGoogleReviews";
+
+const AVATAR_GRADIENTS = [
+  { from: "#2c2cf3", to: "#7a5cff" },
+  { from: "#10b981", to: "#3bc8a6" },
+  { from: "#e896cd", to: "#b4aaff" },
+  { from: "#f59e0b", to: "#f7c56b" },
+];
+
+// lucide-react ships no brand glyphs (see SiteFooter's own note on this) —
+// hand-rolled, same treatment as the footer's social icons and the
+// WhatsApp button's glyph.
+function GoogleIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 48 48" aria-hidden="true">
+      <path
+        fill="#4285F4"
+        d="M45.12 24.5c0-1.56-.14-3.06-.4-4.5H24v8.51h11.84c-.51 2.75-2.06 5.08-4.39 6.64v5.52h7.11c4.16-3.83 6.56-9.47 6.56-16.17z"
+      />
+      <path
+        fill="#34A853"
+        d="M24 46c5.94 0 10.92-1.97 14.56-5.33l-7.11-5.52c-1.97 1.32-4.49 2.1-7.45 2.1-5.73 0-10.58-3.87-12.31-9.07H4.34v5.7A21.98 21.98 0 0 0 24 46z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M11.69 28.18A13.2 13.2 0 0 1 11 24c0-1.45.25-2.86.69-4.18v-5.7H4.34A21.98 21.98 0 0 0 2 24c0 3.55.85 6.91 2.34 9.88z"
+      />
+      <path
+        fill="#EA4335"
+        d="M24 10.75c3.23 0 6.13 1.11 8.41 3.29l6.31-6.31C34.91 4.18 29.93 2 24 2A21.98 21.98 0 0 0 4.34 14.12l7.35 5.7c1.73-5.2 6.58-9.07 12.31-9.07z"
+      />
+    </svg>
+  );
+}
+
+function initialsOf(name = "") {
+  return name
+    .split(" ")
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((word) => word[0].toUpperCase())
+    .join("");
+}
+
+/** Maps a live Google review onto the same shape TestimonialCard expects. */
+function toCardItem(review, index) {
+  const gradient = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
+
+  return {
+    quote: `„${review.text}”`,
+    name: review.author,
+    role: "Client Google",
+    company: [review.relativeTime, `${review.rating}★`].filter(Boolean).join(" · "),
+    avatar: {
+      src: review.avatarUrl || "",
+      initials: initialsOf(review.author),
+      ...gradient,
+    },
+  };
+}
 
 // Measured off the reference captures: "WHAT" runs ~300px tall against a
 // ~1877px-wide capture (~16vw), and it is not two lines centred in one
@@ -81,6 +142,13 @@ function Testimonials() {
   const gridRef = useRef(null);
   const reduceMotion = useReducedMotion();
   const isMobile = useIsMobile();
+  const { reviews, rating, totalReviews, mapsUrl } = useGoogleReviews();
+
+  // Real Google reviews once they exist; the static placeholder copy until
+  // then (see data/testimonials.js) — same card shape either way, so
+  // nothing else below needs to branch on which source it's rendering.
+  const hasLiveReviews = reviews.length > 0;
+  const items = hasLiveReviews ? reviews.map(toCardItem) : testimonials;
 
   const { scrollYProgress } = useScroll({
     target: gridRef,
@@ -115,11 +183,42 @@ function Testimonials() {
       />
 
       <div className="relative z-10 mx-auto grid w-full max-w-[1366px] gap-16 px-6 py-32 sm:px-8 lg:py-40">
-        <h2 className="display max-w-[16ch] text-[clamp(2rem,1.3rem+2.6vw,3.75rem)] leading-[1.1] text-[color:var(--color-ink)]">
-          Ce spun clienții despre{" "}
-          <span className="accent-serif font-normal">colaborarea</span> cu
-          noi
-        </h2>
+        <div className="grid gap-4">
+          <h2 className="display max-w-[16ch] text-[clamp(2rem,1.3rem+2.6vw,3.75rem)] leading-[1.1] text-[color:var(--color-ink)]">
+            Ce spun clienții despre{" "}
+            <span className="accent-serif font-normal">colaborarea</span> cu
+            noi
+          </h2>
+
+          {/* Always visible — labels this section as Google reviews whether
+              or not a live Place ID/API key is configured yet. Only becomes
+              a clickable link with the real rating once live data exists. */}
+          {hasLiveReviews && rating ? (
+            <a
+              href={mapsUrl}
+              target="_blank"
+              rel="noreferrer noopener"
+              className="inline-flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[color:var(--color-ink)] shadow-sm transition-colors hover:border-black/20"
+            >
+              <GoogleIcon size={16} />
+              <span className="flex items-center gap-0.5 text-amber-500">
+                {Array.from({ length: 5 }, (_, index) => (
+                  <Star
+                    key={index}
+                    size={15}
+                    fill={index < Math.round(rating) ? "currentColor" : "none"}
+                  />
+                ))}
+              </span>
+              {rating.toFixed(1)} · {totalReviews} recenzii Google
+            </a>
+          ) : (
+            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[color:var(--color-ink)] shadow-sm">
+              <GoogleIcon size={16} />
+              Recenzii Google
+            </span>
+          )}
+        </div>
 
         {/* Measured off section8_1_reference.PNG: the two cards there run
             308px-910px and 951px-1553px in a 1877px-wide capture — 602px
@@ -141,7 +240,7 @@ function Testimonials() {
             ref={gridRef}
             className="testimonials-carousel flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
-            {testimonials.map((item) => (
+            {items.map((item) => (
               // flex + h-full: without it every card sized to its own
               // quote's line-wrapped height, so whichever quote happened
               // to be shortest (the first one, here) rendered visibly
@@ -159,7 +258,7 @@ function Testimonials() {
             ref={gridRef}
             className="relative mx-auto grid w-full max-w-5xl gap-8 md:grid-cols-2"
           >
-            {testimonials.map((item, index) => {
+            {items.map((item, index) => {
               const isLeftColumn = index % 2 === 0;
               const y = reduceMotion ? 0 : isLeftColumn ? leftY : rightY;
 

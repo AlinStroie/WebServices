@@ -6,6 +6,7 @@ import SEO from "../components/SEO";
 import Nav from "../components/replica/Nav";
 import SiteFooter from "../components/replica/SiteFooter";
 import BackToTop from "../components/replica/BackToTop";
+import WhatsAppButton from "../components/replica/WhatsAppButton";
 import ConsentBanner from "../components/replica/ConsentBanner";
 import Reveal from "../components/replica/Reveal";
 import { apiFetch } from "../lib/api";
@@ -123,6 +124,7 @@ function CaseStudies() {
 
       <SiteFooter />
       <BackToTop />
+      <WhatsAppButton />
       <ConsentBanner />
     </div>
   );
