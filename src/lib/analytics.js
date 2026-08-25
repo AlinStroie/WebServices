@@ -1,9 +1,9 @@
+import { SESSION_KEY, UTM_KEY, hasAnalyticsConsent } from "./cookieConsent";
+
 const API_BASE =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:5000/api";
 
-const SESSION_KEY = "asquared_session_id";
-const UTM_KEY = "asquared_utm_data";
-const CONSENT_KEY = "asquared_cookie_consent";
+export { hasAnalyticsConsent };
 
 export function getSessionId() {
   try {
@@ -17,20 +17,6 @@ export function getSessionId() {
     return sessionId;
   } catch {
     return "unknown-session";
-  }
-}
-
-export function hasAnalyticsConsent() {
-  try {
-    const raw = localStorage.getItem(CONSENT_KEY);
-
-    if (!raw) return false;
-
-    const parsed = JSON.parse(raw);
-
-    return Boolean(parsed.analytics);
-  } catch {
-    return false;
   }
 }
 

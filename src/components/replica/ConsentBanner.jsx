@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Link } from "react-router-dom";
 
+import { getConsent, saveConsent } from "../../lib/cookieConsent";
+
 /**
  * Light-themed consent banner for the replica design.
  *
@@ -9,41 +11,17 @@ import { Link } from "react-router-dom";
  * still used by the legacy home page and every other route, so it has to
  * stay dark and untouched.
  *
- * The storage contract is identical: same `asquared_cookie_consent` key,
- * same `{ essential, analytics, marketing, updatedAt }` shape, same
- * `cookie-consent-updated` event. `hasAnalyticsConsent()` in
- * src/lib/analytics.js reads this key directly, so consent set here works
- * everywhere without touching the analytics layer.
+ * Consent is read/written through src/lib/cookieConsent.js — the same
+ * module the always-available preferences panel on /cookies uses — so
+ * a choice made here or there agrees with the other, and withdrawing
+ * analytics consent from either place clears the same session/UTM keys.
  */
-const CONSENT_KEY = "asquared_cookie_consent";
-
-function saveConsent({ analytics, marketing }) {
-  localStorage.setItem(
-    CONSENT_KEY,
-    JSON.stringify({
-      essential: true,
-      analytics: Boolean(analytics),
-      marketing: Boolean(marketing),
-      updatedAt: new Date().toISOString(),
-    })
-  );
-
-  window.dispatchEvent(new Event("cookie-consent-updated"));
-}
-
 function ConsentBanner() {
   const [visible, setVisible] = useState(false);
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    let stored;
-
-    try {
-      stored = localStorage.getItem(CONSENT_KEY);
-    } catch {
-      // Private mode / storage disabled — treat as "not yet decided".
-      stored = null;
-    }
+    const stored = getConsent();
 
     if (stored) return;
 
@@ -82,21 +60,27 @@ function ConsentBanner() {
             </Link>
           </p>
 
+          {/* Same border, fill, size and weight on both buttons —
+              accept and reject read as equally prominent, on purpose:
+              nudging toward "accept" with a filled/accent button while
+              "reject" gets a bare outline is exactly the dark-pattern
+              consent-banner shape EU regulators (ANSPDCP included) flag
+              first. */}
           <div className="mt-4 flex flex-wrap gap-2">
             <button
               type="button"
-              onClick={() => decide(true)}
-              className="flex-1 rounded-full bg-[color:var(--color-ink)] px-5 py-3 text-sm font-medium text-white transition-transform duration-200 hover:-translate-y-px"
+              onClick={() => decide(false)}
+              className="flex-1 rounded-full border border-black/[0.14] px-5 py-3 text-sm font-medium text-[color:var(--color-ink)] transition-colors duration-200 hover:bg-black/[0.04]"
             >
-              Acceptă
+              Doar esențiale
             </button>
 
             <button
               type="button"
-              onClick={() => decide(false)}
-              className="flex-1 rounded-full border border-black/[0.09] px-5 py-3 text-sm font-medium text-[color:var(--color-ink)] transition-colors duration-200 hover:bg-black/[0.04]"
+              onClick={() => decide(true)}
+              className="flex-1 rounded-full border border-black/[0.14] px-5 py-3 text-sm font-medium text-[color:var(--color-ink)] transition-colors duration-200 hover:bg-black/[0.04]"
             >
-              Doar esențiale
+              Acceptă
             </button>
           </div>
         </motion.div>

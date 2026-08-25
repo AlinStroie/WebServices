@@ -1,6 +1,7 @@
 import SEO from "../components/SEO";
 import { siteConfig } from "../data/siteConfig";
 import LegalLayout, { LegalSection } from "../components/replica/LegalLayout";
+import CookiePreferences from "../components/replica/CookiePreferences";
 
 function CookiePolicy() {
   const companyName = siteConfig?.company?.name || "A Squared Studio";
@@ -64,9 +65,10 @@ function CookiePolicy() {
       <LegalSection number="05" title="Cum poți modifica opțiunile">
         <p>
           Poți modifica sau retrage consimțământul pentru cookie-urile opționale
-          din setările de cookies disponibile pe site. Poți, de asemenea, șterge
+          oricând, din panoul de mai jos. Poți, de asemenea, șterge
           cookie-urile direct din setările browserului.
         </p>
+        <CookiePreferences />
       </LegalSection>
 
       <LegalSection number="06" title="Ce chei pot fi salvate în browser">
