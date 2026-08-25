@@ -32,6 +32,14 @@ function Toggle({ id, checked, disabled, onChange, label, hint }) {
         )}
       </div>
 
+      {/* Tailwind's own documented checkbox-switch shape (h-6 w-11 track,
+          h-5 w-5 dot, translate-x-1 -> translate-x-6) rather than
+          hand-derived numbers — the dot sat on an `absolute` box with no
+          `left` set, so its "resting" spot was an undefined static
+          position with the translate stacked on top of it: unchecked
+          could read as ambiguous, and checked could push the dot past
+          the track's own right edge. `inline-flex items-center` gives the
+          dot a real, deterministic resting position to translate from. */}
       <button
         id={id}
         type="button"
@@ -39,12 +47,12 @@ function Toggle({ id, checked, disabled, onChange, label, hint }) {
         aria-checked={checked}
         disabled={disabled}
         onClick={() => onChange(!checked)}
-        className={`relative h-7 w-12 shrink-0 rounded-full transition-colors duration-200 ${
+        className={`inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-200 ${
           checked ? "bg-[color:var(--color-ink)]" : "bg-black/15"
         } ${disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"}`}
       >
         <span
-          className={`absolute top-1 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${
+          className={`h-5 w-5 rounded-full bg-white shadow transition-transform duration-200 ${
             checked ? "translate-x-6" : "translate-x-1"
           }`}
         />
