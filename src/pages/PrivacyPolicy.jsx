@@ -97,12 +97,13 @@ function PrivacyPolicy() {
         <p>
           Website-ul poate folosi analiză proprie pentru a înțelege cum este utilizat site-ul:
           pagini vizitate, clickuri pe butoane, interacțiuni cu studiile de caz, formularul și
-          sursele de trafic UTM.
+          sursele de trafic UTM. Pe lângă analytics-ul propriu, folosim și Google Analytics 4,
+          cu adresa IP anonimizată, pentru statistici de trafic și comportament al vizitatorilor.
         </p>
         <p>
           Aceste date sunt colectate doar dacă utilizatorul acceptă cookie-urile de analiză.
           Dacă utilizatorul refuză analiza, nu salvăm sessionId, UTM-uri sau evenimente de
-          tracking asociate formularului.
+          tracking asociate formularului, și nu se încarcă Google Analytics.
         </p>
       </LegalSection>
 
@@ -115,17 +116,21 @@ function PrivacyPolicy() {
         <ul className="list-disc space-y-2 pl-6">
           <li>Vercel Inc. — găzduire frontend;</li>
           <li>Railway / furnizorul bazei de date PostgreSQL — găzduire backend și bază de date;</li>
-          <li>Brevo — trimiterea comunicărilor prin email.</li>
+          <li>Brevo — trimiterea comunicărilor prin email;</li>
+          <li>
+            Google Ireland Limited / Google LLC (Google Analytics) — statistici de trafic și
+            comportament al vizitatorilor, doar cu consimțământ pentru analytics.
+          </li>
         </ul>
         <p>
-          Vercel Inc. și Railway sunt furnizori cu sediul în Statele Unite, ceea ce implică
-          transferul unor date (inclusiv adresa IP și identificatori tehnici) în afara Spațiului
-          Economic European. Acest transfer se realizează pe baza clauzelor contractuale
-          standard (SCC) aprobate de Comisia Europeană, incluse în acordurile de procesare a
-          datelor (DPA) semnate cu fiecare furnizor. Brevo procesează datele exclusiv prin
-          infrastructura sa din Uniunea Europeană, fără transfer către țări terțe pentru
-          fluxurile principale de date. Nu vindem și nu închiriem datele tale către terți în
-          scop de marketing.
+          Vercel Inc., Railway și Google sunt furnizori cu sediul în (sau cu procesare inclusă
+          în) Statele Unite, ceea ce implică transferul unor date (inclusiv adresa IP
+          anonimizată și identificatori tehnici) în afara Spațiului Economic European. Acest
+          transfer se realizează pe baza clauzelor contractuale standard (SCC) aprobate de
+          Comisia Europeană, incluse în acordurile de procesare a datelor (DPA) semnate cu
+          fiecare furnizor. Brevo procesează datele exclusiv prin infrastructura sa din Uniunea
+          Europeană, fără transfer către țări terțe pentru fluxurile principale de date. Nu
+          vindem și nu închiriem datele tale către terți în scop de marketing.
         </p>
         <p>
           Temei: art. 28 din GDPR (persoane împuternicite) și art. 44-46 din GDPR (transferuri

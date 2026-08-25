@@ -9,6 +9,7 @@ import {
   trackPricingView,
   trackError,
 } from "../lib/analytics";
+import { loadGoogleAnalytics, trackGaPageView } from "../lib/googleAnalytics";
 
 function getClosestLink(target) {
   if (!target) return null;
@@ -65,6 +66,16 @@ function AnalyticsTracker() {
   const pricingViewedRef = useRef(false);
 
   useEffect(() => {
+    loadGoogleAnalytics();
+
+    window.addEventListener("cookie-consent-updated", loadGoogleAnalytics);
+
+    return () => {
+      window.removeEventListener("cookie-consent-updated", loadGoogleAnalytics);
+    };
+  }, []);
+
+  useEffect(() => {
     const path = location.pathname + location.search;
 
     startTimeRef.current = Date.now();
@@ -72,6 +83,8 @@ function AnalyticsTracker() {
     pricingViewedRef.current = false;
 
     trackPageView(path);
+    loadGoogleAnalytics();
+    trackGaPageView(path);
 
     function handleScroll() {
       if (!hasAnalyticsConsent()) return;

@@ -102,6 +102,7 @@ function CookiePolicy() {
         <p>
           Cookie-urile și datele de analiză ne ajută să înțelegem cum este folosit site-ul:
           pagini accesate, clickuri, surse UTM, interacțiuni cu studiile de caz și formularul.
+          Folosim analytics propriu, cât și Google Analytics 4.
         </p>
         <p>
           Acestea sunt activate doar după ce utilizatorul își exprimă consimțământul prin
@@ -114,8 +115,31 @@ function CookiePolicy() {
               purpose: "date despre sursa traficului",
               duration: "90 zile",
             },
+            {
+              name: "_ga",
+              purpose: "Google Analytics — distinge utilizatorii, la nivel de domeniu",
+              duration: "2 ani",
+            },
+            {
+              name: "_ga_<container-id>",
+              purpose: "Google Analytics — reține starea sesiunii curente",
+              duration: "2 ani",
+            },
           ]}
         />
+        <p className="text-sm">
+          Google Analytics este furnizat de Google Ireland Limited / Google LLC. Datele
+          (paginile vizitate, adresa IP anonimizată, sursa traficului) sunt transmise către
+          Google pe baza clauzelor contractuale standard (SCC) aprobate de Comisia Europeană.
+          Detalii despre transferul internațional, în{" "}
+          <a
+            href="/privacy"
+            className="text-[color:var(--color-ink)] underline underline-offset-4"
+          >
+            Politica de confidențialitate
+          </a>
+          , secțiunea 6.
+        </p>
       </LegalSection>
 
       <LegalSection number="05" title="Cookie-uri de marketing">
