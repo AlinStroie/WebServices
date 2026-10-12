@@ -57,6 +57,10 @@ const envSchema = z.object({
   // gol și frontend-ul cade pe testimonialele placeholder existente).
   GOOGLE_PLACES_API_KEY: z.string().min(1).optional(),
   GOOGLE_PLACE_ID: z.string().min(1).optional(),
+
+  // Secretul cu care Vercel Cron apelează /api/cron/daily. Fără el,
+  // ruta refuză orice apel.
+  CRON_SECRET: z.string().min(16).optional(),
 });
 
 // Verificăm process.env față de schema de mai sus.

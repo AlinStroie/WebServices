@@ -1,5 +1,6 @@
 import rateLimit from "express-rate-limit";
 import { env } from "../config/env.js";
+import { PostgresRateLimitStore } from "../lib/rateLimitStore.js";
 
 // Limitare globală pentru tot API-ul.
 // Exemplu: maxim 300 requesturi în 15 minute.
@@ -15,8 +16,10 @@ export const globalLimiter = rateLimit({
 });
 
 // Limitare mai strictă pentru formularul de contact.
-// Ajută contra spamului.
+// Ajută contra spamului. Contorul stă în baza de date ca să fie
+// comun tuturor instanțelor serverless.
 export const contactLimiter = rateLimit({
+  store: new PostgresRateLimitStore("contact"),
   windowMs: 60 * 60 * 1000,
   max: env.CONTACT_RATE_LIMIT_MAX,
   standardHeaders: true,
@@ -42,6 +45,7 @@ export const analyticsLimiter = rateLimit({
 });
 
 export const adminLoginLimiter = rateLimit({
+  store: new PostgresRateLimitStore("admin-login"),
   windowMs: 15 * 60 * 1000,
   limit: 5,
   standardHeaders: true,

@@ -20,3 +20,8 @@ Thumbs.db
 
 # Test coverage
 coverage
+# Prisma Client — generat la npm install (postinstall)
+src/generated
+
+# Vercel
+.vercel

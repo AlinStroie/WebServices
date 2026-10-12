@@ -336,3 +336,12 @@ model PortalProjectFile {
 
   @@index([projectId])
 }
+// Contoare pentru rate limiting. Pe Vercel fiecare instanță are memoria ei,
+// deci limitele care contează (contact, login admin) stau în baza de date.
+model RateLimit {
+  key     String   @id
+  hits    Int
+  resetAt DateTime @db.Timestamptz(3)
+
+  @@index([resetAt])
+}
