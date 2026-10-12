@@ -14,5 +14,7 @@ fi
 export DATABASE_URL="${DATABASE_URL_UNPOOLED:-$DATABASE_URL}"
 
 npx prisma migrate deploy
-node prisma/seedAdmin.js --if-missing
+# Parola de admin urmează ADMIN_PASSWORD din Vercel la fiecare deploy: panoul
+# nu are schimbare de parolă, deci variabila e singura sursă de adevăr.
+node prisma/seedAdmin.js
 node prisma/seedCaseStudies.js

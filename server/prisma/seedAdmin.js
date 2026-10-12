@@ -8,13 +8,6 @@ async function main() {
     throw new Error("ADMIN_EMAIL și ADMIN_PASSWORD trebuie setate în .env");
   }
 
-  // --if-missing: folosit la fiecare deploy; nu suprascrie parola unui
-  // admin existent, creează doar primul cont.
-  if (process.argv.includes("--if-missing") && (await prisma.adminUser.count()) > 0) {
-    console.log("Admin există deja, sar peste seed.");
-    return;
-  }
-
   const email = env.ADMIN_EMAIL.toLowerCase();
   const passwordHash = await bcrypt.hash(env.ADMIN_PASSWORD, 12);
 
