@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ArrowUpRight, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 import { siteConfig } from "../../data/siteConfig";
-import LogoMark from "./LogoMark";
-import MagneticCta from "./MagneticCta";
+import TypewriterLogo from "./TypewriterLogo";
+import NavbarCta from "./NavbarCta";
 
 // Pricing lives on its own route now, everything else is a same-page
 // section anchor — `to` vs `href` is what tells the renderers below which
@@ -88,9 +88,9 @@ function Nav() {
         const y = window.scrollY;
         const delta = y - lastY;
 
-        if (y < 96) setHidden(false);
-        else if (delta > 8) setHidden(true);
-        else if (delta < -8) setHidden(false);
+        if (y < 96) setHidden((prev) => (prev ? false : prev));
+        else if (delta > 8) setHidden((prev) => (!prev ? true : prev));
+        else if (delta < -8) setHidden((prev) => (prev ? false : prev));
 
         lastY = y;
         ticking = false;
@@ -149,16 +149,7 @@ function Nav() {
         }`}
       >
         <div className="mx-auto flex h-16 w-full max-w-[1366px] items-center justify-between px-6 sm:h-[88px] sm:px-8">
-          <Link to="/" className="flex items-center gap-2.5 sm:gap-3">
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-[color:var(--color-ink)] text-white sm:h-10 sm:w-10">
-              <LogoMark className="h-5 w-5 sm:h-6 sm:w-6" />
-            </span>
-            <span className="text-[13px] font-semibold leading-tight text-[color:var(--color-ink)] sm:text-[15px]">
-              A Squared
-              <br />
-              Studio
-            </span>
-          </Link>
+          <TypewriterLogo />
 
           {/* Links + CTA sit together on the right, mirroring the reference. */}
           <div className="flex items-center gap-9">
@@ -182,16 +173,12 @@ function Nav() {
               )}
             </nav>
 
-            <MagneticCta
-              to="/discovery"
-              className="hidden px-6 py-3 text-[14px] font-medium text-white sm:inline-flex"
-            >
-              Consultanță gratuită
-              <ArrowUpRight
-                size={16}
-                className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            <div className="hidden lg:block">
+              <NavbarCta
+                to="/discovery"
+                className="px-6 py-3 text-[14px]"
               />
-            </MagneticCta>
+            </div>
 
             <button
               type="button"
@@ -246,9 +233,22 @@ function Nav() {
               onClick={(event) => event.stopPropagation()}
             >
             <div className="flex items-center justify-between">
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-[color:var(--color-ink)] text-white">
-                <LogoMark className="h-6 w-6" />
-              </span>
+              <Link
+                to="/"
+                onClick={() => setOpen(false)}
+                className="group flex items-center gap-2.5 select-none sm:gap-3"
+                aria-label="A Squared Studio — Acasă"
+              >
+                <img
+                  src="/logo_black.svg"
+                  alt="A Squared Studio"
+                  className="h-8 w-8 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9"
+                  loading="eager"
+                />
+                <span className="font-zt-nature text-[17px] font-bold italic tracking-[-0.02em] text-[#17171c] sm:text-[20px] inline-flex items-center">
+                  a squared studio.
+                </span>
+              </Link>
 
               <button
                 type="button"
@@ -286,18 +286,9 @@ function Nav() {
               )}
             </nav>
 
-            <MagneticCta
-              to="/discovery"
-              onClick={() => setOpen(false)}
-              className="mt-6 flex w-full justify-center px-6 py-3 text-sm font-medium text-white"
-            >
-              Consultanță gratuită
-              <ArrowUpRight size={17} />
-            </MagneticCta>
-
             <a
               href={`mailto:${siteConfig.contact.email}`}
-              className="mt-4 text-center text-sm text-[color:var(--color-copy-muted)]"
+              className="mt-6 text-center text-sm text-[color:var(--color-copy-muted)]"
             >
               {siteConfig.contact.email}
             </a>

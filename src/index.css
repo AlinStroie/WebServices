@@ -25,6 +25,146 @@
   size-adjust: 107.06%;
 }
 
+@font-face {
+  font-family: "ZT Nature";
+  src: url("/fonts/zt-nature.bold-italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "ZTNature-BoldItalic";
+  src: url("/fonts/zt-nature.bold-italic.otf") format("opentype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+.font-zt-nature {
+  font-family: "ZT Nature", "ZTNature-BoldItalic", system-ui, sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+/* Ultra-smooth Typewriter Animations with Initial Blur Transition */
+@keyframes typewriterEntrance {
+  0% {
+    opacity: 0;
+    filter: blur(14px);
+    transform: translateX(-6px);
+  }
+  40% {
+    opacity: 0.85;
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateX(0);
+  }
+}
+
+.animate-typewriter-entrance {
+  animation: typewriterEntrance 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, filter, transform;
+}
+
+@keyframes typewriterExit {
+  0% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateX(0);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(10px);
+    transform: translateX(-4px);
+  }
+}
+
+.animate-typewriter-exit {
+  animation: typewriterExit 250ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, filter, transform;
+}
+
+@keyframes letterSmoothIn {
+  0% {
+    opacity: 0;
+    filter: blur(4px);
+    transform: translateY(1.5px) scale(0.97);
+  }
+  50% {
+    opacity: 0.9;
+    filter: blur(0.6px);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-letter-smooth {
+  animation: letterSmoothIn 50ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: inline-block;
+  will-change: opacity, filter, transform;
+}
+
+.typewriter-cursor {
+  display: inline-block;
+  height: 1.18em;
+  width: 2px;
+  border-radius: 9999px;
+  background-color: #17171c;
+  margin-left: 2.5px;
+  vertical-align: middle;
+  box-shadow: 0 0 3px rgba(23, 23, 28, 0.35);
+  transition: opacity 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              filter 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, filter, transform;
+}
+
+.typewriter-cursor-faded {
+  opacity: 0 !important;
+  filter: blur(3px) !important;
+  transform: scaleY(0.65) !important;
+  pointer-events: none;
+}
+
+.typewriter-cursor-active {
+  opacity: 1;
+  filter: blur(0px);
+  transform: scaleY(1);
+}
+
+@keyframes caretPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.15;
+  }
+}
+
+.animate-caret-pulse {
+  animation: caretPulse 0.85s infinite ease-in-out;
+}
+
+@keyframes caretBlink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+.animate-caret-blink {
+  animation: caretBlink 0.75s infinite step-end;
+}
+
 :root {
   font-family: Inter, "Inter Fallback", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -33,7 +173,9 @@
 }
 
 html {
-  scroll-behavior: smooth;
+  /* Prevent scrollbar flapping and horizontal layout shifting */
+  overflow-x: clip;
+  scrollbar-gutter: stable;
   /* Nav's fixed header is h-[88px] (5.5rem); pad past it plus a 1rem
      breathing gap so anchor-scrolled sections don't land flush under it. */
   scroll-padding-top: 6.5rem;
@@ -42,6 +184,7 @@ html {
 body {
   margin: 0;
   min-width: 320px;
+  overflow-x: clip;
   background:
     radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 28rem),
     radial-gradient(circle at top right, rgba(120, 120, 120, 0.12), transparent 30rem),
@@ -232,6 +375,13 @@ body {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.001ms !important;
+  }
+
+  /* Keep requested interactive UI button animations fluid */
+  .navbar-cta,
+  .navbar-cta *,
+  .footer-cta-fill {
+    transition-duration: inherit !important;
   }
 }
 
@@ -643,39 +793,9 @@ body {
   transform: translateY(-1.25rem);
 }
 
-/* ---- Section rail: icon-only, pill expands on hover ----
-   Always a 2.5rem circle with the label display:none; hovering (any item,
-   active or not) expands it to a padded pill and reveals the label. Active
-   state is a color change only (rail-item's own bg class), fully decoupled
-   from hover so it never fights the hover expansion. */
-.rail-item {
-  display: flex;
-  align-items: center;
-  gap: 0.625rem;
-  border-radius: 999px;
-  width: 2.5rem;
-  height: 2.5rem;
-  justify-content: center;
-  padding: 0;
-  overflow: hidden;
-  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    color 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-    padding 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.rail-item .rail-text {
-  display: none;
-}
-
-.rail-item:hover {
-  width: auto;
-  justify-content: flex-start;
-  padding: 0.5rem 1rem;
-}
-
-.rail-item:hover .rail-text {
-  display: block;
-}
+/* ---- Section rail: now animated via framer-motion (SectionRail.jsx) ----
+   Matches WhatsAppButton's smooth two-phase morphing (compact circle to expanded pill).
+   CSS rules retired to prevent display:none/block conflicts with Framer Motion. */
 
 /* replica-overlay-fade is still used by ShowcaseGrid's HoverPreview. The
    slideout menu itself now animates via framer-motion (Nav.jsx) instead of
@@ -1012,9 +1132,8 @@ body {
   background: rgba(0, 0, 0, 0.4);
 }
 
-/* Reduced motion: kill the infinite ambient animations outright. */
+/* Reduced motion: kill ambient glows if reduced motion is requested. */
 @media (prefers-reduced-motion: reduce) {
-  .replica-marquee__track,
   .replica-glow::before,
   .replica-glow::after,
   .replica-halo-glow::before,

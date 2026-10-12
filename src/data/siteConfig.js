@@ -22,6 +22,7 @@ export const siteConfig = {
     address: "Strada Înv. Gheorghe Zaharia, nr. 48E, Întorsura Buzăului, jud. Covasna",
     tradeRegisterNo: "F2025038136000",
     fiscalCode: "52634205",
+    vatStatus: "Neplătitor de TVA",
     phone: "+40729818039",
     email: "contact@asquaredstudio.ro",
   },
@@ -30,6 +31,7 @@ export const siteConfig = {
     instagram: "https://instagram.com/byasqared.studio/",
     facebook: "https://facebook.com/profile.php?id=61589528503382",
     linkedin: "https://linkedin.com/a-squared-studio-33a25340b/",
+    tiktok: "https://www.tiktok.com/@byasquared?lang=en-GB",
   },
 
   navigation: [

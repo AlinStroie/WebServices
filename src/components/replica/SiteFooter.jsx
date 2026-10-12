@@ -1,8 +1,6 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { siteConfig } from "../../data/siteConfig";
-import LogoMark from "./LogoMark";
 import MagneticCta from "./MagneticCta";
 
 // lucide-react (as installed here) ships no brand/social glyphs — they
@@ -48,6 +46,14 @@ function LinkedinIcon({ size = 16 }) {
   );
 }
 
+function TiktokIcon({ size = 16 }) {
+  return (
+    <svg width={size} height={size} {...ICON_PROPS}>
+      <path d="M21 7.917v4.034a9.948 9.948 0 0 1 -5 -1.951v4.5a6.5 6.5 0 1 1 -8 -6.326v4.326a2.5 2.5 0 1 0 4 2v-11.5h4.083a6.005 6.005 0 0 0 4.917 4.917" />
+    </svg>
+  );
+}
+
 // Real destinations only — anchors that exist on the homepage (routed as
 // "/#id" so they work from any page, same trick Nav.jsx's links rely on)
 // plus real standalone routes. No fabricated pages.
@@ -68,47 +74,8 @@ const SOCIAL_ICONS = {
   instagram: InstagramIcon,
   facebook: FacebookIcon,
   linkedin: LinkedinIcon,
+  tiktok: TiktokIcon,
 };
-
-/**
- * A live "Local Time" line, matching the reference's own (it stamps a
- * real clock in its studio's timezone, not a static string that would go
- * stale the moment someone reloads the page). Recomputes the UTC offset
- * from Intl rather than hardcoding it, so it stays correct across the
- * DST switch (Romania is UTC+2 in winter, UTC+3 in summer).
- */
-function LocalTime() {
-  const [now, setNow] = useState(() => new Date());
-
-  useEffect(() => {
-    const id = setInterval(() => setNow(new Date()), 30_000);
-    return () => clearInterval(id);
-  }, []);
-
-  const stamp = now.toLocaleString("ro-RO", {
-    timeZone: "Europe/Bucharest",
-    weekday: "short",
-    day: "2-digit",
-    month: "short",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-
-  const offsetName = new Intl.DateTimeFormat("en-US", {
-    timeZone: "Europe/Bucharest",
-    timeZoneName: "shortOffset",
-  })
-    .formatToParts(now)
-    .find((part) => part.type === "timeZoneName")?.value;
-
-  return (
-    <>
-      {stamp}
-      {offsetName ? ` (${offsetName.replace("GMT", "UTC")})` : ""}
-    </>
-  );
-}
 
 /**
  * Closing footer.
@@ -138,6 +105,7 @@ function LocalTime() {
  */
 function SiteFooter() {
   const year = new Date().getFullYear();
+  const company = siteConfig.company;
   const socials = Object.entries(siteConfig.social).filter(([, href]) =>
     Boolean(href)
   );
@@ -172,51 +140,105 @@ function SiteFooter() {
       </div>
 
       <div className="mx-auto grid w-full max-w-[1366px] gap-16">
-        {/* Logo + tagline (left) against a labelled address/time/email
-            block (right) — matches the reference's own split exactly. */}
-        <div className="flex flex-col gap-10 border-t border-[color:var(--color-divider-on-dark)] pt-16 sm:flex-row sm:items-start sm:justify-between">
-          <div className="flex max-w-[36ch] items-start gap-3 text-left">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-[color:var(--color-ink)]">
-              <LogoMark className="h-6 w-6" />
-            </span>
-
-            <div className="grid gap-2">
-              <span className="text-[15px] font-semibold leading-tight text-white">
-                {siteConfig.brand.shortName}
+        {/* Main Info Grid: Brand (Left), Direct Contact (Center), Legal Company Details (Right) */}
+        <div className="grid grid-cols-1 gap-10 border-t border-[color:var(--color-divider-on-dark)] pt-16 md:grid-cols-2 lg:grid-cols-12 lg:gap-8 text-left">
+          {/* Column 1: Brand & Tagline */}
+          <div className="flex flex-col items-start gap-4 lg:col-span-4">
+            <Link
+              to="/"
+              className="group flex items-center gap-2.5 select-none sm:gap-3"
+              aria-label="A Squared Studio — Acasă"
+            >
+              <img
+                src="/logo_white.svg"
+                alt="A Squared Studio"
+                className="h-8 w-8 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9"
+                loading="eager"
+              />
+              <span className="font-zt-nature text-[17px] font-bold italic tracking-[-0.02em] text-white sm:text-[20px] inline-flex items-center">
+                a squared studio.
               </span>
-              <p className="text-sm leading-relaxed text-[color:var(--color-copy-on-dark)]">
-                {siteConfig.brand.tagline}
-              </p>
-            </div>
+            </Link>
+
+            <p className="max-w-[34ch] text-sm leading-relaxed text-[color:var(--color-copy-on-dark)]">
+              {siteConfig.brand.tagline}
+            </p>
           </div>
 
-          <dl className="grid gap-3 text-left text-sm sm:text-right">
-            <div className="flex gap-2 sm:justify-end">
-              <dt className="font-semibold text-white">Adresă locală:</dt>
-              <dd className="text-[color:var(--color-copy-on-dark)]">
-                {siteConfig.contact.location}
-              </dd>
-            </div>
+          {/* Column 2: Contact direct */}
+          <div className="grid content-start gap-3 lg:col-span-3">
+            <h3 className="text-sm font-semibold tracking-wide text-white">Contact direct</h3>
 
-            <div className="flex gap-2 sm:justify-end">
-              <dt className="font-semibold text-white">Ora locală:</dt>
-              <dd className="text-[color:var(--color-copy-on-dark)]">
-                <LocalTime />
-              </dd>
-            </div>
+            <dl className="grid gap-3 text-sm">
+              <div className="grid gap-0.5">
+                <dt className="text-xs uppercase tracking-wider text-[color:var(--color-copy-subtle-on-dark)]">Email</dt>
+                <dd>
+                  <a
+                    href={`mailto:${siteConfig.contact.email}`}
+                    className="text-[color:var(--color-copy-on-dark)] transition-colors hover:text-white"
+                  >
+                    {siteConfig.contact.email}
+                  </a>
+                </dd>
+              </div>
 
-            <div className="flex gap-2 sm:justify-end">
-              <dt className="font-semibold text-white">Email:</dt>
-              <dd>
-                <a
-                  href={`mailto:${siteConfig.contact.email}`}
-                  className="text-[color:var(--color-copy-on-dark)] transition-colors hover:text-white"
-                >
-                  {siteConfig.contact.email}
-                </a>
-              </dd>
-            </div>
-          </dl>
+              <div className="grid gap-0.5">
+                <dt className="text-xs uppercase tracking-wider text-[color:var(--color-copy-subtle-on-dark)]">Telefon</dt>
+                <dd>
+                  <a
+                    href={`tel:${siteConfig.contact.phone.replace(/\s+/g, '')}`}
+                    className="text-[color:var(--color-copy-on-dark)] transition-colors hover:text-white"
+                  >
+                    {siteConfig.contact.phone}
+                  </a>
+                </dd>
+              </div>
+
+              <div className="grid gap-0.5">
+                <dt className="text-xs uppercase tracking-wider text-[color:var(--color-copy-subtle-on-dark)]">Asistență</dt>
+                <dd className="text-[color:var(--color-copy-on-dark)]">
+                  Luni – Vineri · Răspuns rapid
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          {/* Column 3: Date companie & Identificare fiscală */}
+          <div className="grid content-start gap-3 md:col-span-2 lg:col-span-5">
+            <h3 className="text-sm font-semibold tracking-wide text-white">Date companie</h3>
+
+            <dl className="grid gap-2.5 text-sm text-[color:var(--color-copy-on-dark)]">
+              <div className="grid gap-0.5">
+                <dt className="text-xs uppercase tracking-wider text-[color:var(--color-copy-subtle-on-dark)]">Denumire entitate</dt>
+                <dd className="font-medium text-white">
+                  {company.fullLegalName}
+                </dd>
+              </div>
+
+              <div className="grid gap-0.5">
+                <dt className="text-xs uppercase tracking-wider text-[color:var(--color-copy-subtle-on-dark)]">Sediu social</dt>
+                <dd className="leading-relaxed">
+                  {company.address}
+                </dd>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-1.5 text-xs">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[color:var(--color-copy-subtle-on-dark)]">CUI:</span>
+                  <span className="font-mono font-medium text-white">{company.fiscalCode}</span>
+                </div>
+                <span className="text-[color:var(--color-divider-on-dark)]" aria-hidden="true">·</span>
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[color:var(--color-copy-subtle-on-dark)]">Nr. Reg. Com.:</span>
+                  <span className="font-mono font-medium text-white">{company.tradeRegisterNo}</span>
+                </div>
+                <span className="text-[color:var(--color-divider-on-dark)]" aria-hidden="true">·</span>
+                <span className="text-[color:var(--color-copy-subtle-on-dark)]">
+                  {company.vatStatus}
+                </span>
+              </div>
+            </dl>
+          </div>
         </div>
 
         {/* Helpful links */}

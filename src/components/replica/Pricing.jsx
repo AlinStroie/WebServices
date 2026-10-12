@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { memo, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ArrowUpRight, Check, ChevronLeft, ChevronRight, Target } from "lucide-react";
 import {
   motion,
@@ -38,7 +38,7 @@ import { pricing, pricingIncludes } from "../../data/pricing";
  * scrolls up through the viewport — reference's title reads flat white
  * only once fully in view; on entry it's a dark, half-legible gray.
  */
-function PricingCard({ plan }) {
+const PricingCard = memo(function PricingCard({ plan }) {
   return (
     <div
       className={`relative h-full origin-center ${
@@ -118,7 +118,7 @@ function PricingCard({ plan }) {
       </article>
     </div>
   );
-}
+});
 
 function Pricing() {
   const reduceMotion = useReducedMotion();
@@ -164,7 +164,7 @@ function Pricing() {
     }
 
     syncEdgePadding();
-    window.addEventListener("resize", syncEdgePadding);
+    window.addEventListener("resize", syncEdgePadding, { passive: true });
     return () => window.removeEventListener("resize", syncEdgePadding);
   }, []);
 
@@ -215,7 +215,7 @@ function Pricing() {
           }
         });
 
-        setActiveIndex(nearest);
+        setActiveIndex((prev) => (prev === nearest ? prev : nearest));
       });
     }
 
@@ -251,7 +251,7 @@ function Pricing() {
 
           <motion.h2
             ref={titleRef}
-            className="display mt-4 text-[clamp(2rem,4.6vw,3.5rem)]"
+            className="display relative mt-4 text-[clamp(2rem,4.6vw,3.5rem)]"
             style={reduceMotion ? { color: "#ffffff" } : { color: titleColor }}
           >
             Afacerile serioase merită
@@ -290,7 +290,7 @@ function Pricing() {
               className="w-[84vw] shrink-0 snap-center sm:w-[60vw] lg:w-[38vw]"
             >
               <div
-                className="origin-center transition-[opacity,transform] duration-500 ease-out"
+                className="origin-center transform-gpu transition-[opacity,transform] duration-500 ease-out"
                 style={{
                   opacity: distance === 0 ? 1 : distance === 1 ? 0.55 : 0.3,
                   transform: `scale(${distance === 0 ? 1 : distance === 1 ? 0.92 : 0.85})`,

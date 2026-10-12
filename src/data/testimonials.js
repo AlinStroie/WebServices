@@ -16,34 +16,54 @@
 export const testimonials = [
   {
     quote:
-      "„Aici va apărea o recenzie reală, de la un client impresionat de rezultatele livrate de echipa noastră.”",
-    name: "Nume client",
-    role: "Funcție",
-    company: "Companie",
-    avatar: { initials: "NC", from: "#2c2cf3", to: "#7a5cff", src: "" },
+      "„Foarte Profi\nM a ajutat în dezvoltarea afacerii mele foarte mult!!!”",
+    name: "Ali Baba",
+    role: "Client A Squared Studio",
+    company: "acum 3 săptămâni · 5★",
+    avatar: {
+      initials: "AB",
+      from: "#2c2cf3",
+      to: "#7a5cff",
+      src: "https://lh3.googleusercontent.com/a-/ALV-UjUMzfPDyhQ0vv2SZe_TZMkScrThSNAqixskE6JXDv6vO4ZOriDN=s128-c0x00000000-cc-rp-mo",
+    },
   },
   {
     quote:
-      "„Testimoniale autentice vor fi adăugate imediat ce proiectele finalizate primesc feedback-ul entuziast al clienților.”",
-    name: "Nume client",
-    role: "Funcție",
-    company: "Companie",
-    avatar: { initials: "NC", from: "#10b981", to: "#3bc8a6", src: "" },
+      "„Design curat, comunicare clară, termene respectate. A Squared Studio a transformat un site vechi și greoi într-unul modern și funcțional. Recomand cu încredere.”",
+    name: "zew Stroie",
+    role: "Client A Squared Studio",
+    company: "acum 3 săptămâni · 5★",
+    avatar: {
+      initials: "ZS",
+      from: "#10b981",
+      to: "#3bc8a6",
+      src: "https://lh3.googleusercontent.com/a-/ALV-UjU0TjF8Gbnco72k5shhI5En4OyufgiZsKz2-sEJZOCh1UovNK0=s128-c0x00000000-cc-rp-mo",
+    },
   },
   {
     quote:
-      "„Fiecare proiect e construit cu obsesie pentru detalii, iar rezultatele vorbesc de la sine — recenziile urmează.”",
-    name: "Nume client",
-    role: "Funcție",
-    company: "Companie",
-    avatar: { initials: "NC", from: "#e896cd", to: "#b4aaff", src: "" },
+      "„Colaborare excelentă și servicii profesionale de 5 stele!”",
+    name: "Drgj Ciorobitca",
+    role: "Client A Squared Studio",
+    company: "acum 3 săptămâni · 5★",
+    avatar: {
+      initials: "DC",
+      from: "#e896cd",
+      to: "#b4aaff",
+      src: "https://lh3.googleusercontent.com/a-/ALV-UjXrpU-NytdO0kBjp3-MJlw1YzMm2q-yLvHkjH-B17oTVhpdYDw=s128-c0x00000000-cc-rp-mo",
+    },
   },
   {
     quote:
-      "„Spațiu rezervat pentru cuvintele clienților noștri, în curând completat cu povești reale de succes.”",
-    name: "Nume client",
-    role: "Funcție",
-    company: "Companie",
-    avatar: { initials: "NC", from: "#f59e0b", to: "#f7c56b", src: "" },
+      "„Recomand cu încredere A Squared Studio. Calitate ireproșabilă!”",
+    name: "Neagoe Alex",
+    role: "Client A Squared Studio",
+    company: "acum 3 săptămâni · 5★",
+    avatar: {
+      initials: "NA",
+      from: "#f59e0b",
+      to: "#f7c56b",
+      src: "https://lh3.googleusercontent.com/a/ACg8ocKXsGeyJiOI4Ue_KHYpgFnCGz0Uk1D9q_Fqlmjlgofg6fN2WA=s128-c0x00000000-cc-rp-mo",
+    },
   },
 ];

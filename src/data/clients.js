@@ -16,7 +16,9 @@ export const clients = [
   { label: "Site de prezentare", logo: null },
   { label: "Landing page", logo: null },
   { label: "Magazin online", logo: null },
-  { label: "Redesign", logo: null },
+  { label: "Portal clienți", logo: null },
+  { label: "Redesign website", logo: null },
   { label: "Identitate vizuală", logo: null },
-  { label: "Optimizare", logo: null },
+  { label: "Optimizare SEO & Viteză", logo: null },
+  { label: "Platformă Web & SaaS", logo: null },
 ];
