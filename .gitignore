@@ -41,3 +41,8 @@ server/coverage
 portal/.agents/
 portal/.claude/
 portal/skills-lock.json
+
+# Local junk
+desktop.ini
+vite-dev*.log
+test.txt
