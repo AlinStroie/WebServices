@@ -62,7 +62,7 @@ const prolinenData = {
 import fs from "node:fs";
 import path from "node:path";
 
-let GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY || "AIzaSyCXj1vBc6uSbFtFUKbJ6-9aoY_9cukxIvg";
+let GOOGLE_PLACES_API_KEY = process.env.GOOGLE_PLACES_API_KEY || "";
 let GOOGLE_PLACE_ID = process.env.GOOGLE_PLACE_ID || "ChIJw6SOcVc9DEgRNJlM7wTTejs";
 
 try {
