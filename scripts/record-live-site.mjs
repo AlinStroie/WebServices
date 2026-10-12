@@ -59,13 +59,51 @@ async function sweep(page) {
   });
 }
 
+/**
+ * Sites built from our template open with a cookie-consent dialog that blurs
+ * the whole page. Recorded as-is, it covers every frame of the clip. So we
+ * first visit in a throwaway context, reject non-essential cookies, and hand
+ * the stored consent (storageState) to the recording context, where the
+ * banner then never shows.
+ */
+async function consentState(browser) {
+  const context = await browser.newContext({ viewport: SIZE });
+  const page = await context.newPage();
+  await page.goto(URL_ARG, { waitUntil: "networkidle" });
+
+  // The banner mounts a moment after load, so wait for it (isVisible
+  // would answer immediately and miss it).
+  const reject = page
+    .getByRole("button", {
+      name: /nu sunt de acord|doar esen[tț]iale|respinge|refuz|reject/i,
+    })
+    .first();
+  try {
+    await reject.waitFor({ state: "visible", timeout: 8000 });
+    await reject.click();
+    await sleep(800);
+  } catch {
+    console.warn("[rec] no cookie banner found; recording as-is.");
+  }
+
+  const state = await context.storageState();
+  await context.close();
+  return state;
+}
+
 async function main() {
   await rm(TMP, { recursive: true, force: true });
   await mkdir(TMP, { recursive: true });
   await mkdir(OUT, { recursive: true });
 
-  const browser = await chromium.launch();
+  // PW_CHROMIUM_PATH: use a system Chromium when Playwright's own download
+  // isn't available (CI, sandboxes). Unset = Playwright's default browser.
+  const browser = await chromium.launch({
+    executablePath: process.env.PW_CHROMIUM_PATH || undefined,
+  });
+  const storageState = await consentState(browser);
   const context = await browser.newContext({
+    storageState,
     viewport: SIZE,
     deviceScaleFactor: 2,
     recordVideo: { dir: TMP, size: SIZE },
@@ -74,6 +112,11 @@ async function main() {
 
   console.log(`[rec] ${ID_ARG} <- ${URL_ARG} …`);
   await page.goto(URL_ARG, { waitUntil: "networkidle" });
+  if (await page.locator('[role="dialog"]:visible').count()) {
+    console.warn(
+      "[rec] WARNING: a dialog is still visible and will cover the clip."
+    );
+  }
   await sleep(800);
   await sweep(page);
   await context.close(); // finalizes the webm
