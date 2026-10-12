@@ -19,6 +19,7 @@ import { notFound } from "./middleware/notFound.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import seoRoutes from "./routes/seo.routes.js";
 import reviewsRoutes from "./routes/reviews.routes.js";
+import cronRoutes from "./routes/cron.routes.js";
 
 export const app = express();
 
@@ -119,6 +120,7 @@ app.use("/api/analytics", analyticsRoutes);
 app.use("/api/reviews", reviewsRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/portal", portalRoutes);
+app.use("/api/cron", cronRoutes);
 
 // 404
 app.use(notFound);
