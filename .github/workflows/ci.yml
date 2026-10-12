@@ -1,0 +1,81 @@
+name: CI
+
+# Catches what broke the Vercel deploys: a package-lock.json that is out of
+# sync with package.json (npm ci fails) or a build that no longer compiles.
+# Lint is deliberately not a gate yet — it has ~1000 pre-existing errors.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  site:
+    name: Site build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  portal:
+    name: Portal build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+      - run: npm ci
+      - run: npm run build
+
+  server:
+    name: Server install and boot check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: server
+    env:
+      # prisma generate (postinstall) only needs the variable to exist.
+      DATABASE_URL: postgresql://ci:ci@localhost:5432/ci
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - run: npm ci
+      - name: App module loads with a valid environment
+        env:
+          NODE_ENV: production
+          CLIENT_URL: https://example.com
+          JWT_SECRET: ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci
+          ADMIN_JWT_SECRET: ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci-ci
+          ADMIN_EMAIL: ci@example.com
+          ADMIN_PASSWORD: ci-password-12345
+          CLERK_SECRET_KEY: sk_test_ci
+          COMPANY_EMAIL: ci@example.com
+          BREVO_API_KEY: ci
+          SMTP_HOST: ci
+          SMTP_USER: ci
+          SMTP_PASS: ci
+          SMTP_FROM: ci
+        run: node --input-type=module -e "await import('./api/index.js'); console.log('ok')"
