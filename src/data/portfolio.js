@@ -136,6 +136,10 @@ function createProject({
     // Real, shipped client work only — when set, the portfolio card links out
     // to the live site instead of the internal /project/:id placeholder.
     liveUrl,
+    // Anything without a live URL is a demo concept, not delivered client
+    // work. Derived (not a per-project flag) so a new entry can't be shown
+    // as real by forgetting to set one.
+    isConcept: !liveUrl,
   };
 }
 

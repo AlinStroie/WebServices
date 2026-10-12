@@ -65,9 +65,9 @@ function Works() {
                   {project.title}
                 </h3>
 
-                {project.client && (
+                {(project.isConcept || project.client) && (
                   <p className="text-lg font-semibold uppercase tracking-[0.08em] text-white/50">
-                    {project.client}
+                    {project.isConcept ? "Proiect concept" : project.client}
                   </p>
                 )}
 
