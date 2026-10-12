@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { motion, useScroll, useTransform, useReducedMotion } from "framer-motion";
 
@@ -23,6 +23,15 @@ import { whyUs } from "../../data/whyUs";
 function WhyUs() {
   const sectionRef = useRef(null);
   const reduceMotion = useReducedMotion();
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined" ? window.innerWidth < 768 : false
+  );
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", onResize, { passive: true });
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -35,12 +44,12 @@ function WhyUs() {
   return (
     <div ref={sectionRef} className="relative w-full bg-[color:var(--color-ink)]">
       <motion.div
-        className="grad-light w-full origin-center overflow-hidden rounded-[24px] will-change-transform"
-        style={{ scale: reduceMotion ? 1 : maskScale }}
+        className="grad-light w-full origin-center overflow-hidden rounded-[24px] transform-gpu will-change-transform"
+        style={{ scale: reduceMotion || isMobile ? 1 : maskScale }}
       >
         <motion.div
-          className="origin-center will-change-transform"
-          style={{ scale: reduceMotion ? 1 : counterScale }}
+          className="origin-center transform-gpu will-change-transform"
+          style={{ scale: reduceMotion || isMobile ? 1 : counterScale }}
         >
           <section
             id="avantaje"
@@ -80,7 +89,7 @@ function WhyUs() {
   );
 }
 
-function WhyUsCard({ item }) {
+const WhyUsCard = memo(function WhyUsCard({ item }) {
   const [open, setOpen] = useState(false);
   const Icon = item.icon;
 
@@ -110,6 +119,6 @@ function WhyUsCard({ item }) {
       </div>
     </details>
   );
-}
+});
 
 export default WhyUs;

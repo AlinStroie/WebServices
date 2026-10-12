@@ -16,7 +16,7 @@ export const usps = [
   {
     stat: 95,
     suffix: "+",
-    statLabel: "scor Lighthouse mediu, pe fiecare proiect",
+    statLabel: "scor de performanță mediu, pe fiecare proiect",
     title: "Viteză Și Performanță La Vârf",
     text: "Imagini optimizate, cod curat și găzduire performantă, pe orice dispozitiv. Un site rapid nu doar convertește mai bine — te ține și în fruntea rezultatelor Google.",
   },

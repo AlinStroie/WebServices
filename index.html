@@ -42,10 +42,11 @@
          fetch immediately, in parallel with the JS bundle. -->
     <link
       rel="preload"
-      as="video"
+      as="fetch"
       href="/hero/hero-video.mp4"
       type="video/mp4"
-      fetchpriority="high"
+      crossorigin="anonymous"
+      fetchpriority="low"
     />
 
     <meta property="og:type" content="website" />

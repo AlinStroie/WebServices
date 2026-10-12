@@ -15,22 +15,6 @@ const proofPoints = [
 ];
 
 /**
- * Placeholder proof avatars — the reference floats a row of 7 real client
- * headshots at 48px. We have no cleared photos, so each is a crafted
- * gradient disc with initials. Add `src: "/team/ana.webp"` to render a real
- * image instead. See docs/PLACEHOLDERS-TO-PREPARE.md #2.
- */
-const avatars = [
-  { initials: "AM", from: "#2c2cf3", to: "#7a5cff" },
-  { initials: "IR", from: "#10b981", to: "#3bc8a6" },
-  { initials: "DP", from: "#e896cd", to: "#b4aaff" },
-  { initials: "SV", from: "#f59e0b", to: "#f7c56b" },
-  { initials: "MC", from: "#2c2cf3", to: "#4c86ff" },
-  { initials: "LT", from: "#6366f1", to: "#a78bfa" },
-  { initials: "GA", from: "#0ea5e9", to: "#6ee7f0" },
-];
-
-/**
  * Sticky hero with a scroll-linked fade, over a full-bleed looping
  * background video (`public/hero/hero-video.mp4`). The reference floats a
  * cut-out subject on the right; here the video itself is the subject, and
@@ -57,7 +41,7 @@ function Hero() {
   );
   useEffect(() => {
     const onResize = () => setViewportH(window.innerHeight);
-    window.addEventListener("resize", onResize);
+    window.addEventListener("resize", onResize, { passive: true });
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
@@ -125,14 +109,14 @@ function Hero() {
               </h1>
 
               <motion.ul
-                className="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm"
+                className="flex flex-col gap-2.5 text-sm"
                 {...fade(0.5)}
               >
                 {proofPoints.map((point) => (
-                  <li key={point} className="flex items-center gap-2">
+                  <li key={point} className="flex items-center gap-2.5">
                     <CircleCheck
                       size={17}
-                      className="text-[color:var(--color-accent)]"
+                      className="shrink-0 text-[color:var(--color-accent)]"
                     />
                     <span className="text-white/85">{point}</span>
                   </li>
@@ -140,7 +124,10 @@ function Hero() {
               </motion.ul>
             </div>
 
-            <motion.div className="mt-5 grid gap-5 sm:mt-8 sm:gap-8" {...fade(0.65)}>
+            <motion.div
+              className="mt-6 flex flex-wrap items-center gap-4 sm:mt-8 sm:gap-6"
+              {...fade(0.65)}
+            >
               <MagneticCta
                 to="/discovery"
                 className="w-fit px-6 py-3.5 text-sm font-medium text-white sm:px-8 sm:py-4 sm:text-base"
@@ -152,49 +139,21 @@ function Hero() {
                 />
               </MagneticCta>
 
-              {/* Social proof, laid out like the reference: overlapping
-                  avatars │ a thin divider │ stars stacked over the trust
-                  line. */}
-              <div className="flex items-center gap-3 sm:gap-4">
-                <div className="flex" aria-hidden="true">
-                  {avatars.map((a) =>
-                    a.src ? (
-                      <img
-                        key={a.initials}
-                        src={a.src}
-                        alt=""
-                        className="hero-avatar hero-avatar--sm"
-                      />
-                    ) : (
-                      <span
-                        key={a.initials}
-                        className="hero-avatar hero-avatar--sm"
-                        style={{
-                          backgroundImage: `linear-gradient(135deg, ${a.from}, ${a.to})`,
-                        }}
-                      >
-                        {a.initials}
-                      </span>
-                    )
-                  )}
-                </div>
+              <span className="hidden sm:block h-8 w-px bg-white/20 sm:h-10" aria-hidden="true" />
 
-                <span className="h-8 w-px bg-white/20 sm:h-10" aria-hidden="true" />
-
-                <div className="grid gap-1.5">
-                  <div className="flex gap-0.5" aria-hidden="true">
-                    {[0, 1, 2, 3, 4].map((i) => (
-                      <Star
-                        key={i}
-                        size={14}
-                        className="fill-white text-white sm:h-4 sm:w-4"
-                      />
-                    ))}
-                  </div>
-                  <p className="text-sm text-white">
-                    Agenție de web design de încredere
-                  </p>
+              <div className="grid gap-1.5">
+                <div className="flex gap-0.5" aria-hidden="true">
+                  {[0, 1, 2, 3, 4].map((i) => (
+                    <Star
+                      key={i}
+                      size={14}
+                      className="fill-white text-white sm:h-4 sm:w-4"
+                    />
+                  ))}
                 </div>
+                <p className="text-sm text-white">
+                  Agenție de web design de încredere
+                </p>
               </div>
             </motion.div>
           </div>

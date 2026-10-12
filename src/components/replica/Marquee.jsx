@@ -1,52 +1,68 @@
+import { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import { clients } from "../../data/clients";
 
+// Repetăm lista pentru a asigura continuitate impecabilă pe orice rezoluție (chiar și ecrane ultra-wide / 4K).
+const marqueeItems = [...clients, ...clients, ...clients, ...clients];
+
 /**
- * Infinite marquee band — two identical tracks so the loop seam is
- * invisible, 50s linear infinite (linear is mandatory: any easing on an
- * infinite marquee produces a visible pulse at each cycle boundary).
- *
- * The reference uses this slot for client logos. Content lives in
- * src/data/clients.js: entries with a `logo` path render as an <img>,
- * entries without one render as their text `label`. Default placeholders
- * are text-only — nothing borrowed, nothing implied.
- *
- * Edge fade is `.replica-marquee`'s mask-image in index.css, not here —
- * it has to live on the overflow:hidden element itself.
+ * Bandă de tip inel infinit (infinite loop conveyor).
+ * Rulează fluid și continuu prin toate tipurile de website-uri și servicii.
+ * Optimizat cu useInView pentru a opri animația când nu este vizibilă pe ecran.
  */
 function Marquee() {
-  const track = (key) => (
-    <div className="replica-marquee__track" aria-hidden={key !== "a"}>
-      {clients.map((client, i) => (
-        <span
-          key={`${key}-${i}`}
-          className="flex shrink-0 items-center gap-5 whitespace-nowrap text-lg font-medium text-[color:var(--color-copy-on-dark)] sm:text-xl"
-        >
-          <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[color:var(--color-accent)]" />
-          {client.logo ? (
-            <img
-              src={client.logo}
-              alt={client.label}
-              className="h-8 w-auto object-contain opacity-80"
-              loading="lazy"
-              decoding="async"
-            />
-          ) : (
-            client.label
-          )}
-        </span>
-      ))}
-    </div>
-  );
+  const containerRef = useRef(null);
+  const isInView = useInView(containerRef, { margin: "300px 0px" });
 
   return (
-    <section className="relative grid gap-20 bg-[color:var(--color-ink)] py-20">
-      <h2 className="title-gradient mx-auto max-w-[24ch] px-6 text-center text-[clamp(1.25rem,0.9545rem+1.2727vw,2rem)] font-normal leading-[1.2]">
-        Web Design Premium în România: Soluții Complete, Livrate de o Echipă Dedicată
-      </h2>
+    <section
+      ref={containerRef}
+      className="relative w-full overflow-hidden bg-[color:var(--color-ink)] py-12 sm:py-16"
+    >
+      {/* Bandă continuă în inel (infinite loop ring) */}
+      <div
+        className="relative w-full overflow-hidden select-none py-2"
+        style={{
+          maskImage:
+            "linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%)",
+          WebkitMaskImage:
+            "linear-gradient(90deg, transparent 0%, black 12%, black 88%, transparent 100%)",
+        }}
+      >
+        <motion.div
+          animate={isInView ? { x: ["0%", "-50%"] } : undefined}
+          transition={{
+            ease: "linear",
+            duration: 65,
+            repeat: Infinity,
+          }}
+          className="flex w-max items-center gap-10 sm:gap-16 transform-gpu will-change-transform"
+        >
+          {marqueeItems.map((item, index) => (
+            <div
+              key={`${item.label}-${index}`}
+              className="group flex shrink-0 items-center gap-5 sm:gap-8 select-none cursor-default"
+            >
+              <span className="relative flex h-2 w-2 shrink-0 items-center justify-center">
+                <span className="h-2 w-2 rounded-full bg-[color:var(--color-accent)] shadow-[0_0_8px_var(--color-accent)]" />
+              </span>
 
-      <div className="replica-marquee mx-auto w-full max-w-[1600px]">
-        {track("a")}
-        {track("b")}
+              {item.logo ? (
+                <img
+                  src={item.logo}
+                  alt={item.label}
+                  className="h-9 sm:h-11 w-auto object-contain opacity-80 transition-opacity duration-300 group-hover:opacity-100"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : (
+                <span className="text-[21px] sm:text-[27px] md:text-[29px] font-medium tracking-tight text-[color:var(--color-copy-on-dark)] transition-colors duration-300 group-hover:text-white whitespace-nowrap">
+                  {item.label}
+                </span>
+              )}
+            </div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

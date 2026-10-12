@@ -12,7 +12,6 @@ import {
   Sparkles,
 } from "lucide-react";
 
-import LogoMark from "../components/replica/LogoMark";
 import SEO from "../components/SEO";
 import { apiFetch } from "../lib/api";
 import { siteConfig } from "../data/siteConfig";
@@ -231,12 +230,18 @@ function Discovery() {
         <div className="flex items-center justify-between">
           <Link
             to="/"
-            className="flex items-center gap-3 text-[15px] font-semibold text-[color:var(--color-ink)]"
+            className="group flex items-center gap-2.5 select-none sm:gap-3"
+            aria-label="A Squared Studio — Acasă"
           >
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[color:var(--color-ink)] text-white">
-              <LogoMark className="h-5 w-5" />
+            <img
+              src="/logo_black.svg"
+              alt="A Squared Studio"
+              className="h-8 w-8 shrink-0 object-contain transition-transform duration-300 group-hover:scale-105 sm:h-9 sm:w-9"
+              loading="eager"
+            />
+            <span className="font-zt-nature text-[17px] font-bold italic tracking-[-0.02em] text-[#17171c] sm:text-[20px] inline-flex items-center">
+              a squared studio.
             </span>
-            A Squared Studio
           </Link>
 
           {step > 0 && step < 3 && (

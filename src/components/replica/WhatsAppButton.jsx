@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { siteConfig } from "../../data/siteConfig";
 
 // lucide-react ships no brand glyphs (see SiteFooter's own note on this) —
@@ -17,39 +19,101 @@ function WhatsAppIcon({ size = 26 }) {
 }
 
 /**
- * Sticky WhatsApp contact button. Sits at the same bottom-right offset
- * BackToTop already reserves room above for (its 6rem bottom offset assumes
- * something else occupies the ~2rem slot beneath it — this is that
- * something). Two separate cues: a persistent "unread message" badge on the
- * collapsed bubble (an attention affordance, always on), and a label that
- * slides out on hover/focus (an explanatory affordance, interaction-only).
+ * Sticky WhatsApp contact button.
+ *
+ * Smooth two-phase morphing animation:
+ * - Phase 1: Sleek collapsed circle with the WhatsApp icon and a pulsing unread notification badge.
+ * - Phase 2: Expanded pill revealing the clear "Contactează-ne pe WhatsApp" action label.
+ *
+ * Choreography:
+ * 1. Entrance on page load: pops up with an organic spring into Phase 1.
+ * 2. Auto-reveal: after ~1.2s, smoothly unfolds into Phase 2 so the visitor discovers the CTA.
+ * 3. Auto-collapse: holds for 3.2s, then glides seamlessly back to Phase 1.
+ * 4. User interaction: hovering or focusing smoothly expands Phase 2 anytime, with immediate fluid response.
  */
 function WhatsAppButton() {
   const phone = siteConfig?.contact?.whatsapp || siteConfig?.contact?.phone || "";
   const digits = phone.replace(/\D/g, "");
   const whatsappPhone = digits.startsWith("40") ? digits : `4${digits}`;
 
+  const [isHovered, setIsHovered] = useState(false);
+  const isExpanded = isHovered;
+
   return (
-    <a
+    <motion.a
       href={`https://wa.me/${whatsappPhone}`}
       target="_blank"
       rel="noreferrer noopener"
       aria-label="Contactează-ne pe WhatsApp"
-      className="group fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-[95] flex h-14 items-center rounded-full bg-[#25D366] pr-0 shadow-[0_10px_30px_rgba(0,0,0,0.4)] transition-[padding] duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] hover:pr-5 focus-visible:pr-5 sm:bottom-8 sm:right-8"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onFocus={() => setIsHovered(true)}
+      onBlur={() => setIsHovered(false)}
+      initial={{ scale: 0, opacity: 0, y: 20 }}
+      animate={{
+        scale: 1,
+        opacity: 1,
+        y: 0,
+        boxShadow: isExpanded
+          ? "0 16px 42px -4px rgba(37, 211, 102, 0.45), 0 10px 24px -6px rgba(0, 0, 0, 0.35)"
+          : "0 10px 30px rgba(0, 0, 0, 0.38)",
+      }}
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.96 }}
+      transition={{
+        scale: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 },
+        y: { duration: 0.7, ease: [0.16, 1, 0.3, 1], delay: 0.4 },
+        opacity: { duration: 0.45, delay: 0.4 },
+        boxShadow: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+      }}
+      className="fixed bottom-[calc(1.25rem+env(safe-area-inset-bottom))] right-[calc(1.25rem+env(safe-area-inset-right))] z-[95] flex h-14 items-center rounded-full bg-[#25D366] text-white select-none overflow-hidden sm:bottom-8 sm:right-8"
     >
+      {/* Faza 1: Iconiță WhatsApp fixă 56x56 + badge de notificare pulsantă */}
       <span className="relative flex h-14 w-14 shrink-0 items-center justify-center">
         <WhatsAppIcon size={28} />
 
         <span className="absolute right-1.5 top-1.5 flex h-3 w-3">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+          {isHovered && (
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500 opacity-75" />
+          )}
           <span className="relative inline-flex h-3 w-3 rounded-full bg-red-500 ring-2 ring-[#25D366]" />
         </span>
       </span>
 
-      <span className="max-w-0 overflow-hidden whitespace-nowrap text-sm font-semibold text-white transition-all duration-300 ease-[cubic-bezier(0.4,0,0.2,1)] group-hover:max-w-[14rem] group-focus-visible:max-w-[14rem]">
-        Contactează-ne pe WhatsApp
-      </span>
-    </a>
+      {/* Faza 2: Container cu expansiune fluidă și text fără clipping */}
+      <motion.div
+        initial={{ width: 0, opacity: 0 }}
+        animate={{
+          width: isExpanded ? "auto" : 0,
+          opacity: isExpanded ? 1 : 0,
+        }}
+        transition={{
+          width: {
+            duration: 0.85,
+            ease: [0.16, 1, 0.3, 1],
+          },
+          opacity: {
+            duration: isExpanded ? 0.55 : 0.25,
+            delay: isExpanded ? 0.22 : 0,
+            ease: isExpanded ? "easeOut" : "easeIn",
+          },
+        }}
+        className="overflow-hidden whitespace-nowrap shrink-0"
+      >
+        <motion.div
+          animate={{
+            x: isExpanded ? 0 : -12,
+          }}
+          transition={{
+            duration: isExpanded ? 0.75 : 0.25,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="pr-6 pl-0.5 text-[14.5px] font-semibold tracking-[-0.01em] text-white select-none whitespace-nowrap shrink-0"
+        >
+          Contactează-ne pe WhatsApp
+        </motion.div>
+      </motion.div>
+    </motion.a>
   );
 }
 

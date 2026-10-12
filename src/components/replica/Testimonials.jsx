@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import { Star } from "lucide-react";
 
@@ -51,11 +51,12 @@ function initialsOf(name = "") {
 /** Maps a live Google review onto the same shape TestimonialCard expects. */
 function toCardItem(review, index) {
   const gradient = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
+  const cleanText = (review.text || "").replace(/^[„"]+|["”]+$/g, "").trim();
 
   return {
-    quote: `„${review.text}”`,
+    quote: `„${cleanText}”`,
     name: review.author,
-    role: "Client Google",
+    role: "Client A Squared Studio",
     company: [review.relativeTime, `${review.rating}★`].filter(Boolean).join(" · "),
     avatar: {
       src: review.avatarUrl || "",
@@ -63,6 +64,35 @@ function toCardItem(review, index) {
       ...gradient,
     },
   };
+}
+
+function TestimonialAvatar({ avatar, name }) {
+  const [hasError, setHasError] = useState(false);
+
+  if (avatar?.src && !hasError) {
+    return (
+      <img
+        src={avatar.src}
+        alt={name}
+        className="hero-avatar object-cover"
+        referrerPolicy="no-referrer"
+        loading="lazy"
+        decoding="async"
+        onError={() => setHasError(true)}
+      />
+    );
+  }
+
+  return (
+    <span
+      className="hero-avatar"
+      style={{
+        backgroundImage: `linear-gradient(135deg, ${avatar?.from || "#2c2cf3"}, ${avatar?.to || "#7a5cff"})`,
+      }}
+    >
+      {avatar?.initials || initialsOf(name)}
+    </span>
+  );
 }
 
 // Measured off the reference captures: "WHAT" runs ~300px tall against a
@@ -99,31 +129,14 @@ function TestimonialCard({ item, y, className = "" }) {
   return (
     <motion.figure
       style={y !== undefined ? { y } : undefined}
-      className={`testimonial-card relative grid gap-6 rounded-none p-8 md:aspect-[602/331] ${className}`}
+      className={`testimonial-card relative grid gap-6 rounded-none p-8 transform-gpu will-change-transform md:aspect-[602/331] ${className}`}
     >
-      <blockquote className="text-lg leading-relaxed text-[color:var(--color-ink)]">
+      <blockquote className="text-lg leading-relaxed whitespace-pre-line text-[color:var(--color-ink)]">
         {item.quote}
       </blockquote>
 
       <figcaption className="mt-auto flex items-center gap-3">
-        {item.avatar.src ? (
-          <img
-            src={item.avatar.src}
-            alt={item.name}
-            className="hero-avatar"
-            loading="lazy"
-            decoding="async"
-          />
-        ) : (
-          <span
-            className="hero-avatar"
-            style={{
-              backgroundImage: `linear-gradient(135deg, ${item.avatar.from}, ${item.avatar.to})`,
-            }}
-          >
-            {item.avatar.initials}
-          </span>
-        )}
+        <TestimonialAvatar avatar={item.avatar} name={item.name} />
 
         <span className="grid">
           <span className="text-sm font-semibold text-[color:var(--color-ink)]">
@@ -190,34 +203,25 @@ function Testimonials() {
             noi
           </h2>
 
-          {/* Always visible — labels this section as Google reviews whether
-              or not a live Place ID/API key is configured yet. Only becomes
-              a clickable link with the real rating once live data exists. */}
-          {hasLiveReviews && rating ? (
-            <a
-              href={mapsUrl}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[color:var(--color-ink)] shadow-sm transition-colors hover:border-black/20"
-            >
-              <GoogleIcon size={16} />
-              <span className="flex items-center gap-0.5 text-amber-500">
-                {Array.from({ length: 5 }, (_, index) => (
-                  <Star
-                    key={index}
-                    size={15}
-                    fill={index < Math.round(rating) ? "currentColor" : "none"}
-                  />
-                ))}
-              </span>
-              {rating.toFixed(1)} · {totalReviews} recenzii Google
-            </a>
-          ) : (
-            <span className="inline-flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[color:var(--color-ink)] shadow-sm">
-              <GoogleIcon size={16} />
-              Recenzii Google
+          {/* Always clickable — leads directly to the A Squared Studio Google Maps review page */}
+          <a
+            href={mapsUrl || "https://maps.google.com/?cid=4285970013544552756"}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="inline-flex w-fit items-center gap-2 rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-medium text-[color:var(--color-ink)] shadow-sm transition-colors hover:border-black/20 hover:bg-neutral-50"
+          >
+            <GoogleIcon size={16} />
+            <span className="flex items-center gap-0.5 text-amber-500">
+              {Array.from({ length: 5 }, (_, index) => (
+                <Star
+                  key={index}
+                  size={15}
+                  fill={index < Math.round(rating || 5) ? "currentColor" : "none"}
+                />
+              ))}
             </span>
-          )}
+            {(rating || 5.0).toFixed(1)} · {totalReviews || 4} recenzii Google
+          </a>
         </div>
 
         {/* Measured off section8_1_reference.PNG: the two cards there run
@@ -238,7 +242,7 @@ function Testimonials() {
           // instead (a peek of the next card hints it's swipeable).
           <div
             ref={gridRef}
-            className="testimonials-carousel flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="testimonials-carousel relative flex snap-x snap-mandatory gap-4 overflow-x-auto px-6 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {items.map((item) => (
               // flex + h-full: without it every card sized to its own

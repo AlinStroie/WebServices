@@ -32,9 +32,9 @@ function BackToTop() {
         const scrollingDown = y > lastY.current + 2;
 
         if (!pastThreshold || scrollingDown) {
-          setShown(false);
+          setShown((prev) => (prev ? false : prev));
         } else if (scrollingUp) {
-          setShown(true);
+          setShown((prev) => (!prev ? true : prev));
         }
 
         lastY.current = y;
